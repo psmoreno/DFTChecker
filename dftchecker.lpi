@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectOptions>
+    <Version Value="9"/>
+    <PathDelim Value="\"/>
+    <General>
+      <SessionStorage Value="InProjectDir"/>
+      <MainUnit Value="0"/>
+      <Title Value="dftchecker"/>
+      <ResourceType Value="res"/>
+      <UseXPManifest Value="True"/>
+      <Icon Value="0"/>
+    </General>
+    <i18n>
+      <EnableI18N LFM="False"/>
+    </i18n>
+    <VersionInfo>
+      <StringTable ProductVersion=""/>
+    </VersionInfo>
+    <BuildModes Count="1">
+      <Item1 Name="Default" Default="True"/>
+    </BuildModes>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <FormatVersion Value="1"/>
+      </local>
+    </RunParams>
+    <RequiredPackages Count="6">
+      <Item1>
+        <PackageName Value="fortes324forlaz"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="lazreport"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="lhelpcontrolpkg"/>
+      </Item3>
+      <Item4>
+        <PackageName Value="zcomponent"/>
+      </Item4>
+      <Item5>
+        <PackageName Value="FCL"/>
+      </Item5>
+      <Item6>
+        <PackageName Value="LCL"/>
+      </Item6>
+    </RequiredPackages>
+    <Units Count="14">
+      <Unit0>
+        <Filename Value="dftchecker.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="dftchecker"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="fmmain.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormPrincipal"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="fmmain"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="fmmodels.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormModels"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="fmModels"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="fmof.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormOF"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="fmOF"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="fmlinks.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormLinks"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="fmlinks"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="fmoptions.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormOptions"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="fmoptions"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="fmabout.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormAbout"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="fmabout"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="fmnewbox.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormNewBox"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="fmnewbox"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="fmclosebox.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormCloseBox"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="fmclosebox"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="fmaddinsert.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormAddInsert"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="fmaddinsert"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="fmintro.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormIntro"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="fmIntro"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="customconfig.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="customconfig"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="ucrypto.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="ucrypto"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="fmkanbam.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormKanbam"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="fmKanbam"/>
+      </Unit13>
+    </Units>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="11"/>
+    <PathDelim Value="\"/>
+    <Target>
+      <Filename Value="dftchecker"/>
+    </Target>
+    <SearchPaths>
+      <IncludeFiles Value="$(ProjOutDir)"/>
+      <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
+    </SearchPaths>
+    <CodeGeneration>
+      <Optimizations>
+        <OptimizationLevel Value="3"/>
+      </Optimizations>
+    </CodeGeneration>
+    <Linking>
+      <Debugging>
+        <GenerateDebugInfo Value="False"/>
+      </Debugging>
+      <Options>
+        <Win32>
+          <GraphicApplication Value="True"/>
+        </Win32>
+      </Options>
+    </Linking>
+    <Other>
+      <CompilerMessages>
+        <MsgFileName Value=""/>
+      </CompilerMessages>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="3">
+      <Item1>
+        <Name Value="EAbort"/>
+      </Item1>
+      <Item2>
+        <Name Value="ECodetoolError"/>
+      </Item2>
+      <Item3>
+        <Name Value="EFOpenError"/>
+      </Item3>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

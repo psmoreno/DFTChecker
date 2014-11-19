@@ -1,0 +1,63 @@
+CREATE DATABASE `dft` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+CREATE TABLE `controlpcb` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Fecha` date DEFAULT NULL,
+  `Hora` time DEFAULT NULL,
+  `OfSerie` varchar(20) DEFAULT NULL,
+  `Modelo` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `jig` (
+  `IdJig` int(11) NOT NULL,
+  `Ruta` varchar(300) NOT NULL,
+  PRIMARY KEY (`IdJig`),
+  UNIQUE KEY `IdJig_UNIQUE` (`IdJig`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `linkofmod` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `IdOf` int(11) DEFAULT NULL,
+  `IdModelo` int(11) DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `Id_UNIQUE` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `modelo` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Modelo` varchar(20) NOT NULL,
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `Id_UNIQUE` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `ordenf` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `OrdenF` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `Id_UNIQUE` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `results` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `OfSerie` varchar(20) DEFAULT NULL,
+  `Result` varchar(2) DEFAULT NULL,
+  `fecha` date DEFAULT NULL,
+  `Hora` time DEFAULT NULL,
+  `NJig` int(11) DEFAULT NULL,
+  `line_id` int(11) DEFAULT NULL,
+  `TestTime` double DEFAULT NULL,
+  `Chassis` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `Id_UNIQUE` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2794 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `testtime` (
+  `Id` int(11) NOT NULL,
+  `TestTime` int(11) NOT NULL,
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `Id_UNIQUE` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
