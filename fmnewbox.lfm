@@ -1,7 +1,7 @@
 object FormNewBox: TFormNewBox
-  Left = 753
+  Left = 626
   Height = 165
-  Top = 357
+  Top = 392
   Width = 424
   BorderStyle = bsDialog
   Caption = 'Abrir nuevo Pallet'
@@ -336,6 +336,7 @@ object FormNewBox: TFormNewBox
       Height = 32
       Top = 48
       Width = 96
+      MaxValue = 9999
       MinValue = 1
       TabOrder = 3
       Value = 1
@@ -347,7 +348,6 @@ object FormNewBox: TFormNewBox
     Properties.Strings = (
       'AutoEncodeStrings='
     )
-    TestMode = 0
     Port = 0
     left = 56
   end

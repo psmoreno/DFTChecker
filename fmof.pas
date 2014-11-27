@@ -89,6 +89,7 @@ begin
      begin
         ZQueryOF.Append;
         ZQueryOF.FieldByName('OrdenF').AsString:=FormAddInsert.StrValue;
+        //Por lo general la orden se crea abierta o sea status = 1
         ZQueryOF.CommitUpdates;
      end
      else

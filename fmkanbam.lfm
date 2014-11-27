@@ -1,7 +1,7 @@
 object FormKanbam: TFormKanbam
-  Left = 613
+  Left = 581
   Height = 578
-  Top = 163
+  Top = 147
   Width = 532
   BorderStyle = bsDialog
   Caption = 'Impresión de KANBAM'

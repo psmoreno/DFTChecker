@@ -63,7 +63,7 @@ begin
   if ((Length(EditOF.Text)=6)and(TryStrToInt(EditOF.Text,tmp))) then
   begin
     ZQueryNewBox.SQL.Text:='SELECT * FROM tlinkofmod WHERE strOF LIKE '''+
-    EditOF.Text+'''';
+    EditOF.Text+''' AND Status>0';
     ZQueryNewBox.Open;
     if ZQueryNewBox.RecordCount=1 then
     begin

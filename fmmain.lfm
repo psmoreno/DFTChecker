@@ -1,7 +1,7 @@
 object FormPrincipal: TFormPrincipal
-  Left = 467
+  Left = 388
   Height = 608
-  Top = 131
+  Top = 187
   Width = 885
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
@@ -234,6 +234,7 @@ object FormPrincipal: TFormPrincipal
         end>
       DataSource = DataSourcePrincipal
       DefaultRowHeight = 25
+      ReadOnly = True
       TabOrder = 0
       TitleFont.CharSet = ANSI_CHARSET
       TitleFont.Height = -21

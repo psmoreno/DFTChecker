@@ -108,11 +108,13 @@ type
     IsInExecution:boolean;
     TotalCount:integer;
     CurrentCount:integer;
+    OrderActive:boolean;
 
     procedure LoadFormOptions(MdResult:integer);
     procedure RecordDFTResults(FilePath:string);
     procedure BackupAllRecords;
     procedure ExtractResources;
+    procedure RegisterWrongPCB;
   public
     { public declarations }
   end;
@@ -185,6 +187,7 @@ begin
      ZQueryPrincipal.Open;
      CurrentCount:=0;
      IsInExecution:=true;
+     OrderActive:=true;
   end;
 end;
 
@@ -224,9 +227,9 @@ end;
 
 procedure TFormPrincipal.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
-  If IsInExecution then
+  If OrderActive then
   Begin;
-      CanClose := not IsInExecution;
+      CanClose := not OrderActive;
       MessageDlg('Antes de Cerrar la aplicación debe terminar de completar la Caja.', mtinformation, [mbOK],0);
   end;
 end;
@@ -293,6 +296,7 @@ begin
    DataSourcePrincipal.DataSet:=ZQueryPrincipal;
    ZQueryPrincipal.SQL.Text:='SELECT * FROM Controlpcb';
    ExtractResources;
+   OrderActive:=false;
    try
      ZConnectionPrincipal.Connect;
      ZQueryPrincipal.Active:=true;
@@ -384,6 +388,7 @@ var
   ZConnectionLoadPCBinPallet:TZConnection;
   strCount:string;
 begin
+  self.IsInExecution:=false;
   ZConnectionLoadPCBinPallet:=TZConnection.Create(nil);
   ZQueryLoadPCBinPallet:=TZQuery.Create(nil);
 
@@ -409,7 +414,6 @@ begin
        ZQueryPrincipal.Open;
        if ZQueryPrincipal.RecordCount = 0 then
        begin
-            //ImageResult.Picture.LoadFromFile('OK.png');
             ImageResult.Picture.LoadFromLazarusResource('OK');
             ImageResult.Visible:=true;
             ZQueryPrincipal.Append;
@@ -431,8 +435,8 @@ begin
        end
        else
        begin
-         //ImageResult.Picture.LoadFromFile('NG.png');
-         ImageResult.Picture.LoadFromLazarusResource('NG');
+         ShowMessage('Esta placa ya sido ingresada');
+         ImageResult.Picture.LoadFromLazarusResource('OK');
          ImageResult.Visible:=true;
        end;
        ZQueryPrincipal.Close;
@@ -441,15 +445,14 @@ begin
      end
      else
      begin
-       //ImageResult.Picture.LoadFromFile('NG.png');
+       RegisterWrongPCB;
        ImageResult.Picture.LoadFromLazarusResource('NG');
        ImageResult.Visible:=true;
      end;
   end
   else
   begin
-     //ImageResult.Picture.LoadFromFile('NG.png');
-     ImageResult.Picture.LoadFromLazarusResource('NG');
+     ImageResult.Picture.LoadFromLazarusResource('NT');
      ImageResult.Visible:=true;
   end;
   ZQueryLoadPCBinPallet.Close;
@@ -459,6 +462,7 @@ begin
        EditPCB.SelectAll;
        EditPCB.SetFocus;
   end;
+  self.IsInExecution:=true;
 end;
 
 procedure TFormPrincipal.ActionCloseBoxExecute(Sender: TObject);
@@ -479,6 +483,7 @@ begin
      LabelIDBOX.Caption:='';
      LabelQty.Caption:='  /  ';
      BackupAllRecords;
+     OrderActive:=false;
   end;
 end;
 
@@ -511,6 +516,8 @@ var
   ZQueryLoadDFTRecords:TZQuery;
   ZConnectionLoadDFTRrecords:TZConnection;
 begin
+  self.IsInExecution:=false; //stop a while the timer
+
   Cadenas:=TStringList.Create;
   Componentes:=TStringList.Create;
   ZConnectionLoadDFTRrecords:=TZConnection.Create(nil);
@@ -541,11 +548,19 @@ begin
      Componentes[0]+','+Componentes[1]+',"'+DateToStr(date)+'","'+TimeToStr(Now)+'",'+Componentes[2]+','+Componentes[3]+','+
      Componentes[4]+','+Componentes[5]+');';
      ZQueryLoadDFTRecords.SQL.Clear;
-     if debug=1 then ShowMessage(strSqlRecord);
-        ZQueryLoadDFTRecords.SQL.Text:=strSqlRecord;
+     if debug=1 then
+     begin
+       ShowMessage(strSqlRecord);
+     end;
+     ZQueryLoadDFTRecords.SQL.Text:=strSqlRecord;
      ZQueryLoadDFTRecords.ExecSQL;
   end;
   Cadenas.Clear;
+
+  ZQueryLoadDFTRecords.Close;
+  ZConnectionLoadDFTRrecords.Disconnect;
+
+  self.IsInExecution:=true; // resume the timer
 end;
 
 Procedure TFormPrincipal.BackupAllRecords;
@@ -599,6 +614,37 @@ begin
         {finally}
            rs1.Free;
      end;
+end;
+
+procedure TFormPrincipal.RegisterWrongPCB;
+var
+  ZQueryLoadWrongPCB:TZQuery;
+  ZConnectionLoadWrongPCB:TZConnection;
+
+begin
+  ZConnectionLoadWrongPCB:=TZConnection.Create(nil);
+  ZQueryLoadWrongPCB:=TZQuery.Create(nil);
+
+  ZConnectionLoadWrongPCB.HostName:=CCF.ConfigSQl.HIP;
+  ZConnectionLoadWrongPCB.Port:=StrToInt(CCF.ConfigSQl.PConecction);
+  ZConnectionLoadWrongPCB.Protocol:=CCF.ConfigSQl.Databasetype;
+  ZConnectionLoadWrongPCB.Database:=CCF.ConfigSQl.DBname;
+  ZConnectionLoadWrongPCB.User:=CCF.ConfigSQl.User;
+  ZConnectionLoadWrongPCB.Password:=CCF.ConfigSQl.Pass;
+  ZQueryLoadWrongPCB.Connection:=ZConnectionLoadWrongPCB;
+  ZQueryLoadWrongPCB.SQL.Text:='SELECT * FROM wrongpcb';
+  ZConnectionLoadWrongPCB.Connect;
+  ZQueryLoadWrongPCB.Open;
+  ZQueryLoadWrongPCB.Append;
+
+  ZQueryLoadWrongPCB.FieldByName('BPRdate').AsString:=DateToStr(Date);
+  ZQueryLoadWrongPCB.FieldByName('BPRhour').AsString:=TimeToStr(Now);
+  ZQueryLoadWrongPCB.FieldByName('OfSerial').AsString:=EditPCB.Text;
+  ZQueryLoadWrongPCB.FieldByName('ModelName').AsString:=LabelModel.Caption;
+
+  ZQueryLoadWrongPCB.CommitUpdates;
+  ZQueryLoadWrongPCB.Close;
+  ZConnectionLoadWrongPCB.Disconnect;
 end;
 
 initialization

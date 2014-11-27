@@ -72,6 +72,7 @@ begin
   if ((EditLinkOF.Text=ZQueryLinksOF.FieldByName('OrdenF').AsString)and
   (EditLinkModel.Text=ZQueryLinksModels.FieldByName('ModelName').AsString ))then
   begin
+       // Creo el registro vinculo
        ZQueryLinkOFModels.Append;
        ZQueryLinkOFModels.FieldByName('NBox').AsInteger:=0;
        ZQueryLinkOFModels.FieldByName('strOF').AsString:=ZQueryLinksOF.FieldByName('OrdenF').AsString;
@@ -79,7 +80,7 @@ begin
        ZQueryLinkOFModels.FieldByName('Status').AsInteger:=1;
        ZQueryLinkOFModels.CommitUpdates;
 
-
+       //Cierro esa orden para hacer vinculos
        ZQueryLinksOF.Edit;
        ZQueryLinksOF.FieldByName('Status').AsInteger:=0;
        ZQueryLinksOF.CommitUpdates;
@@ -95,11 +96,13 @@ var
 begin
   if ZQueryLinkOFModels.RecordCount>0 then
   begin
+       //Borro el registro vinculo
        strValue:=ZQueryLinkOFModels.FieldByName('strOF').AsString;
        ZQueryLinkOFModels.Delete;
 
        ZQueryLinksOF.Close;
        ZQueryLinksOF.SQL.Text:='SELECT * FROM tordenf WHERE OrdenF like ''%'+strValue+'%'' ';
+       //Reactivo la orden de fabricacion
        ZQueryLinksOF.Open;
        ZQueryLinksOF.Edit;
        ZQueryLinksOF.FieldByName('Status').AsInteger:=1;
