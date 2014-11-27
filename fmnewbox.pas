@@ -68,9 +68,9 @@ begin
     if ZQueryNewBox.RecordCount=1 then
     begin
         ZQueryNewBox.Close;
-        ZQueryNewBox.SQL.Text:='SELECT * FROM tlinkofmod WHERE Status = 0';
+        ZQueryNewBox.SQL.Text:='SELECT MAX(Nbox) as MVAL FROM tlinkofmod WHERE Status = 0';
         ZQueryNewBox.Open;
-        tmp:=ZQueryNewBox.RecordCount+1;
+        tmp:=ZQueryNewBox.FieldByName('MVAL').AsInteger+1;
         ZQueryNewBox.Close;
 
         ZQueryNewBox.SQL.Text:='SELECT * FROM tlinkofmod WHERE strOF LIKE '''+
