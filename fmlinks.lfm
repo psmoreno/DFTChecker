@@ -850,6 +850,7 @@ object FormLinks: TFormLinks
     Properties.Strings = (
       'AutoEncodeStrings='
     )
+    TestMode = 0
     Port = 0
     left = 80
     top = 64

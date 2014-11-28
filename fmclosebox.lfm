@@ -374,6 +374,7 @@ object FormCloseBox: TFormCloseBox
     Properties.Strings = (
       'AutoEncodeStrings='
     )
+    TestMode = 0
     Port = 0
     left = 72
     top = 56

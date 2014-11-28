@@ -82,6 +82,9 @@ begin
         ZQueryNewBox.FieldByName('Status').AsInteger:=0;
         ZQueryNewBox.FieldByName('Nbox').AsInteger:=tmp;
         ZQueryNewBox.CommitUpdates;
+
+        ZQueryNewBox.Close;
+        ZConnectionNewBox.Disconnect;
         RNbox:=tmp;
         RQty:=SpinEditNewBox.Value;
         Close;
@@ -90,10 +93,11 @@ begin
     else
     begin
        MessageDlg('Error','Esta orden de fabricacion no se encuentra activa!',mtError,[mbOK],0);
+       ZQueryNewBox.Close;
+       ZConnectionNewBox.Disconnect;
        EditOF.SelectAll;
        EditOF.SetFocus;
     end;
-    ZQueryNewBox.Close;
   end
   else
   begin

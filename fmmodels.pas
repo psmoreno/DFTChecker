@@ -139,7 +139,7 @@ end;
 
 procedure TFormModels.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  ZQueryModels.Active:=false;
+  ZQueryModels.Close;
   ZConnectionModels.Disconnect;
 end;
 

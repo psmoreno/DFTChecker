@@ -80,7 +80,6 @@ begin
   ZQueryCloseBox.CommitUpdates;
   ZQueryCloseBox.Close;
   ZConnectionCloseBox.Disconnect;
-
   Close;
   ModalResult:=mrOK;
 end;

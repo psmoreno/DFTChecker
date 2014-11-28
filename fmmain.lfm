@@ -14,6 +14,7 @@ object FormPrincipal: TFormPrincipal
   Font.Pitch = fpVariable
   Font.Quality = fqDraft
   Menu = MainMenuPrincipal
+  OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   Position = poDesktopCenter

@@ -125,9 +125,9 @@ end;
 
 procedure TFormLinks.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  ZQueryLinksOF.Active:=false;
-  ZQueryLinkOFModels.Active:=false;
-  ZQueryLinkOFModels.Active:=false;
+  ZQueryLinksOF.Close;
+  ZQueryLinksModels.Close;
+  ZQueryLinkOFModels.Close;
   ZConnectionLinks.Disconnect;
 end;
 

@@ -98,6 +98,7 @@ type
     procedure ActionOFLinkExecute(Sender: TObject);
     procedure ActionPrintKBExecute(Sender: TObject);
     procedure EditPCBKeyPress(Sender: TObject; var Key: char);
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure TimerMainTimer(Sender: TObject);
@@ -186,8 +187,9 @@ begin
      ZQueryPrincipal.SQL.Text:='SELECT * FROM Controlpcb';
      ZQueryPrincipal.Open;
      CurrentCount:=0;
+
      IsInExecution:=true;
-     OrderActive:=true;
+     OrderActive:=true;//timer 's independent semaphore
   end;
 end;
 
@@ -223,6 +225,13 @@ begin
   begin
      ActionChkPCBExecute(self);
   end;
+end;
+
+procedure TFormPrincipal.FormClose(Sender: TObject;
+  var CloseAction: TCloseAction);
+begin
+  ZQueryPrincipal.Close;
+  ZConnectionPrincipal.Disconnect;
 end;
 
 procedure TFormPrincipal.FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -308,7 +317,7 @@ end;
 
 procedure TFormPrincipal.TimerMainTimer(Sender: TObject);
 begin
-  if IsInExecution then
+  if ((IsInExecution=true) and (OrderActive=true)) then
   begin
     if FileExistsUTF8(CCF.ConfigOptions.DFTResult1) then
     begin
@@ -473,6 +482,7 @@ begin
   if FormCloseBox.ShowModal=mrOK then
   begin
      IsInExecution:=false;
+     OrderActive:=false;
      ActionCloseBox.Enabled:=false;
      ActionNewBox.Enabled:=true;
      ActionChkPCB.Enabled:=false;
@@ -483,7 +493,6 @@ begin
      LabelIDBOX.Caption:='';
      LabelQty.Caption:='  /  ';
      BackupAllRecords;
-     OrderActive:=false;
   end;
 end;
 
