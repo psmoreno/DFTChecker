@@ -63,7 +63,7 @@ begin
   ZQueryOF.SQL.Text:='SELECT * FROM tordenf';
   ZQueryOF.Open;
   ZQueryOF.RecNo:=Pos;
-  FormAddInsert.IsAnOF:=true;
+  FormAddInsert.InputType:=0;
   FormAddInsert.StrValue:=ZQueryOF.FieldByName('OrdenF').AsString;
   if FormAddInsert.ShowModal=mrOK then
   begin
@@ -71,12 +71,24 @@ begin
      ZQueryOF.FieldByName('OrdenF').AsString:=FormAddInsert.StrValue;
      ZQueryOF.CommitUpdates;
   end;
+  FormAddInsert.InputType:=2;
+  FormAddInsert.StrValue:=ZQueryOF.FieldByName('Qty').AsString;
+  if FormAddInsert.ShowModal=mrOK then
+  begin
+     ZQueryOF.Edit;
+     ZQueryOF.FieldByName('Qty').AsString:=FormAddInsert.StrValue;
+     ZQueryOF.CommitUpdates;
+  end;
 end;
 
 procedure TFormOF.BitBtnAddOFClick(Sender: TObject);
+var
+  tmpOF:string;
+  tmpQty:integer;
+  CanContinue:boolean;
 begin
   EditSearchOF.Text:='';
-  FormAddInsert.IsAnOF:=true;
+  FormAddInsert.InputType:=0;
   FormAddInsert.StrValue:='';
   if FormAddInsert.ShowModal=mrOK then
   begin
@@ -87,16 +99,31 @@ begin
      ZQueryOF.Open;
      if ZQueryOF.RecordCount = 0 then
      begin
-        ZQueryOF.Append;
-        ZQueryOF.FieldByName('OrdenF').AsString:=FormAddInsert.StrValue;
-        //Por lo general la orden se crea abierta o sea status = 1
-        ZQueryOF.CommitUpdates;
+        tmpOF:=FormAddInsert.StrValue;
+        CanContinue:=true;
      end
      else
      begin
         MessageDlg('Error','Esta orden de fabricacion ya existe, pueder ser que este cerrada!',mtError,[mbOK],0);
+        CanContinue:=false;
      end;
   end;
+
+  if (CanContinue=false) then
+     exit;
+
+  FormAddInsert.InputType:=2;
+  FormAddInsert.StrValue:='';
+  if FormAddInsert.ShowModal=mrOK then
+  begin
+      tmpQty:=StrToInt(FormAddInsert.StrValue);
+      ZQueryOF.Append;
+      ZQueryOF.FieldByName('OrdenF').AsString:=tmpOF;
+      ZQueryOF.FieldByName('Qty').AsInteger:=tmpQty;
+      //Por lo general la orden se crea abierta o sea status = 1
+      ZQueryOF.CommitUpdates;
+  end;
+
   ZQueryOF.Close;
   ZQueryOF.SQL.Text:='SELECT * FROM tordenf WHERE Status > 0';
   ZQueryOF.Open;

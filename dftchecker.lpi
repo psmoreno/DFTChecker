@@ -48,7 +48,7 @@
         <PackageName Value="LCL"/>
       </Item6>
     </RequiredPackages>
-    <Units Count="14">
+    <Units Count="13">
       <Unit0>
         <Filename Value="dftchecker.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -103,55 +103,47 @@
         <UnitName Value="fmabout"/>
       </Unit6>
       <Unit7>
-        <Filename Value="fmnewbox.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="FormNewBox"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-        <UnitName Value="fmnewbox"/>
-      </Unit7>
-      <Unit8>
         <Filename Value="fmclosebox.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="FormCloseBox"/>
+        <ComponentName Value="FormCloseOF"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="fmclosebox"/>
-      </Unit8>
-      <Unit9>
+      </Unit7>
+      <Unit8>
         <Filename Value="fmaddinsert.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FormAddInsert"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="fmaddinsert"/>
-      </Unit9>
-      <Unit10>
+      </Unit8>
+      <Unit9>
         <Filename Value="fmintro.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FormIntro"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="fmIntro"/>
-      </Unit10>
-      <Unit11>
+      </Unit9>
+      <Unit10>
         <Filename Value="customconfig.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="customconfig"/>
-      </Unit11>
-      <Unit12>
+      </Unit10>
+      <Unit11>
         <Filename Value="ucrypto.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ucrypto"/>
-      </Unit12>
-      <Unit13>
+      </Unit11>
+      <Unit12>
         <Filename Value="fmkanbam.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FormKanbam"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="fmKanbam"/>
-      </Unit13>
+      </Unit12>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -164,15 +156,7 @@
       <IncludeFiles Value="$(ProjOutDir)"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
-    <CodeGeneration>
-      <Optimizations>
-        <OptimizationLevel Value="3"/>
-      </Optimizations>
-    </CodeGeneration>
     <Linking>
-      <Debugging>
-        <GenerateDebugInfo Value="False"/>
-      </Debugging>
       <Options>
         <Win32>
           <GraphicApplication Value="True"/>

@@ -10,81 +10,102 @@ uses
 
 type
 
-  { TFormCloseBox }
+  { TFormCloseOF }
 
-  TFormCloseBox = class(TForm)
+  TFormCloseOF = class(TForm)
     BitBtnOK: TBitBtn;
     BitBtnCancel: TBitBtn;
+    EditOF: TEdit;
     EditOFObserv: TEdit;
     Label1: TLabel;
     Label2: TLabel;
-    LabelQty: TLabel;
-    LabelOF: TLabel;
-    Label3: TLabel;
     PanelClosePallet: TPanel;
     ZConnectionCloseBox: TZConnection;
     ZQueryCloseBox: TZQuery;
     procedure BitBtnCancelClick(Sender: TObject);
     procedure BitBtnOKClick(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormShow(Sender: TObject);
   private
     { private declarations }
     CCF:TCustomConfig;
-    RstrOF:string;
-    RPCBQty:string;
+    RstrOf:string;
   public
     { public declarations }
     procedure LoadConfig(TCmCfg:TCustomConfig);
-    property strOF:string read RstrOF write RstrOF;
-    property PCBQty:string read RPCBQty write RPCBQty;
+    property strOf:string read RstrOf write RstrOf;
   end;
 
 var
-  FormCloseBox: TFormCloseBox;
+  FormCloseOF: TFormCloseOF;
 
 implementation
 
 {$R *.lfm}
 
-{ TFormCloseBox }
+{ TFormCloseOF }
 
-procedure TFormCloseBox.BitBtnCancelClick(Sender: TObject);
+procedure TFormCloseOF.BitBtnCancelClick(Sender: TObject);
 begin
   Close;
   ModalResult:=mrCancel;
 end;
 
-procedure TFormCloseBox.BitBtnOKClick(Sender: TObject);
+procedure TFormCloseOF.BitBtnOKClick(Sender: TObject);
 var
-  Count:integer;
-  Total:integer;
+  tmp:integer;
+  OpResult:boolean;
 begin
-  Count:=StrToInt(Copy(RPCBQty,0,2));
-  Total:=StrToInt(Copy(RPCBQty,4,5));
-  if Count < Total then
+  if ((Length(EditOF.Text)=6)and(TryStrToInt(EditOF.Text,tmp))) then
   begin
-    if (MessageDlg('Advertencia','Esta seguro que desea cerra la orden de fabricacion sin que este completa?',
-    mtConfirmation,mbYesNo,0)<>mrYes) then
+    ZConnectionCloseBox.Connect;
+    ZQueryCloseBox.SQL.Text:='SELECT * FROM tlinkofmod WHERE strOF LIKE '''+
+    EditOF.Text+''' AND Status>0';
+    ZQueryCloseBox.Open;
+    if ZQueryCloseBox.RecordCount=1 then
     begin
-       exit;
+         ZQueryCloseBox.Edit;
+         ZQueryCloseBox.FieldByName('Observ').AsString:=EditOFObserv.Text;
+         ZQueryCloseBox.FieldByName('Status').AsInteger:=0;
+         ZQueryCloseBox.CommitUpdates;
+         OpResult:=true;
+    end
+    else
+    begin
+         MessageDlg('Error','Esta orden de fabricacion no se encuentra activa!',mtError,[mbOK],0);
+         OpResult:=false;
     end;
+    BitBtnCancel.Enabled:=true;
+    ZQueryCloseBox.Close;
+    ZConnectionCloseBox.Disconnect;
+  end
+  else
+  begin
+    MessageDlg('Error','El formato de la orden de fabricacion es un numero de 6 digitos!',mtError,[mbOK],0);
+    OpResult:=false;
   end;
-  ZQueryCloseBox.SQL.Text:='SELECT * FROM pallet';
-  ZConnectionCloseBox.Connect;
-  ZQueryCloseBox.Open;
-  ZQueryCloseBox.Append;
-  ZQueryCloseBox.FieldByName('OrdenF').AsString:=RstrOF;
-  ZQueryCloseBox.FieldByName('Qty').AsInteger:=Count;
-  ZQueryCloseBox.FieldByName('FullQty').AsInteger:=Total;
-  ZQueryCloseBox.FieldByName('Observ').AsString:=EditOFObserv.Text;
-  ZQueryCloseBox.CommitUpdates;
-  ZQueryCloseBox.Close;
-  ZConnectionCloseBox.Disconnect;
-  Close;
-  ModalResult:=mrOK;
+  if OpResult then
+  begin
+    Close;
+    ModalResult:=mrOK;
+  end
+  else
+  begin
+    EditOF.SelectAll;
+    EditOF.SetFocus
+  end;
 end;
 
-procedure TFormCloseBox.FormShow(Sender: TObject);
+procedure TFormCloseOF.FormCloseQuery(Sender: TObject; var CanClose: boolean);
+begin
+  CanClose:=BitBtnCancel.Enabled;
+  if BitBtnCancel.Enabled = false then
+  begin
+     ShowMessage('Es obligatorio cerrar la orden de fabricacion');
+  end;
+end;
+
+procedure TFormCloseOF.FormShow(Sender: TObject);
 begin
   ZConnectionCloseBox.HostName:=CCF.ConfigSQl.HIP;
   ZConnectionCloseBox.Port:=StrToInt(CCF.ConfigSQl.PConecction);
@@ -93,13 +114,21 @@ begin
   ZConnectionCloseBox.User:=CCF.ConfigSQl.User;
   ZConnectionCloseBox.Password:=CCF.ConfigSQl.Pass;
   ZQueryCloseBox.Connection:=ZConnectionCloseBox;
-
-  LabelOF.Caption:=RstrOF;
-  LabelQty.Caption:=RPCBQty;
+  EditOF.Text:=RstrOf;
   EditOFObserv.Text:='';
+  if RstrOf <> '' then
+  begin
+    BitBtnCancel.Enabled:=false;
+    EditOFObserv.SetFocus;
+  end
+  else
+  begin
+    BitBtnCancel.Enabled:=true;
+    EditOF.SetFocus;
+  end;
 end;
 
-procedure TFormCloseBox.LoadConfig(TCmCfg:TCustomConfig);
+procedure TFormCloseOF.LoadConfig(TCmCfg:TCustomConfig);
 begin
    CCF:=TCmCfg;
 end;

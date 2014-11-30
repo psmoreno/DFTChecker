@@ -1,17 +1,18 @@
-object FormCloseBox: TFormCloseBox
+object FormCloseOF: TFormCloseOF
   Left = 727
   Height = 179
   Top = 359
-  Width = 515
+  Width = 421
   BorderStyle = bsDialog
-  Caption = 'Cerrar Pallet'
+  Caption = 'Cerrar Orden de Fabricación'
   ClientHeight = 179
-  ClientWidth = 515
+  ClientWidth = 421
   Font.CharSet = ANSI_CHARSET
   Font.Height = -21
   Font.Name = 'Arial'
   Font.Pitch = fpVariable
   Font.Quality = fqDraft
+  OnCloseQuery = FormCloseQuery
   OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '1.2.2.0'
@@ -19,35 +20,20 @@ object FormCloseBox: TFormCloseBox
     Left = 8
     Height = 162
     Top = 8
-    Width = 498
+    Width = 402
     BevelInner = bvLowered
     ClientHeight = 162
-    ClientWidth = 498
+    ClientWidth = 402
     TabOrder = 0
     object Label1: TLabel
       Left = 16
       Height = 24
-      Top = 8
-      Width = 43
-      Caption = 'Caja'
+      Top = 11
+      Width = 201
+      Caption = 'Orden de fabricación:'
       ParentColor = False
     end
-    object LabelOF: TLabel
-      Left = 72
-      Height = 24
-      Top = 8
-      Width = 149
-      Caption = 'OF4536270001'
-      Font.CharSet = ANSI_CHARSET
-      Font.Color = clBlue
-      Font.Height = -21
-      Font.Name = 'Arial'
-      Font.Pitch = fpVariable
-      Font.Quality = fqDraft
-      ParentColor = False
-      ParentFont = False
-    end
-    object Label3: TLabel
+    object Label2: TLabel
       Left = 16
       Height = 24
       Top = 40
@@ -59,11 +45,11 @@ object FormCloseBox: TFormCloseBox
       Left = 16
       Height = 32
       Top = 72
-      Width = 472
-      TabOrder = 0
+      Width = 376
+      TabOrder = 1
     end
     object BitBtnOK: TBitBtn
-      Left = 64
+      Left = 16
       Height = 38
       Top = 112
       Width = 153
@@ -201,10 +187,10 @@ object FormCloseBox: TFormCloseBox
         0000000000010000000400010000000102400000007800000011
       }
       OnClick = BitBtnOKClick
-      TabOrder = 1
+      TabOrder = 2
     end
     object BitBtnCancel: TBitBtn
-      Left = 288
+      Left = 239
       Height = 38
       Top = 112
       Width = 153
@@ -342,30 +328,15 @@ object FormCloseBox: TFormCloseBox
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       }
       OnClick = BitBtnCancelClick
-      TabOrder = 2
+      TabOrder = 3
     end
-    object Label2: TLabel
-      Left = 240
-      Height = 24
+    object EditOF: TEdit
+      Left = 232
+      Height = 32
       Top = 8
-      Width = 138
-      Caption = 'Cantidad PCB:'
-      ParentColor = False
-    end
-    object LabelQty: TLabel
-      Left = 392
-      Height = 24
-      Top = 8
-      Width = 54
-      Caption = '00/00'
-      Font.CharSet = ANSI_CHARSET
-      Font.Color = clBlue
-      Font.Height = -21
-      Font.Name = 'Arial'
-      Font.Pitch = fpVariable
-      Font.Quality = fqDraft
-      ParentColor = False
-      ParentFont = False
+      Width = 160
+      MaxLength = 6
+      TabOrder = 0
     end
   end
   object ZConnectionCloseBox: TZConnection

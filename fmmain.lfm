@@ -1,7 +1,7 @@
 object FormPrincipal: TFormPrincipal
-  Left = 388
+  Left = 481
   Height = 608
-  Top = 187
+  Top = 117
   Width = 885
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
@@ -32,21 +32,21 @@ object FormPrincipal: TFormPrincipal
     object ToolButton1: TToolButton
       Left = 1
       Top = 2
-      Action = ActionNewBox
+      Action = ActionRun
       ParentShowHint = False
       ShowHint = True
     end
     object ToolButton2: TToolButton
       Left = 37
       Top = 2
-      Action = ActionCloseBox
+      Action = ActionCloseOF
       ParentShowHint = False
       ShowHint = True
     end
     object ToolButton3: TToolButton
       Left = 73
       Top = 2
-      Action = ActionPrintKB
+      Action = ActionSearchDFT
       ParentShowHint = False
       ShowHint = True
     end
@@ -81,7 +81,7 @@ object FormPrincipal: TFormPrincipal
     object ToolButton8: TToolButton
       Left = 222
       Top = 2
-      Action = ActionPrintPallet
+      Action = ActionSearchDMS
       ParentShowHint = False
       ShowHint = True
     end
@@ -127,32 +127,32 @@ object FormPrincipal: TFormPrincipal
       Left = 24
       Height = 24
       Top = 24
-      Width = 201
-      Caption = 'Orden de fabricación:'
+      Width = 246
+      Caption = 'Orden fabricación Activas:'
       ParentColor = False
     end
     object Label2: TLabel
-      Left = 360
+      Left = 340
       Height = 24
       Top = 24
-      Width = 74
-      Caption = 'Modelo:'
+      Width = 141
+      Caption = 'Total Op. DMS:'
       ParentColor = False
     end
     object Label3: TLabel
-      Left = 624
+      Left = 553
       Height = 24
       Top = 24
-      Width = 49
-      Caption = 'Caja:'
+      Width = 159
+      Caption = 'Total Magazzines'
       ParentColor = False
     end
-    object LabelOF: TLabel
-      Left = 240
+    object LabelOFActives: TLabel
+      Left = 278
       Height = 24
       Top = 24
-      Width = 101
-      Caption = 'OF402351'
+      Width = 36
+      Caption = '002'
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlue
       Font.Height = -21
@@ -163,12 +163,12 @@ object FormPrincipal: TFormPrincipal
       ParentColor = False
       ParentFont = False
     end
-    object LabelIDBOX: TLabel
-      Left = 688
+    object LabelCountMag: TLabel
+      Left = 721
       Height = 24
       Top = 24
-      Width = 149
-      Caption = 'OF4023510001'
+      Width = 48
+      Caption = '0001'
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlue
       Font.Height = -21
@@ -179,12 +179,12 @@ object FormPrincipal: TFormPrincipal
       ParentColor = False
       ParentFont = False
     end
-    object LabelModel: TLabel
-      Left = 442
+    object LabelCountOpDMS: TLabel
+      Left = 486
       Height = 24
       Top = 24
-      Width = 157
-      Caption = '70LB7200.AWG'
+      Width = 48
+      Caption = '0001'
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlue
       Font.Height = -21
@@ -201,7 +201,7 @@ object FormPrincipal: TFormPrincipal
     Height = 264
     Top = 136
     Width = 848
-    Caption = 'Confección de la caja'
+    Caption = 'Confección de la cajas'
     ClientHeight = 246
     ClientWidth = 844
     TabOrder = 2
@@ -214,24 +214,24 @@ object FormPrincipal: TFormPrincipal
       Color = clWindow
       Columns = <      
         item
-          Title.Caption = 'Fecha'
-          Width = 120
-          FieldName = 'BPRdate'
-        end      
-        item
-          Title.Caption = 'Hora'
-          Width = 100
-          FieldName = 'BPRhour'
-        end      
-        item
-          Title.Caption = 'Numero serie'
-          Width = 200
-          FieldName = 'OfSerial'
+          Title.Caption = 'Orden Fabricación'
+          Width = 180
+          FieldName = 'strOf'
         end      
         item
           Title.Caption = 'Modelo'
           Width = 180
-          FieldName = 'ModelName'
+          FieldName = 'strModel'
+        end      
+        item
+          Title.Caption = 'Mag. Actual'
+          Width = 120
+          FieldName = 'ActualMagazzine'
+        end      
+        item
+          Title.Caption = 'Cnt. Actual'
+          Width = 120
+          FieldName = 'ActualCount'
         end>
       DataSource = DataSourcePrincipal
       DefaultRowHeight = 25
@@ -243,82 +243,12 @@ object FormPrincipal: TFormPrincipal
       TitleFont.Pitch = fpVariable
       TitleFont.Quality = fqDraft
     end
-    object Label7: TLabel
-      Left = 668
-      Height = 24
-      Top = 16
-      Width = 83
-      Caption = 'Cantidad'
-      ParentColor = False
-    end
-    object LabelQty: TLabel
-      Left = 764
-      Height = 24
-      Top = 16
-      Width = 54
-      Caption = '01/17'
-      Font.CharSet = ANSI_CHARSET
-      Font.Color = clBlue
-      Font.Height = -21
-      Font.Name = 'Arial'
-      Font.Pitch = fpVariable
-      Font.Quality = fqDraft
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-    end
-    object BitBtnAddBox: TBitBtn
+    object BitBtnCloseOF: TBitBtn
       Left = 668
       Height = 38
-      Top = 48
+      Top = 64
       Width = 153
-      Action = ActionNewBox
-      Glyph.Data = {
-        36040000424D3604000000000000360000002800000010000000100000000100
-        2000000000000004000064000000640000000000000000000000000000000000
-        000000010200010203000000000001020200000000001E364604285675050B1B
-        2500010203000000000000000000010102000001010000000000000000000000
-        00000000000000000000010305000B1E2B02143E5E05336D9712397FB01C3275
-        A512265C820A15334A03060F1600000000000000000000000000000000000001
-        010008172100153A56051F5A860D246AA00F20679E182F6A974D2D6B984B2A6C
-        9C282D73A61A2E76AB13296C9D0E1E4F7308050C120100000000000000001638
-        5107286FA615246BA118206498261D5C8D5D1B5889B62F6A96F82C6B98ED2563
-        91C12563908C266491582868972F2D76AB160A1B270300000000000000001942
-        611421679D381C59896F1D5B8CC71F5F91FD1E6194FF34729FFF3578A6FF2D70
-        A0FF2A6B9CFF276897FD266592DF276694B2081621210000000000000000153B
-        58531F6397DD1E5E90FE216396FF246799FE246799FC3A78A3FE3A7CA9FE3275
-        A4FC2E71A1FC2B6E9EFE296C9DFD2B70A3FF091924410000000000000000183F
-        5D93246BA1FF246597F926689AFC296B9AFF2C6E9DFF4280AAFF4388B2FF387C
-        A8FF3477A5FF3073A2FF2C6E9EFB2B70A3FF0A1A264200000000000000001C43
-        61922970A6FF2A6A99FB31729FFF4185ADFF31709AFF417EA7FF3D80ABFF387A
-        A3FF3879A2FF33749FFF2F709DFD2D71A3FF0918244000000000000000002046
-        6293377CACFF3E80A8FB488DB6FF5299C0FF498AB0FF3B779FFF2E6F9CFF4185
-        AFFF4185B0FF3F82ACFF3B7DA6FD387BA6FF1B3D52890814192B1C3747633C79
-        9FE6498FB9FF4D93BBFE5297BEFF5B9DC2FF6DAFD1FF508DAEFF4D94BDFF5199
-        C3FF498FB9FF458BB5FF4489B4FF4287B0FD4691BFFF32698ABC437EA3D04E97
-        C2FF4F94BBFD599CC1FF68A8CBFF6DAACAFF5383A0FF223F57FF2A4F6AFF4277
-        98FF508FB4FF5599BFFE5196BCFA4C92BBFF478BB4F10F1D262C274457735BA1
-        C9FF62A2C4FA68A5C5FB528CAFFC29587CFE0C3051FF0B2B49FF0B2B49FF0F35
-        55FD1C4B6FFB2E6790FE4284B0FC59A1CCFF2E52667C00000000050708085B8E
-        AAD1599EC8FF357AABFD216496FF1E5B88FF215983FE21547AFB20537AFC225D
-        88FF276897FF296794F6214D6DA9142532400304040200000001000000000F14
-        1818182C3B5122445D86336385BC38739CE9377AA7FF3578A7FE3374A3FF3069
-        90DF2141587D0E161C1D01000000000000010001010100000000000001010000
-        01010000000000000000020100000B0E0F0B17222B30243E4F691B3140530608
-        0906000000000000000000010103010202030000000000000000000000000101
-        0101010203040102030400000102000000000000000000000000000000000000
-        0001010203040101020200000000000000000000000000000000
-      }
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 1
-    end
-    object BitBtnCloseBox: TBitBtn
-      Left = 668
-      Height = 38
-      Top = 96
-      Width = 153
-      Action = ActionCloseBox
+      Action = ActionCloseOF
       Glyph.Data = {
         36040000424D3604000000000000360000002800000010000000100000000100
         2000000000000004000064000000640000000000000000000000000000000000
@@ -357,15 +287,15 @@ object FormPrincipal: TFormPrincipal
       }
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 2
+      TabOrder = 1
     end
-    object BitBtnPrintKB: TBitBtn
+    object BitBtnSearchDFT: TBitBtn
       Left = 668
       Height = 38
-      Top = 144
+      Top = 112
       Width = 153
-      Action = ActionPrintKB
-      Caption = 'Imprimir KBN'
+      Action = ActionSearchDFT
+      Caption = 'Buscar DFT'
       Glyph.Data = {
         36040000424D3604000000000000360000002800000010000000100000000100
         2000000000000004000064000000640000000000000000000000FCFCFC00FCFC
@@ -404,7 +334,99 @@ object FormPrincipal: TFormPrincipal
       }
       ParentShowHint = False
       ShowHint = True
+      TabOrder = 2
+    end
+    object BitBtnRun: TBitBtn
+      Left = 668
+      Height = 38
+      Top = 16
+      Width = 153
+      Action = ActionRun
+      Glyph.Data = {
+        36040000424D3604000000000000360000002800000010000000100000000100
+        2000000000000004000064000000640000000000000000000000000000000000
+        000000010200010203000000000001020200000000001E364604285675050B1B
+        2500010203000000000000000000010102000001010000000000000000000000
+        00000000000000000000010305000B1E2B02143E5E05336D9712397FB01C3275
+        A512265C820A15334A03060F1600000000000000000000000000000000000001
+        010008172100153A56051F5A860D246AA00F20679E182F6A974D2D6B984B2A6C
+        9C282D73A61A2E76AB13296C9D0E1E4F7308050C120100000000000000001638
+        5107286FA615246BA118206498261D5C8D5D1B5889B62F6A96F82C6B98ED2563
+        91C12563908C266491582868972F2D76AB160A1B270300000000000000001942
+        611421679D381C59896F1D5B8CC71F5F91FD1E6194FF34729FFF3578A6FF2D70
+        A0FF2A6B9CFF276897FD266592DF276694B2081621210000000000000000153B
+        58531F6397DD1E5E90FE216396FF246799FE246799FC3A78A3FE3A7CA9FE3275
+        A4FC2E71A1FC2B6E9EFE296C9DFD2B70A3FF091924410000000000000000183F
+        5D93246BA1FF246597F926689AFC296B9AFF2C6E9DFF4280AAFF4388B2FF387C
+        A8FF3477A5FF3073A2FF2C6E9EFB2B70A3FF0A1A264200000000000000001C43
+        61922970A6FF2A6A99FB31729FFF4185ADFF31709AFF417EA7FF3D80ABFF387A
+        A3FF3879A2FF33749FFF2F709DFD2D71A3FF0918244000000000000000002046
+        6293377CACFF3E80A8FB488DB6FF5299C0FF498AB0FF3B779FFF2E6F9CFF4185
+        AFFF4185B0FF3F82ACFF3B7DA6FD387BA6FF1B3D52890814192B1C3747633C79
+        9FE6498FB9FF4D93BBFE5297BEFF5B9DC2FF6DAFD1FF508DAEFF4D94BDFF5199
+        C3FF498FB9FF458BB5FF4489B4FF4287B0FD4691BFFF32698ABC437EA3D04E97
+        C2FF4F94BBFD599CC1FF68A8CBFF6DAACAFF5383A0FF223F57FF2A4F6AFF4277
+        98FF508FB4FF5599BFFE5196BCFA4C92BBFF478BB4F10F1D262C274457735BA1
+        C9FF62A2C4FA68A5C5FB528CAFFC29587CFE0C3051FF0B2B49FF0B2B49FF0F35
+        55FD1C4B6FFB2E6790FE4284B0FC59A1CCFF2E52667C00000000050708085B8E
+        AAD1599EC8FF357AABFD216496FF1E5B88FF215983FE21547AFB20537AFC225D
+        88FF276897FF296794F6214D6DA9142532400304040200000001000000000F14
+        1818182C3B5122445D86336385BC38739CE9377AA7FF3578A7FE3374A3FF3069
+        90DF2141587D0E161C1D01000000000000010001010100000000000001010000
+        01010000000000000000020100000B0E0F0B17222B30243E4F691B3140530608
+        0906000000000000000000010103010202030000000000000000000000000101
+        0101010203040102030400000102000000000000000000000000000000000000
+        0001010203040101020200000000000000000000000000000000
+      }
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 3
+    end
+    object BitBtnSearchDNS: TBitBtn
+      Left = 668
+      Height = 38
+      Top = 160
+      Width = 153
+      Action = ActionSearchDMS
+      Glyph.Data = {
+        36040000424D3604000000000000360000002800000010000000100000000100
+        2000000000000004000064000000640000000000000000000000000000000000
+        000002020204000000006A686884BDBCBCD8AEADADC8B1B0B0CBB1B0B0CBAFAE
+        AEC8BCBBBBD77170708900000000020202030000000000000000010101010303
+        0304010101000000001EAAA9A9E4FFFFFFFFFCFCFCFDFFFFFFFFFFFFFFFFFCFC
+        FCFEFFFFFFFFB4B3B3EA04030428000000000303030501010101000000010101
+        01030000000010101143B2B1B1FFFFFFFFFBF3F3F3FDF5F5F5FDF5F5F5FDF3F3
+        F3FDFEFEFEFAB8B7B7FF16161651000000000101010301010101090909117171
+        71A39B9B9BDB525252E0B1AFB0FFFFFFFFFFFAFAFAFFFDFDFDFFFDFDFDFFFAFA
+        FAFFFFFFFFFFB6B5B6FF515151E29A9A9ADB747474A70B0B0B146060608EEEEE
+        EEFFCECECEFC414142FF908F8EFFD2D2D1FFC7C7C6FFC9C9C8FFC9C9C8FFC7C7
+        C6FFD2D2D1FF949393FF403F40FFC9C9CAFCF0F0F0FF66666697838383B2EAEA
+        EAFFDBDBDBFAB5B5B6FEB3B5B9FFB3B5B9FFB3B5B9FFB3B5B9FFB3B5B9FFB3B5
+        B9FFB3B5B9FFB3B6B9FFB4B5B6FEDADADAFBEBEBEBFF858585BA818181B2F1F1
+        F0FFEBECEDFCEAE8E4FFCDC2B1FFCEC3B1FFCEC3B1FFCEC3B1FFCEC3B1FFCEC3
+        B1FFCEC3B1FFCDC1B0FFE8E5E1FFECECEDFDF2F1F1FF838383BA838383B3F7F6
+        F5FFF3F5F9FCB3A080FFA58442FFAE8E51FFAC8C4EFFAC8C4EFFAC8C4EFFAC8C
+        4EFFAD8E50FFA78544FFAF9A76FFF2F3F7FDF8F8F7FF868686BB838383B2FCFC
+        FBFFF5F6FAFCBCA982FFDDC985FFE1CE8FFFE0CD8DFFE0CD8DFFE0CD8DFFE0CD
+        8DFFE0CD8EFFDFCB88FFBAA77CFFF2F3F5FDFDFDFDFF868686BA898989B2FFFF
+        FEFFF5F6FAFABEAD88FDE2D28CFFE6D897FFE5D795FFE5D795FFE5D795FFE5D7
+        95FFE5D796FFE4D58FFFBDAB82FDF3F3F6FBFFFFFFFF8C8C8CBA6565658EFFFF
+        FFFFFFFFFFFCC0AC84FFD0B671FFD1BA79FFD1B977FFD1B977FFD1B977FFD1B9
+        77FFD1B978FFD2B873FFBEA87DFFFEFFFFFCFFFFFFFF6C6C6C96090909117675
+        75A2B2B4B7DD847358D8997C4BFAA98F60FFA78C5DFFA78C5DFFA78C5DFFA78C
+        5DFFA98F60FF9B7E4DFB826F51D8B2B3B5DC797878A60A0A0A14000000010000
+        00010000000000000005ADACADDDFCFCFCFFEFEFEFFDF1F1F1FFF1F1F1FFEFEE
+        EEFDFCFCFCFFB0B0B0E300000009000000000000000100000001010101010303
+        03030101010000000004B3B2B2DCFFFFFFFFF6F6F6FCF9F9F9FEF9F9F9FEF6F6
+        F6FCFFFFFFFFB6B5B5E200000008010101000303030301010101000000000000
+        00010000000000000006B7B6B6DEFFFFFFFFFCFCFCFDFFFFFFFFFFFFFFFFFCFC
+        FCFDFFFFFFFFBBBABAE300000009000000000000000100000000000000000000
+        000000000000000000008C8B8BC0CAC9C9F8BFBEBEECC1C0C0EEC1C0C0EEBFBE
+        BEECCAC9C9F7908F8FC600000002000000000000000100000000
+      }
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
     end
   end
   object GroupBoxQuery: TGroupBox
@@ -431,6 +453,7 @@ object FormPrincipal: TFormPrincipal
       Top = 67
       Width = 304
       Enabled = False
+      MaxLength = 11
       OnKeyPress = EditPCBKeyPress
       ParentShowHint = False
       ShowHint = True
@@ -655,7 +678,7 @@ object FormPrincipal: TFormPrincipal
     object MenuItem2: TMenuItem
       Caption = '&Edición'
       object MenuItem8: TMenuItem
-        Action = ActionNewBox
+        Action = ActionRun
         Bitmap.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
           2000000000000004000064000000640000000000000000000000000000000000
@@ -694,7 +717,7 @@ object FormPrincipal: TFormPrincipal
         }
       end
       object MenuItem9: TMenuItem
-        Action = ActionCloseBox
+        Action = ActionCloseOF
         Bitmap.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
           2000000000000004000064000000640000000000000000000000000000000000
@@ -733,7 +756,7 @@ object FormPrincipal: TFormPrincipal
         }
       end
       object MenuItem10: TMenuItem
-        Action = ActionPrintKB
+        Action = ActionSearchDFT
         Bitmap.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
           2000000000000004000064000000640000000000000000000000FCFCFC00FCFC
@@ -772,7 +795,7 @@ object FormPrincipal: TFormPrincipal
         }
       end
       object MenuItem14: TMenuItem
-        Action = ActionPrintPallet
+        Action = ActionSearchDMS
         Bitmap.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
           2000000000000004000064000000640000000000000000000000000000000000
@@ -3675,24 +3698,23 @@ object FormPrincipal: TFormPrincipal
     Images = ImageListPrincipal16
     left = 309
     top = 191
-    object ActionNewBox: TAction
-      Caption = 'Nueva caja'
-      Hint = 'Permite iniciar un nuevo pallet'
+    object ActionRun: TAction
+      Caption = 'Comenzar'
+      Hint = 'Permite iniciar el control de las placas'
       ImageIndex = 1
-      OnExecute = ActionNewBoxExecute
+      OnExecute = ActionRunExecute
     end
-    object ActionCloseBox: TAction
-      Caption = 'Cerrar caja'
-      Enabled = False
-      Hint = 'Permite cerrar el pallet'
+    object ActionCloseOF: TAction
+      Caption = 'Cerrar OF'
+      Hint = 'Permite cerrar las ordenes de fabricación'
       ImageIndex = 2
-      OnExecute = ActionCloseBoxExecute
+      OnExecute = ActionCloseOFExecute
     end
-    object ActionPrintKB: TAction
-      Caption = 'KANBAM'
-      Hint = 'Permite imprimir la identificación del pallet'
+    object ActionSearchDFT: TAction
+      Caption = 'Buscar en resultados DFT'
+      Hint = 'Permite buscar una placa en resultados DFT'
       ImageIndex = 3
-      OnExecute = ActionPrintKBExecute
+      OnExecute = ActionSearchDFTExecute
     end
     object ActionChkPCB: TAction
       Enabled = False
@@ -3718,9 +3740,9 @@ object FormPrincipal: TFormPrincipal
       ImageIndex = 12
       OnExecute = ActionOFLinkExecute
     end
-    object ActionPrintPallet: TAction
-      Caption = 'Imprimir Pallet'
-      Hint = 'Permite imprimir registros de un pallet'
+    object ActionSearchDMS: TAction
+      Caption = 'Buscar DMS'
+      Hint = 'Permite buscar en los registros DMS'
       ImageIndex = 4
     end
     object ActionConfig: TAction

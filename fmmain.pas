@@ -5,33 +5,34 @@ unit fmmain;
 interface
 
 uses
-  Classes, SysUtils, db, FileUtil, LR_Desgn, LR_View, LazHelpCHM, ZDataset,
+  Classes, SysUtils, db, FileUtil, LR_Desgn, LazHelpCHM, ZDataset,
   ZConnection, Forms, Controls, Graphics, Dialogs, Menus, ComCtrls, StdCtrls,
   DBGrids, Buttons, ExtCtrls, ActnList, LazHelpHTML, fmOF, fmModels, fmlinks,
-  fmoptions, fmKanbam, fmabout, fmnewbox, fmclosebox, HelpIntfs, customconfig,
-  fmIntro, LResources, LR_Class;
+  fmoptions, fmKanbam, fmabout, fmclosebox, HelpIntfs, customconfig, fmIntro,
+  LResources, LR_Class;
 
 type
 
   { TFormPrincipal }
 
   TFormPrincipal = class(TForm)
-    ActionPrintPallet: TAction;
+    ActionSearchDMS: TAction;
     ActionAbout: TAction;
     ActionHelp: TAction;
     ActionExit: TAction;
     ActionConfig: TAction;
     ActionOFLink: TAction;
-    ActionNewBox: TAction;
-    ActionCloseBox: TAction;
-    ActionPrintKB: TAction;
+    ActionRun: TAction;
+    ActionCloseOF: TAction;
+    ActionSearchDFT: TAction;
     ActionChkPCB: TAction;
     ActionEditOF: TAction;
     ActionEditModels: TAction;
     ActionListPrincipal: TActionList;
-    BitBtnAddBox: TBitBtn;
-    BitBtnCloseBox: TBitBtn;
-    BitBtnPrintKB: TBitBtn;
+    BitBtnRun: TBitBtn;
+    BitBtnCloseOF: TBitBtn;
+    BitBtnSearchDFT: TBitBtn;
+    BitBtnSearchDNS: TBitBtn;
     DataSourcePrincipal: TDataSource;
     DBGridPrincipal: TDBGrid;
     EditPCB: TEdit;
@@ -47,11 +48,9 @@ type
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
-    LabelOF: TLabel;
-    LabelModel: TLabel;
-    LabelIDBOX: TLabel;
-    Label7: TLabel;
-    LabelQty: TLabel;
+    LabelOFActives: TLabel;
+    LabelCountOpDMS: TLabel;
+    LabelCountMag: TLabel;
     Label9: TLabel;
     MainMenuPrincipal: TMainMenu;
     MenuItem1: TMenuItem;
@@ -88,15 +87,15 @@ type
     ZQueryPrincipal: TZQuery;
     procedure ActionAboutExecute(Sender: TObject);
     procedure ActionChkPCBExecute(Sender: TObject);
-    procedure ActionCloseBoxExecute(Sender: TObject);
+    procedure ActionCloseOFExecute(Sender: TObject);
     procedure ActionConfigExecute(Sender: TObject);
     procedure ActionEditModelsExecute(Sender: TObject);
     procedure ActionEditOFExecute(Sender: TObject);
     procedure ActionExitExecute(Sender: TObject);
     procedure ActionHelpExecute(Sender: TObject);
-    procedure ActionNewBoxExecute(Sender: TObject);
+    procedure ActionRunExecute(Sender: TObject);
     procedure ActionOFLinkExecute(Sender: TObject);
-    procedure ActionPrintKBExecute(Sender: TObject);
+    procedure ActionSearchDFTExecute(Sender: TObject);
     procedure EditPCBKeyPress(Sender: TObject; var Key: char);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -107,15 +106,15 @@ type
     FI:TFormIntro;
     CCF:TCustomConfig;
     IsInExecution:boolean;
-    TotalCount:integer;
-    CurrentCount:integer;
     OrderActive:boolean;
+    MagazzineCount:integer;
+    CurrentCount:integer;
 
     procedure LoadFormOptions(MdResult:integer);
     procedure RecordDFTResults(FilePath:string);
-    procedure BackupAllRecords;
     procedure ExtractResources;
     procedure RegisterWrongPCB;
+    function CustomFormatNumbers(Value:integer;TotalLenghtofValue:integer):string;
   public
     { public declarations }
   end;
@@ -160,36 +159,57 @@ begin
   ShowHelpOrErrorForKeyword('','Help\index.html');
 end;
 
-procedure TFormPrincipal.ActionNewBoxExecute(Sender: TObject);
-var
-  strpos:string;
+procedure TFormPrincipal.ActionRunExecute(Sender: TObject);
+const
+  Run:boolean=false;
+
 begin
-  FormNewBox.LoadConfig(CCF);
-  if FormNewBox.ShowModal=mrOK then
+  if Run=false then
   begin
-     LabelOF.Caption:='OF'+FormNewBox.OFb;
-     LabelModel.Caption:=FormNewBox.Model;
-     TotalCount:=FormNewBox.Qty;
-     strpos:=IntToStr(TotalCount);
-     LabelQty.Caption:='00/'+copy('00',0,2-Length(strPos))+strPos;
-     strPos:=IntToStr(FormNewBox.Nbox);;
-     LabelIDBOX.Caption:='OF'+FormNewBox.OFb+copy('0000',0,4-Length(strPos))+strPos;
-     ActionCloseBox.Enabled:=true;
-     ActionNewBox.Enabled:=false;
-     ActionChkPCB.Enabled:=true;
-     EditPCB.Enabled:=true;
-     ImageResult.Visible:=true;
+     try
+        ZConnectionPrincipal.Connect;
+        ZQueryPrincipal.Active:=true;
+        LabelOFActives.Caption:=CustomFormatNumbers(ZQueryPrincipal.RecordCount,4);
+        LabelCountOpDMS.Caption:=CustomFormatNumbers(0,4);
+        LabelCountMag.Caption:=CustomFormatNumbers(0,4);
 
+        ZQueryPrincipal.Close;
+        ZQueryPrincipal.SQL.Text:='SELECT * FROM tlinkofmod WHERE Status > 0';
+        ZQueryPrincipal.Open;
+        if ZQueryPrincipal.RecordCount >0 then
+        begin
+           ActionChkPCB.Enabled:=true;
+           EditPCB.Enabled:=true;
+        end
+        else
+        begin
+           ActionChkPCB.Enabled:=false;
+           EditPCB.Enabled:=false;
+        end;
+
+        IsInExecution:=true;
+        OrderActive:=true;
+
+        MagazzineCount:=0;
+        CurrentCount:=0;
+        ActionRun.Caption:='Detener';
+        Run:=true;
+     except
+           MessageDlg('Advertencia','No se encontró una conexion SQL disponible, funcionalidad limitada!',
+           mtWarning,[mbOK],0);
+           ActionRun.Caption:='Comenzar';
+     end;
+  end
+  else
+  begin
+     IsInExecution:=false;
+     OrderActive:=false;
      ZQueryPrincipal.Close;
-     ZQueryPrincipal.SQL.Text:='TRUNCATE TABLE controlpcb';
-     ZQueryPrincipal.ExecSQL;
-     ZQueryPrincipal.SQL.Clear;
-     ZQueryPrincipal.SQL.Text:='SELECT * FROM Controlpcb';
-     ZQueryPrincipal.Open;
-     CurrentCount:=0;
-
-     IsInExecution:=true;
-     OrderActive:=true;//timer 's independent semaphore
+     ZConnectionPrincipal.Disconnect;
+     ActionRun.Caption:='Comenzar';
+     ActionChkPCB.Enabled:=false;
+     EditPCB.Enabled:=false;
+     Run:=false;
   end;
 end;
 
@@ -214,7 +234,7 @@ begin
   end;
 end;
 
-procedure TFormPrincipal.ActionPrintKBExecute(Sender: TObject);
+procedure TFormPrincipal.ActionSearchDFTExecute(Sender: TObject);
 begin
   FormKanbam.ShowModal;
 end;
@@ -239,7 +259,7 @@ begin
   If OrderActive then
   Begin;
       CanClose := not OrderActive;
-      MessageDlg('Antes de Cerrar la aplicación debe terminar de completar la Caja.', mtinformation, [mbOK],0);
+      MessageDlg('Debe detener la aplicación antes de cerrarla.', mtinformation, [mbOK],0);
   end;
 end;
 
@@ -290,10 +310,9 @@ begin
    TimerMain.Enabled:=true;
    IsInExecution:=false;
    ImageResult.Visible:=false;
-   LabelOF.Caption:='';
-   LabelModel.Caption:='';
-   LabelIDBOX.Caption:='';
-   LabelQty.Caption:='  /  ';
+   LabelOFActives.Caption:='';
+   LabelCountOpDMS.Caption:='';
+   LabelCountMag.Caption:='';
 
    ZConnectionPrincipal.HostName:=CCF.ConfigSQl.HIP;
    ZConnectionPrincipal.Port:=StrToInt(CCF.ConfigSQl.PConecction);
@@ -303,16 +322,9 @@ begin
    ZConnectionPrincipal.Password:=CCF.ConfigSQl.Pass;
    ZQueryPrincipal.Connection:=ZConnectionPrincipal;
    DataSourcePrincipal.DataSet:=ZQueryPrincipal;
-   ZQueryPrincipal.SQL.Text:='SELECT * FROM Controlpcb';
+   ZQueryPrincipal.SQL.Text:='SELECT * FROM tlinkofmod WHERE Status=1';
    ExtractResources;
    OrderActive:=false;
-   try
-     ZConnectionPrincipal.Connect;
-     ZQueryPrincipal.Active:=true;
-   except
-     MessageDlg('Advertencia','No se encontró una conexion SQL disponible, funcionalidad limitada!',
-     mtWarning,[mbOK],0);
-   end;
 end;
 
 procedure TFormPrincipal.TimerMainTimer(Sender: TObject);
@@ -395,7 +407,7 @@ procedure TFormPrincipal.ActionChkPCBExecute(Sender: TObject);
 var
   ZQueryLoadPCBinPallet:TZQuery;
   ZConnectionLoadPCBinPallet:TZConnection;
-  strCount:string;
+  CurCnt:integer;
 begin
   self.IsInExecution:=false;
   ZConnectionLoadPCBinPallet:=TZConnection.Create(nil);
@@ -408,7 +420,7 @@ begin
   ZConnectionLoadPCBinPallet.User:=CCF.ConfigSQl.User;
   ZConnectionLoadPCBinPallet.Password:=CCF.ConfigSQl.Pass;
   ZQueryLoadPCBinPallet.Connection:=ZConnectionLoadPCBinPallet;
-  ZQueryLoadPCBinPallet.SQL.Text:='SELECT * FROM dftresults WHERE OfSerie LIKE '''+
+  ZQueryLoadPCBinPallet.SQL.Text:='SELECT * FROM tdftresults WHERE OfSerie LIKE '''+
   EditPCB.Text +'''';
   ZConnectionLoadPCBinPallet.Connect;
   ZQueryLoadPCBinPallet.Open;
@@ -418,39 +430,80 @@ begin
      if ZQueryLoadPCBinPallet.FieldByName('Result').AsString='OK' then
      begin
        ZQueryPrincipal.Close;
-       ZQueryPrincipal.SQL.Text:='SELECT * FROM controlpcb WHERE OfSerial LIKE '''+
+       ZQueryPrincipal.SQL.Text:='SELECT * FROM tdms WHERE OfSerial LIKE '''+
        EditPCB.Text+'''';
        ZQueryPrincipal.Open;
        if ZQueryPrincipal.RecordCount = 0 then
        begin
-            ImageResult.Picture.LoadFromLazarusResource('OK');
-            ImageResult.Visible:=true;
-            ZQueryPrincipal.Append;
-            ZQueryPrincipal.FieldByName('BPRdate').AsString:=DateToStr(date);
-            ZQueryPrincipal.FieldByName('BPRhour').AsString:=TimeToStr(now);
-            ZQueryPrincipal.FieldByName('OfSerial').AsString:=EditPCB.Caption;
-            ZQueryPrincipal.FieldByName('ModelName').AsString:=LabelModel.Caption;
-            ZQueryPrincipal.CommitUpdates;
-            CurrentCount:=CurrentCount+1;
-            strCount:=IntToStr(CurrentCount);
-            LabelQty.Caption:=Copy('00',0,2-Length(strCount))+strCount+Copy(LabelQty.Caption,3,5);
-            if CurrentCount = TotalCount then
+            ZQueryPrincipal.Close;
+            ZQueryPrincipal.SQL.Text:='SELECT * FROM tlinkofmod WHERE Status > 0 AND strOf LIKE '''+
+            Copy(EditPCB.Text,0,6)+'''';
+            ZQueryPrincipal.Open;
+            if ZQueryPrincipal.RecordCount = 1 then
             begin
-                 EditPCB.Enabled:=false;
-                 ActionChkPCB.Enabled:=false;
-                 ActionCloseBoxExecute(self);
-            end;
+               CurrentCount:=CurrentCount+1;
+               LabelCountOpDMS.Caption:=CustomFormatNumbers(CurrentCount,4);
+               LabelCountOpDMS.Caption:=CustomFormatNumbers(CurrentCount,4);
 
+               ZQueryPrincipal.Edit;
+               ZQueryPrincipal.FieldByName('ActualCount').AsInteger:=ZQueryPrincipal.FieldByName('ActualCount').AsInteger+1;
+               if ((ZQueryPrincipal.FieldByName('ActualCount').AsInteger mod ZQueryPrincipal.FieldByName('Nbox').AsInteger)=0)
+               then begin
+                ZQueryPrincipal.FieldByName('ActualMagazzine').AsInteger:=ZQueryPrincipal.FieldByName('ActualMagazzine').AsInteger+1;
+                MagazzineCount:=MagazzineCount+1;
+              end;
+              ZQueryPrincipal.CommitUpdates;
+              CurCnt:=ZQueryPrincipal.FieldByName('ActualCount').AsInteger;
+
+              ZQueryPrincipal.Close;
+              ZQueryPrincipal.SQL.Text:='SELECT * FROM tdms WHERE OfSerial LIKE '''+ EditPCB.Text+'''';
+              ZQueryPrincipal.Open;
+              ZQueryPrincipal.Append;
+              ZQueryPrincipal.FieldByName('DMSdate').AsString:=DateToStr(date);
+              ZQueryPrincipal.FieldByName('DMShour').AsString:=TimeToStr(now);
+              ZQueryPrincipal.FieldByName('OfSerial').AsString:=EditPCB.Caption;
+              ZQueryPrincipal.FieldByName('ModelName').AsString:=LabelCountOpDMS.Caption;
+              ZQueryPrincipal.CommitUpdates;
+
+              ZQueryPrincipal.Close;
+              ZQueryPrincipal.SQL.Text:='SELECT * FROM tordenf WHERE OrdenF LIKE '''+Copy(EditPCB.Text,0,6)+ '''' ;
+              ZQueryPrincipal.Open;
+              if ZQueryPrincipal.FieldByName('Qty').AsInteger <= CurCnt then
+              begin
+                FormCloseOF.LoadConfig(CCF);
+                FormCloseOF.strOf:=Copy(EditPCB.Text,0,6);
+                FormCloseOF.ShowModal;
+              end;
+
+              ZQueryPrincipal.Close;
+              ZQueryPrincipal.SQL.Text:='SELECT * FROM tlinkofmod WHERE Status > 0';
+              ZQueryPrincipal.Open;
+
+              if ZQueryPrincipal.RecordCount = 0 then
+              begin
+                ActionRunExecute(nil);
+              end;
+
+              ImageResult.Picture.LoadFromLazarusResource('OK');
+              ImageResult.Visible:=true;
+            end
+            else
+            begin
+              ShowMessage('No pertenece a ninguna orden de fabricacion activa');
+              ZQueryPrincipal.Close;
+              ZQueryPrincipal.SQL.Text:='SELECT * FROM tlinkofmod WHERE Status > 0';
+              ZQueryPrincipal.Open;
+            end;
        end
        else
        begin
          ShowMessage('Esta placa ya sido ingresada');
          ImageResult.Picture.LoadFromLazarusResource('OK');
          ImageResult.Visible:=true;
+         ZQueryPrincipal.Close;
+         ZQueryPrincipal.SQL.Text:='SELECT * FROM tlinkofmod WHERE Status > 0';
+         ZQueryPrincipal.Open;
        end;
-       ZQueryPrincipal.Close;
-       ZQueryPrincipal.SQL.Text:='SELECT * FROM controlpcb';
-       ZQueryPrincipal.Open;
      end
      else
      begin
@@ -474,25 +527,22 @@ begin
   self.IsInExecution:=true;
 end;
 
-procedure TFormPrincipal.ActionCloseBoxExecute(Sender: TObject);
+procedure TFormPrincipal.ActionCloseOFExecute(Sender: TObject);
 begin
-  FormCloseBox.LoadConfig(CCF);
-  FormCloseBox.strOF:=Self.LabelIDBOX.Caption;
-  FormCloseBox.PCBQty:=Self.LabelQty.Caption;
-  if FormCloseBox.ShowModal=mrOK then
+  FormCloseOF.LoadConfig(CCF);
+  FormCloseOF.strOf:='';
+  if FormCloseOF.ShowModal=mrOK then
   begin
      IsInExecution:=false;
      OrderActive:=false;
-     ActionCloseBox.Enabled:=false;
-     ActionNewBox.Enabled:=true;
+     ActionCloseOF.Enabled:=false;
+     ActionRun.Enabled:=true;
      ActionChkPCB.Enabled:=false;
      EditPCB.Enabled:=false;
      ImageResult.Visible:=false;
-     LabelOF.Caption:='';
-     LabelModel.Caption:='';
-     LabelIDBOX.Caption:='';
-     LabelQty.Caption:='  /  ';
-     BackupAllRecords;
+     LabelOFActives.Caption:='';
+     LabelCountOpDMS.Caption:='';
+     LabelCountMag.Caption:='';
   end;
 end;
 
@@ -553,7 +603,7 @@ begin
         Componentes[k]:=StringReplace(Componentes[k],')','',[rfReplaceAll,rfIgnoreCase]);
         Componentes[k]:=StringReplace(Componentes[k],'(','',[rfReplaceAll,rfIgnoreCase]);
      end;
-     strSqlRecord:='INSERT INTO dftresults(OfSerie,Result,TestDate,TestHour,NJig,Line_id,TestTime,Chassis) VALUES ('+
+     strSqlRecord:='INSERT INTO tdftresults(OfSerie,Result,TestDate,TestHour,NJig,Line_id,TestTime,Chassis) VALUES ('+
      Componentes[0]+','+Componentes[1]+',"'+DateToStr(date)+'","'+TimeToStr(Now)+'",'+Componentes[2]+','+Componentes[3]+','+
      Componentes[4]+','+Componentes[5]+');';
      ZQueryLoadDFTRecords.SQL.Clear;
@@ -570,45 +620,6 @@ begin
   ZConnectionLoadDFTRrecords.Disconnect;
 
   self.IsInExecution:=true; // resume the timer
-end;
-
-Procedure TFormPrincipal.BackupAllRecords;
-var
-  ZConnectionBKP:TZConnection;
-  ZQueryBKP:TZQuery;
-  Counter:integer;
-begin
-  ZConnectionBKP:=TZConnection.Create(nil);
-  ZQueryBKP:=TZQuery.Create(nil);
-
-  ZConnectionBKP.HostName:=CCF.ConfigSQl.HIP;
-  ZConnectionBKP.Port:=StrToInt(CCF.ConfigSQl.PConecction);
-  ZConnectionBKP.Protocol:=CCF.ConfigSQl.Databasetype;
-  ZConnectionBKP.Database:=CCF.ConfigSQl.DBname;
-  ZConnectionBKP.User:=CCF.ConfigSQl.User;
-  ZConnectionBKP.Password:=CCF.ConfigSQl.Pass;
-  ZQueryBKP.Connection:=ZConnectionBKP;
-  ZQueryBKP.SQL.Text:='SELECT * FROM tbpr';
-  ZConnectionBKP.Connect;
-  ZQueryBKP.Open;
-  ZQueryPrincipal.Close;
-  ZQueryPrincipal.SQL.Text:='SELECT * FROM controlpcb';
-  ZQueryPrincipal.Open;
-  ZQueryPrincipal.First;
-  Counter:=1;
-  while (Counter <=ZQueryPrincipal.RecordCount) do
-  begin
-     ZQueryBKP.Append;
-     ZQueryBKP.FieldByName('BPRdate').AsString:=ZQueryPrincipal.FieldByName('BPRdate').AsString;
-     ZQueryBKP.FieldByName('BPRhour').AsString:=ZQueryPrincipal.FieldByName('BPRhour').AsString;
-     ZQueryBKP.FieldByName('OfSerial').AsString:=ZQueryPrincipal.FieldByName('OfSerial').AsString;
-     ZQueryBKP.FieldByName('ModelName').AsString:=ZQueryPrincipal.FieldByName('ModelName').AsString;
-     ZQueryBKP.CommitUpdates;
-     Counter:=Counter+1;
-     ZQueryPrincipal.Next;
-  end;
-  ZQueryBKP.Close;
-  ZConnectionBKP.Disconnect;
 end;
 
 procedure TFormPrincipal.ExtractResources;
@@ -641,19 +652,35 @@ begin
   ZConnectionLoadWrongPCB.User:=CCF.ConfigSQl.User;
   ZConnectionLoadWrongPCB.Password:=CCF.ConfigSQl.Pass;
   ZQueryLoadWrongPCB.Connection:=ZConnectionLoadWrongPCB;
-  ZQueryLoadWrongPCB.SQL.Text:='SELECT * FROM wrongpcb';
+  ZQueryLoadWrongPCB.SQL.Text:='SELECT * FROM twrongpcb';
   ZConnectionLoadWrongPCB.Connect;
   ZQueryLoadWrongPCB.Open;
   ZQueryLoadWrongPCB.Append;
 
-  ZQueryLoadWrongPCB.FieldByName('BPRdate').AsString:=DateToStr(Date);
-  ZQueryLoadWrongPCB.FieldByName('BPRhour').AsString:=TimeToStr(Now);
+  ZQueryLoadWrongPCB.FieldByName('WRdate').AsString:=DateToStr(Date);
+  ZQueryLoadWrongPCB.FieldByName('WRhour').AsString:=TimeToStr(Now);
   ZQueryLoadWrongPCB.FieldByName('OfSerial').AsString:=EditPCB.Text;
-  ZQueryLoadWrongPCB.FieldByName('ModelName').AsString:=LabelModel.Caption;
+  ZQueryLoadWrongPCB.FieldByName('ModelName').AsString:=LabelCountOpDMS.Caption;
 
   ZQueryLoadWrongPCB.CommitUpdates;
   ZQueryLoadWrongPCB.Close;
   ZConnectionLoadWrongPCB.Disconnect;
+end;
+
+function TFormPrincipal.CustomFormatNumbers(Value:integer;TotalLenghtofValue:integer):string;
+var
+  StrResult:string;
+  i:integer;
+  StrValue:string;
+begin
+  StrResult:='';
+  for i:=1 to TotalLenghtofValue do
+  begin
+     StrResult:=StrResult+'0';
+  end;
+  StrValue:=IntToStr(Value);
+  StrResult:=Copy(StrResult,0,TotalLenghtofValue-Length(StrValue))+StrValue;
+  CustomFormatNumbers:=StrResult;
 end;
 
 initialization

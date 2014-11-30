@@ -1,12 +1,12 @@
 object FormOF: TFormOF
-  Left = 759
+  Left = 642
   Height = 292
-  Top = 317
-  Width = 460
+  Top = 272
+  Width = 479
   BorderStyle = bsDialog
-  Caption = 'Ordenes de fabricación'
+  Caption = 'Ordenes de fabricación habilitadas'
   ClientHeight = 292
-  ClientWidth = 460
+  ClientWidth = 479
   Font.CharSet = ANSI_CHARSET
   Font.Height = -21
   Font.Name = 'Arial'
@@ -20,11 +20,11 @@ object FormOF: TFormOF
     Left = 8
     Height = 272
     Top = 8
-    Width = 258
+    Width = 280
     BevelInner = bvRaised
     BevelOuter = bvLowered
     ClientHeight = 272
-    ClientWidth = 258
+    ClientWidth = 280
     TabOrder = 0
     object Label1: TLabel
       Left = 8
@@ -38,7 +38,7 @@ object FormOF: TFormOF
       Left = 8
       Height = 32
       Top = 32
-      Width = 240
+      Width = 264
       CharCase = ecUppercase
       OnKeyUp = EditSearchOFKeyUp
       TabOrder = 0
@@ -47,14 +47,19 @@ object FormOF: TFormOF
       Left = 8
       Height = 188
       Top = 72
-      Width = 240
+      Width = 264
       AutoEdit = False
       Color = clWindow
       Columns = <      
         item
           Title.Caption = 'OrdenF'
-          Width = 204
+          Width = 140
           FieldName = 'OrdenF'
+        end      
+        item
+          Title.Caption = 'Cantidad'
+          Width = 90
+          FieldName = 'Qty'
         end>
       DataSource = DataSourceOF
       TabOrder = 1
@@ -67,7 +72,7 @@ object FormOF: TFormOF
     end
   end
   object PanelOF2: TPanel
-    Left = 280
+    Left = 300
     Height = 272
     Top = 8
     Width = 170
@@ -661,6 +666,7 @@ object FormOF: TFormOF
     Properties.Strings = (
       'AutoEncodeStrings='
     )
+    TestMode = 0
     HostName = 'localhost'
     Port = 3306
     Database = 'dft'

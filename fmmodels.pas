@@ -63,7 +63,7 @@ begin
   ZQueryModels.SQL.Text:='SELECT * FROM tmodels';
   ZQueryModels.Open;
   ZQueryModels.RecNo:=Pos;
-  FormAddInsert.IsAnOF:=false;
+  FormAddInsert.InputType:=1;
   FormAddInsert.StrValue:=ZQueryModels.FieldByName('ModelName').AsString;
   if FormAddInsert.ShowModal=mrOK then
   begin
@@ -76,7 +76,7 @@ end;
 procedure TFormModels.BitBtnAddModelsClick(Sender: TObject);
 begin
   EditSearchModels.Text:='';
-  FormAddInsert.IsAnOF:=false;
+  FormAddInsert.InputType:=1;
   FormAddInsert.StrValue:='';
   if FormAddInsert.ShowModal=mrOK then
   begin

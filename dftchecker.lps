@@ -4,15 +4,15 @@
     <PathDelim Value="\"/>
     <Version Value="9"/>
     <BuildModes Active="Default"/>
-    <Units Count="34">
+    <Units Count="36">
       <Unit0>
         <Filename Value="dftchecker.lpr"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="dftchecker"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="6"/>
-        <CursorPos X="131" Y="25"/>
-        <UsageCount Value="94"/>
+        <TopLine Value="5"/>
+        <CursorPos X="129" Y="18"/>
+        <UsageCount Value="111"/>
       </Unit0>
       <Unit1>
         <Filename Value="fmmain.pas"/>
@@ -22,11 +22,11 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="fmmain"/>
         <IsVisibleTab Value="True"/>
-        <EditorIndex Value="0"/>
+        <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="317"/>
-        <CursorPos X="8" Y="320"/>
-        <UsageCount Value="94"/>
+        <TopLine Value="468"/>
+        <CursorPos X="37" Y="484"/>
+        <UsageCount Value="111"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -38,9 +38,9 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="fmModels"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="140"/>
-        <CursorPos X="22" Y="142"/>
-        <UsageCount Value="93"/>
+        <TopLine Value="118"/>
+        <CursorPos X="29" Y="79"/>
+        <UsageCount Value="110"/>
       </Unit2>
       <Unit3>
         <Filename Value="fmof.pas"/>
@@ -50,9 +50,9 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="fmOF"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="152"/>
-        <CursorPos X="3" Y="174"/>
-        <UsageCount Value="92"/>
+        <TopLine Value="98"/>
+        <CursorPos X="23" Y="119"/>
+        <UsageCount Value="109"/>
       </Unit3>
       <Unit4>
         <Filename Value="fmlinks.pas"/>
@@ -61,10 +61,12 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="fmlinks"/>
+        <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="126"/>
-        <CursorPos X="1" Y="131"/>
-        <UsageCount Value="92"/>
+        <TopLine Value="78"/>
+        <CursorPos X="122" Y="90"/>
+        <UsageCount Value="109"/>
+        <Loaded Value="True"/>
       </Unit4>
       <Unit5>
         <Filename Value="fmoptions.pas"/>
@@ -73,10 +75,12 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="fmoptions"/>
+        <EditorIndex Value="4"/>
         <WindowIndex Value="0"/>
         <TopLine Value="167"/>
         <CursorPos X="1" Y="187"/>
-        <UsageCount Value="92"/>
+        <UsageCount Value="109"/>
+        <Loaded Value="True"/>
       </Unit5>
       <Unit6>
         <Filename Value="fmabout.pas"/>
@@ -88,36 +92,24 @@
         <WindowIndex Value="0"/>
         <TopLine Value="15"/>
         <CursorPos X="9" Y="40"/>
-        <UsageCount Value="91"/>
+        <UsageCount Value="108"/>
       </Unit6>
       <Unit7>
-        <Filename Value="fmnewbox.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="FormNewBox"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-        <UnitName Value="fmnewbox"/>
-        <WindowIndex Value="0"/>
-        <TopLine Value="56"/>
-        <CursorPos X="5" Y="103"/>
-        <UsageCount Value="91"/>
-      </Unit7>
-      <Unit8>
         <Filename Value="fmclosebox.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="FormCloseBox"/>
+        <ComponentName Value="FormCloseOF"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="fmclosebox"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="2"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="64"/>
-        <CursorPos X="34" Y="82"/>
-        <UsageCount Value="90"/>
+        <TopLine Value="108"/>
+        <CursorPos X="20" Y="127"/>
+        <UsageCount Value="107"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
-      </Unit8>
-      <Unit9>
+      </Unit7>
+      <Unit8>
         <Filename Value="fmaddinsert.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FormAddInsert"/>
@@ -125,11 +117,11 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="fmaddinsert"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="6"/>
-        <CursorPos X="3" Y="50"/>
-        <UsageCount Value="90"/>
-      </Unit9>
-      <Unit10>
+        <TopLine Value="49"/>
+        <CursorPos X="65" Y="66"/>
+        <UsageCount Value="107"/>
+      </Unit8>
+      <Unit9>
         <Filename Value="fmintro.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FormIntro"/>
@@ -139,27 +131,27 @@
         <WindowIndex Value="0"/>
         <TopLine Value="73"/>
         <CursorPos X="81" Y="87"/>
-        <UsageCount Value="90"/>
-      </Unit10>
-      <Unit11>
+        <UsageCount Value="107"/>
+      </Unit9>
+      <Unit10>
         <Filename Value="customconfig.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="customconfig"/>
         <WindowIndex Value="0"/>
         <TopLine Value="154"/>
         <CursorPos X="1" Y="163"/>
-        <UsageCount Value="90"/>
-      </Unit11>
-      <Unit12>
+        <UsageCount Value="107"/>
+      </Unit10>
+      <Unit11>
         <Filename Value="ucrypto.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ucrypto"/>
         <WindowIndex Value="0"/>
         <TopLine Value="79"/>
         <CursorPos X="1" Y="69"/>
-        <UsageCount Value="90"/>
-      </Unit12>
-      <Unit13>
+        <UsageCount Value="107"/>
+      </Unit11>
+      <Unit12>
         <Filename Value="fmkanbam.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FormKanbam"/>
@@ -168,8 +160,19 @@
         <UnitName Value="fmKanbam"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
-        <CursorPos X="122" Y="15"/>
-        <UsageCount Value="26"/>
+        <CursorPos X="129" Y="9"/>
+        <UsageCount Value="43"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="fmnewbox.pas"/>
+        <ComponentName Value="FormNewBox"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="fmnewbox"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="56"/>
+        <CursorPos X="5" Y="103"/>
+        <UsageCount Value="95"/>
       </Unit13>
       <Unit14>
         <Filename Value="C:\lazarus\lcl\propertystorage.pas"/>
@@ -177,7 +180,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="691"/>
         <CursorPos X="1" Y="697"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="10"/>
       </Unit14>
       <Unit15>
         <Filename Value="C:\lazarus\lcl\inipropstorage.pas"/>
@@ -185,15 +188,17 @@
         <WindowIndex Value="0"/>
         <TopLine Value="199"/>
         <CursorPos X="1" Y="214"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="10"/>
       </Unit15>
       <Unit16>
         <Filename Value="C:\lazarus\components\pascalscada\zeoslib\src\component\ZAbstractRODataset.pas"/>
         <UnitName Value="ZAbstractRODataset"/>
+        <EditorIndex Value="5"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="2272"/>
-        <CursorPos X="1" Y="2287"/>
-        <UsageCount Value="9"/>
+        <TopLine Value="1790"/>
+        <CursorPos X="1" Y="1802"/>
+        <UsageCount Value="13"/>
+        <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit16>
       <Unit17>
@@ -202,16 +207,18 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1173"/>
         <CursorPos X="1" Y="1187"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit17>
       <Unit18>
         <Filename Value="C:\lazarus\components\pascalscada\zeoslib\src\dbc\ZDbcMySqlUtils.pas"/>
         <UnitName Value="ZDbcMySqlUtils"/>
+        <EditorIndex Value="3"/>
         <WindowIndex Value="0"/>
         <TopLine Value="422"/>
         <CursorPos X="1" Y="445"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="13"/>
+        <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit18>
       <Unit19>
@@ -219,7 +226,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="2698"/>
         <CursorPos X="134" Y="2712"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
       </Unit19>
       <Unit20>
         <Filename Value="C:\lazarus\components\pascalscada\zeoslib\src\component\ZSqlStrings.pas"/>
@@ -227,7 +234,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="321"/>
         <CursorPos X="1" Y="395"/>
-        <UsageCount Value="15"/>
+        <UsageCount Value="14"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit20>
       <Unit21>
@@ -235,14 +242,14 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1804"/>
         <CursorPos X="1" Y="1817"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit21>
       <Unit22>
         <Filename Value="Cresources.lrs"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="17" Y="1"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit22>
       <Unit23>
         <Filename Value="C:\lazarus\components\pascalscada\zeoslib\src\component\ZAbstractConnection.pas"/>
@@ -250,7 +257,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1185"/>
         <CursorPos X="1" Y="1208"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
         <DefaultSyntaxHighlighter Value="Delphi"/>
       </Unit23>
       <Unit24>
@@ -258,7 +265,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit24>
       <Unit25>
@@ -266,7 +273,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit25>
       <Unit26>
@@ -274,7 +281,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit26>
       <Unit27>
@@ -285,7 +292,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit27>
       <Unit28>
@@ -293,7 +300,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit28>
       <Unit29>
@@ -304,7 +311,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit29>
       <Unit30>
@@ -312,14 +319,14 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1571"/>
         <CursorPos X="1" Y="1587"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit30>
       <Unit31>
         <Filename Value="C:\lazarus\lcl\interfaces\win32\win32object.inc"/>
         <WindowIndex Value="0"/>
         <TopLine Value="441"/>
         <CursorPos X="1" Y="456"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit31>
       <Unit32>
         <Filename Value="C:\lazarus\components\fortesreport\rlprinters.pas"/>
@@ -327,7 +334,7 @@
         <WindowIndex Value="0"/>
         <TopLine Value="111"/>
         <CursorPos X="10" Y="134"/>
-        <UsageCount Value="16"/>
+        <UsageCount Value="15"/>
       </Unit32>
       <Unit33>
         <Filename Value="G:\DFTChecker\customconfig.pas"/>
@@ -335,8 +342,26 @@
         <WindowIndex Value="0"/>
         <TopLine Value="1"/>
         <CursorPos X="1" Y="1"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit33>
+      <Unit34>
+        <Filename Value="C:\lazarus\components\pascalscada\zeoslib\src\component\ZAbstractDataset.pas"/>
+        <UnitName Value="ZAbstractDataset"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="655"/>
+        <CursorPos X="1" Y="673"/>
+        <UsageCount Value="10"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit34>
+      <Unit35>
+        <Filename Value="C:\lazarus\components\pascalscada\zeoslib\src\dbc\ZDbcCachedResultSet.pas"/>
+        <UnitName Value="ZDbcCachedResultSet"/>
+        <WindowIndex Value="0"/>
+        <TopLine Value="672"/>
+        <CursorPos X="1" Y="685"/>
+        <UsageCount Value="10"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit35>
     </Units>
     <General>
       <ActiveWindowIndexAtStart Value="0"/>
@@ -344,123 +369,123 @@
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="308" Column="19" TopLine="283"/>
+        <Caret Line="442" Column="1" TopLine="420"/>
       </Position1>
       <Position2>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="472" Column="19" TopLine="447"/>
+        <Caret Line="443" Column="1" TopLine="421"/>
       </Position2>
       <Position3>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="312" Column="19" TopLine="306"/>
+        <Caret Line="444" Column="1" TopLine="422"/>
       </Position3>
       <Position4>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="317" Column="24" TopLine="306"/>
+        <Caret Line="445" Column="1" TopLine="423"/>
       </Position4>
       <Position5>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="322" Column="24" TopLine="306"/>
+        <Caret Line="446" Column="1" TopLine="424"/>
       </Position5>
       <Position6>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="327" Column="24" TopLine="306"/>
+        <Caret Line="448" Column="1" TopLine="426"/>
       </Position6>
       <Position7>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="332" Column="24" TopLine="308"/>
+        <Caret Line="449" Column="1" TopLine="427"/>
       </Position7>
       <Position8>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="554" Column="32" TopLine="493"/>
+        <Caret Line="450" Column="1" TopLine="428"/>
       </Position8>
       <Position9>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="312" Column="18" TopLine="306"/>
+        <Caret Line="451" Column="1" TopLine="429"/>
       </Position9>
       <Position10>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="481" Column="15" TopLine="464"/>
+        <Caret Line="452" Column="1" TopLine="430"/>
       </Position10>
       <Position11>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="332" Column="21" TopLine="313"/>
+        <Caret Line="454" Column="1" TopLine="432"/>
       </Position11>
       <Position12>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="451" Column="1" TopLine="434"/>
+        <Caret Line="455" Column="1" TopLine="433"/>
       </Position12>
       <Position13>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="322" Column="17" TopLine="305"/>
+        <Caret Line="456" Column="1" TopLine="434"/>
       </Position13>
       <Position14>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="327" Column="24" TopLine="305"/>
+        <Caret Line="461" Column="1" TopLine="448"/>
       </Position14>
       <Position15>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="332" Column="24" TopLine="310"/>
+        <Caret Line="464" Column="1" TopLine="448"/>
       </Position15>
       <Position16>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="557" Column="1" TopLine="534"/>
+        <Caret Line="465" Column="1" TopLine="448"/>
       </Position16>
       <Position17>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="248" Column="4" TopLine="248"/>
+        <Caret Line="466" Column="1" TopLine="448"/>
       </Position17>
       <Position18>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="233" Column="34" TopLine="229"/>
+        <Caret Line="490" Column="1" TopLine="477"/>
       </Position18>
       <Position19>
-        <Filename Value="fmclosebox.pas"/>
-        <Caret Line="90" Column="3" TopLine="82"/>
+        <Filename Value="fmmain.pas"/>
+        <Caret Line="491" Column="1" TopLine="477"/>
       </Position19>
       <Position20>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="415" Column="5" TopLine="420"/>
+        <Caret Line="492" Column="1" TopLine="477"/>
       </Position20>
       <Position21>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="483" Column="14" TopLine="476"/>
+        <Caret Line="494" Column="1" TopLine="477"/>
       </Position21>
       <Position22>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="323" Column="20" TopLine="311"/>
+        <Caret Line="495" Column="1" TopLine="477"/>
       </Position22>
       <Position23>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="328" Column="24" TopLine="311"/>
+        <Caret Line="497" Column="1" TopLine="477"/>
       </Position23>
       <Position24>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="333" Column="24" TopLine="311"/>
+        <Caret Line="470" Column="64" TopLine="421"/>
       </Position24>
       <Position25>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="338" Column="24" TopLine="315"/>
+        <Caret Line="472" Column="46" TopLine="464"/>
       </Position25>
       <Position26>
-        <Filename Value="fmmain.pas"/>
-        <Caret Line="343" Column="24" TopLine="321"/>
+        <Filename Value="fmclosebox.pas"/>
+        <Caret Line="120" Column="32" TopLine="93"/>
       </Position26>
       <Position27>
-        <Filename Value="fmmain.pas"/>
-        <Caret Line="516" Column="42" TopLine="529"/>
+        <Filename Value="fmclosebox.pas"/>
+        <Caret Line="103" Column="64" TopLine="98"/>
       </Position27>
       <Position28>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="191" Column="6" TopLine="167"/>
+        <Caret Line="483" Column="45" TopLine="467"/>
       </Position28>
       <Position29>
-        <Filename Value="fmmain.pas"/>
-        <Caret Line="494" Column="23" TopLine="475"/>
+        <Filename Value="fmclosebox.pas"/>
+        <Caret Line="68" Column="122" TopLine="81"/>
       </Position29>
       <Position30>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="190" Column="6" TopLine="167"/>
+        <Caret Line="483" Column="37" TopLine="467"/>
       </Position30>
     </JumpHistory>
   </ProjectSession>

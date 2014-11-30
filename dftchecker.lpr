@@ -8,7 +8,7 @@ uses
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, fortes324forlaz, fmmain, zcomponent, fmModels, fmof, fmlinks,
-  fmoptions, fmabout, fmnewbox, fmclosebox, fmaddinsert, fmintro, customconfig,
+  fmoptions, fmabout, fmclosebox, fmaddinsert, fmintro, customconfig,
   ucrypto, lhelpcontrolpkg, fmKanbam
   { you can add units after this };
 
@@ -24,8 +24,7 @@ begin
   Application.CreateForm(TFormLinks, FormLinks);
   Application.CreateForm(TFormOptions, FormOptions);
   Application.CreateForm(TFormAbout, FormAbout);
-  Application.CreateForm(TFormNewBox, FormNewBox);
-  Application.CreateForm(TFormCloseBox, FormCloseBox);
+  Application.CreateForm(TFormCloseOF, FormCloseOF);
   Application.CreateForm(TFormAddInsert, FormAddInsert);
   Application.CreateForm(TFormKanbam, FormKanbam);
   Application.Run;

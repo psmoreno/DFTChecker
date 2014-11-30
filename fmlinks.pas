@@ -23,12 +23,14 @@ type
     DBGridLinkOF: TDBGrid;
     DBGridLinkModel: TDBGrid;
     DBGridLinkOFModel: TDBGrid;
+    EditQtyMagazzine: TEdit;
     EditLinkOF: TEdit;
     EditLinkModel: TEdit;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
+    Label5: TLabel;
     Panel1: TPanel;
     SpeedButtonOF: TSpeedButton;
     SpeedButtonModel: TSpeedButton;
@@ -68,25 +70,31 @@ begin
 end;
 
 procedure TFormLinks.BitBtnLinkClick(Sender: TObject);
+var
+  tmpQty:integer;
 begin
   if ((EditLinkOF.Text=ZQueryLinksOF.FieldByName('OrdenF').AsString)and
-  (EditLinkModel.Text=ZQueryLinksModels.FieldByName('ModelName').AsString ))then
+  (EditLinkModel.Text=ZQueryLinksModels.FieldByName('ModelName').AsString )and
+  (TryStrToInt(EditQtyMagazzine.Text,tmpQty)))then
   begin
-       // Creo el registro vinculo
-       ZQueryLinkOFModels.Append;
-       ZQueryLinkOFModels.FieldByName('NBox').AsInteger:=0;
-       ZQueryLinkOFModels.FieldByName('strOF').AsString:=ZQueryLinksOF.FieldByName('OrdenF').AsString;
-       ZQueryLinkOFModels.FieldByName('strModel').AsString:=ZQueryLinksModels.FieldByName('ModelName').AsString;
-       ZQueryLinkOFModels.FieldByName('Status').AsInteger:=1;
-       ZQueryLinkOFModels.CommitUpdates;
+       if tmpQty > 0 then
+       begin
+            // Creo el registro vinculo
+            ZQueryLinkOFModels.Append;
+            ZQueryLinkOFModels.FieldByName('NBox').AsInteger:=tmpQty;
+            ZQueryLinkOFModels.FieldByName('strOF').AsString:=ZQueryLinksOF.FieldByName('OrdenF').AsString;
+            ZQueryLinkOFModels.FieldByName('strModel').AsString:=ZQueryLinksModels.FieldByName('ModelName').AsString;
+            ZQueryLinkOFModels.FieldByName('Status').AsInteger:=1;
+            ZQueryLinkOFModels.CommitUpdates;
 
-       //Cierro esa orden para hacer vinculos
-       ZQueryLinksOF.Edit;
-       ZQueryLinksOF.FieldByName('Status').AsInteger:=0;
-       ZQueryLinksOF.CommitUpdates;
-       ZQueryLinksOF.Close;
-       ZQueryLinksOF.SQL.Text:='SELECT * FROM tordenf WHERE Status > 0';
-       ZQueryLinksOF.Open;
+            //Cierro esa orden para hacer vinculos
+            ZQueryLinksOF.Edit;
+            ZQueryLinksOF.FieldByName('Status').AsInteger:=0;
+            ZQueryLinksOF.CommitUpdates;
+            ZQueryLinksOF.Close;
+            ZQueryLinksOF.SQL.Text:='SELECT * FROM tordenf WHERE Status > 0';
+            ZQueryLinksOF.Open;
+       end;
   end;
 end;
 
