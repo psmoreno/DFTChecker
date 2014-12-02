@@ -647,7 +647,6 @@ object FormModels: TFormModels
     Properties.Strings = (
       'AutoEncodeStrings='
     )
-    TestMode = 0
     Port = 0
     left = 96
     top = 128

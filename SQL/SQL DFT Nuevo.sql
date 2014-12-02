@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-11-2014 a las 16:29:27
+-- Tiempo de generación: 01-12-2014 a las 10:46:48
 -- Versión del servidor: 5.5.39
 -- Versión de PHP: 5.4.31
 
@@ -23,66 +23,34 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `controlpcb`
+-- Estructura de tabla para la tabla `tdftresults`
 --
 
-DROP TABLE IF EXISTS `controlpcb`;
-CREATE TABLE IF NOT EXISTS `controlpcb` (
+CREATE TABLE IF NOT EXISTS `tdftresults` (
 `Id` int(11) NOT NULL,
-  `BPRdate` varchar(15) NOT NULL,
-  `BPRhour` varchar(15) NOT NULL,
-  `OfSerial` varchar(20) NOT NULL,
-  `ModelName` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  `OfSerie` varchar(20) DEFAULT NULL COMMENT 'OF-Serial de la placa producida',
+  `Result` varchar(2) DEFAULT NULL COMMENT 'Resultado test: OK-NG',
+  `TestDate` varchar(15) DEFAULT NULL COMMENT 'Fecha del test',
+  `TestHour` varchar(15) DEFAULT NULL COMMENT 'Hora del test',
+  `NJig` int(11) DEFAULT NULL COMMENT 'En que JIG se realizo',
+  `Line_id` int(11) DEFAULT NULL COMMENT 'Numero que identifica la linea',
+  `TestTime` double DEFAULT NULL COMMENT 'Duracion test en segundos',
+  `Chassis` varchar(20) DEFAULT NULL COMMENT 'Chasis DFT usado'
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Tabla que contiene resultados de los testeos' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `dftresults`
+-- Estructura de tabla para la tabla `tdms`
 --
 
-DROP TABLE IF EXISTS `dftresults`;
-CREATE TABLE IF NOT EXISTS `dftresults` (
+CREATE TABLE IF NOT EXISTS `tdms` (
 `Id` int(11) NOT NULL,
-  `OfSerie` varchar(20) DEFAULT NULL,
-  `Result` varchar(2) DEFAULT NULL,
-  `TestDate` varchar(15) DEFAULT NULL,
-  `TestHour` varchar(15) DEFAULT NULL,
-  `NJig` int(11) DEFAULT NULL,
-  `Line_id` int(11) DEFAULT NULL,
-  `TestTime` double DEFAULT NULL,
-  `Chassis` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1528 ;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `pallet`
---
-
-DROP TABLE IF EXISTS `pallet`;
-CREATE TABLE IF NOT EXISTS `pallet` (
-`PalletID` int(11) NOT NULL,
-  `OrdenF` varchar(20) NOT NULL,
-  `Qty` int(11) DEFAULT NULL,
-  `FullQty` int(11) NOT NULL,
-  `Observ` varchar(200) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Guardado de pallet' AUTO_INCREMENT=3 ;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `tbpr`
---
-
-DROP TABLE IF EXISTS `tbpr`;
-CREATE TABLE IF NOT EXISTS `tbpr` (
-`Id` int(11) NOT NULL,
-  `BPRdate` varchar(15) NOT NULL,
-  `BPRhour` varchar(15) NOT NULL,
-  `OfSerial` varchar(20) NOT NULL,
-  `ModelName` varchar(20) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=35 ;
+  `DMSdate` varchar(15) NOT NULL COMMENT 'Fecha en la que se realizo la operacion DMS',
+  `DMShour` varchar(15) NOT NULL COMMENT 'Hora en la que se realizo la operacion DMS',
+  `OfSerial` varchar(20) NOT NULL COMMENT 'Serial de la placa con DMS',
+  `ModelName` varchar(20) NOT NULL COMMENT 'Nombre del modelo'
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Tabla que guarda placas registradas DMS' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -90,14 +58,30 @@ CREATE TABLE IF NOT EXISTS `tbpr` (
 -- Estructura de tabla para la tabla `tlinkofmod`
 --
 
-DROP TABLE IF EXISTS `tlinkofmod`;
 CREATE TABLE IF NOT EXISTS `tlinkofmod` (
 `Id` int(11) NOT NULL,
-  `NBox` int(11) NOT NULL,
-  `strOf` varchar(20) NOT NULL,
-  `strModel` varchar(20) NOT NULL,
-  `Status` int(3) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+  `strOf` varchar(20) NOT NULL COMMENT 'Orden de fabricacion',
+  `strModel` varchar(20) NOT NULL COMMENT 'Modelo a producir',
+  `Nbox` int(4) NOT NULL COMMENT 'Cantidad de placas que contiene la caja',
+  `ActualMagazzine` int(4) DEFAULT '0' COMMENT 'Guarda que magazzine se esta llenando',
+  `ActualCount` int(4) DEFAULT '0' COMMENT 'Indica cuantas placas se ha hecho de la OF',
+  `Status` int(3) NOT NULL DEFAULT '1' COMMENT 'Estado: 0-Cerrada,1-abierta',
+  `Observ` varchar(150) DEFAULT NULL COMMENT 'Se guardaran observaciones en caso de que sea necesario'
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Tabla que guarda vinculos OF-Modelo' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tmagazzines`
+--
+
+CREATE TABLE IF NOT EXISTS `tmagazzines` (
+`Id` int(11) NOT NULL,
+  `NMagazzine` int(4) NOT NULL COMMENT 'Nro de magazzine para dicha OF',
+  `OrdenF` varchar(20) NOT NULL COMMENT 'Orde de fabricacion del magazzine',
+  `Qty` int(11) DEFAULT NULL COMMENT 'Cantidad de placas que entran',
+  `RealQty` int(11) NOT NULL COMMENT 'Cantidad real de placas en el magazzine'
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Registro de los magazzines que se llenaron' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -105,11 +89,10 @@ CREATE TABLE IF NOT EXISTS `tlinkofmod` (
 -- Estructura de tabla para la tabla `tmodels`
 --
 
-DROP TABLE IF EXISTS `tmodels`;
 CREATE TABLE IF NOT EXISTS `tmodels` (
 `Id` int(11) NOT NULL,
-  `ModelName` varchar(20) NOT NULL
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
+  `ModelName` varchar(20) NOT NULL COMMENT 'Nombre del modelo a producir'
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Tabla que guarda modelos de TV' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -117,61 +100,54 @@ CREATE TABLE IF NOT EXISTS `tmodels` (
 -- Estructura de tabla para la tabla `tordenf`
 --
 
-DROP TABLE IF EXISTS `tordenf`;
 CREATE TABLE IF NOT EXISTS `tordenf` (
 `Id` int(11) NOT NULL,
-  `OrdenF` varchar(20) DEFAULT NULL,
-  `Status` int(3) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+  `OrdenF` varchar(20) DEFAULT NULL COMMENT 'Guarda la orden de fabricacion',
+  `Qty` int(5) NOT NULL COMMENT 'Cantidad de placas que contiene la orden',
+  `Status` int(3) NOT NULL DEFAULT '1' COMMENT 'Estado OF 0-cerrado, 1-abierta'
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Tabla que guarda ordenes de fabricacion' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `wrongpcb`
+-- Estructura de tabla para la tabla `twrongpcb`
 --
 
-DROP TABLE IF EXISTS `wrongpcb`;
-CREATE TABLE IF NOT EXISTS `wrongpcb` (
+CREATE TABLE IF NOT EXISTS `twrongpcb` (
 `Id` int(11) NOT NULL,
-  `BPRDate` varchar(15) NOT NULL,
-  `BPRHour` varchar(15) NOT NULL,
-  `ModelName` varchar(50) NOT NULL,
-  `OfSerial` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='test table' AUTO_INCREMENT=1 ;
+  `WRDate` varchar(15) NOT NULL COMMENT 'Fecha del escaneo',
+  `WRHour` varchar(15) NOT NULL COMMENT 'Hora del escaneo',
+  `ModelName` varchar(50) NOT NULL COMMENT 'En caso de que la identifique',
+  `OfSerial` varchar(50) NOT NULL COMMENT 'Lo que se registro el escaner'
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Guarda informa sobre placas escaneadas' AUTO_INCREMENT=1 ;
 
 --
 -- Índices para tablas volcadas
 --
 
 --
--- Indices de la tabla `controlpcb`
+-- Indices de la tabla `tdftresults`
 --
-ALTER TABLE `controlpcb`
- ADD PRIMARY KEY (`Id`);
-
---
--- Indices de la tabla `dftresults`
---
-ALTER TABLE `dftresults`
+ALTER TABLE `tdftresults`
  ADD PRIMARY KEY (`Id`), ADD UNIQUE KEY `Id_UNIQUE` (`Id`);
 
 --
--- Indices de la tabla `pallet`
+-- Indices de la tabla `tdms`
 --
-ALTER TABLE `pallet`
- ADD PRIMARY KEY (`PalletID`);
-
---
--- Indices de la tabla `tbpr`
---
-ALTER TABLE `tbpr`
+ALTER TABLE `tdms`
  ADD PRIMARY KEY (`Id`);
 
 --
 -- Indices de la tabla `tlinkofmod`
 --
 ALTER TABLE `tlinkofmod`
- ADD PRIMARY KEY (`Id`), ADD UNIQUE KEY `Id_UNIQUE` (`Id`), ADD UNIQUE KEY `strOf` (`strOf`), ADD UNIQUE KEY `strOf_2` (`strOf`), ADD UNIQUE KEY `NBox` (`NBox`);
+ ADD PRIMARY KEY (`Id`), ADD UNIQUE KEY `Id_UNIQUE` (`Id`), ADD UNIQUE KEY `strOf` (`strOf`), ADD UNIQUE KEY `strOf_2` (`strOf`);
+
+--
+-- Indices de la tabla `tmagazzines`
+--
+ALTER TABLE `tmagazzines`
+ ADD PRIMARY KEY (`Id`);
 
 --
 -- Indices de la tabla `tmodels`
@@ -186,9 +162,9 @@ ALTER TABLE `tordenf`
  ADD PRIMARY KEY (`Id`), ADD UNIQUE KEY `Id_UNIQUE` (`Id`);
 
 --
--- Indices de la tabla `wrongpcb`
+-- Indices de la tabla `twrongpcb`
 --
-ALTER TABLE `wrongpcb`
+ALTER TABLE `twrongpcb`
  ADD PRIMARY KEY (`Id`);
 
 --
@@ -196,45 +172,41 @@ ALTER TABLE `wrongpcb`
 --
 
 --
--- AUTO_INCREMENT de la tabla `controlpcb`
+-- AUTO_INCREMENT de la tabla `tdftresults`
 --
-ALTER TABLE `controlpcb`
-MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tdftresults`
+MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
 --
--- AUTO_INCREMENT de la tabla `dftresults`
+-- AUTO_INCREMENT de la tabla `tdms`
 --
-ALTER TABLE `dftresults`
-MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1528;
---
--- AUTO_INCREMENT de la tabla `pallet`
---
-ALTER TABLE `pallet`
-MODIFY `PalletID` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT de la tabla `tbpr`
---
-ALTER TABLE `tbpr`
-MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=35;
+ALTER TABLE `tdms`
+MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT de la tabla `tlinkofmod`
 --
 ALTER TABLE `tlinkofmod`
-MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
+--
+-- AUTO_INCREMENT de la tabla `tmagazzines`
+--
+ALTER TABLE `tmagazzines`
+MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT de la tabla `tmodels`
 --
 ALTER TABLE `tmodels`
-MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
+MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
 --
 -- AUTO_INCREMENT de la tabla `tordenf`
 --
 ALTER TABLE `tordenf`
-MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
 --
--- AUTO_INCREMENT de la tabla `wrongpcb`
+-- AUTO_INCREMENT de la tabla `twrongpcb`
 --
-ALTER TABLE `wrongpcb`
-MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `twrongpcb`
+MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

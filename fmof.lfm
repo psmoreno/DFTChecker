@@ -1,7 +1,7 @@
 object FormOF: TFormOF
-  Left = 642
+  Left = 905
   Height = 292
-  Top = 272
+  Top = 384
   Width = 479
   BorderStyle = bsDialog
   Caption = 'Ordenes de fabricación habilitadas'
@@ -666,7 +666,6 @@ object FormOF: TFormOF
     Properties.Strings = (
       'AutoEncodeStrings='
     )
-    TestMode = 0
     HostName = 'localhost'
     Port = 3306
     Database = 'dft'

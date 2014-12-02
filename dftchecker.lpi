@@ -28,25 +28,28 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="6">
+    <RequiredPackages Count="7">
       <Item1>
-        <PackageName Value="fortes324forlaz"/>
+        <PackageName Value="bgracontrols"/>
       </Item1>
       <Item2>
-        <PackageName Value="lazreport"/>
+        <PackageName Value="fortes324forlaz"/>
       </Item2>
       <Item3>
-        <PackageName Value="lhelpcontrolpkg"/>
+        <PackageName Value="lazreport"/>
       </Item3>
       <Item4>
-        <PackageName Value="zcomponent"/>
+        <PackageName Value="lhelpcontrolpkg"/>
       </Item4>
       <Item5>
-        <PackageName Value="FCL"/>
+        <PackageName Value="zcomponent"/>
       </Item5>
       <Item6>
-        <PackageName Value="LCL"/>
+        <PackageName Value="FCL"/>
       </Item6>
+      <Item7>
+        <PackageName Value="LCL"/>
+      </Item7>
     </RequiredPackages>
     <Units Count="13">
       <Unit0>
@@ -137,12 +140,12 @@
         <UnitName Value="ucrypto"/>
       </Unit11>
       <Unit12>
-        <Filename Value="fmkanbam.pas"/>
+        <Filename Value="fmsearchdft.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="FormKanbam"/>
+        <ComponentName Value="FormSearchDFT"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="fmKanbam"/>
+        <UnitName Value="fmsearchdft"/>
       </Unit12>
     </Units>
   </ProjectOptions>
@@ -156,7 +159,15 @@
       <IncludeFiles Value="$(ProjOutDir)"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
+    <CodeGeneration>
+      <Optimizations>
+        <OptimizationLevel Value="3"/>
+      </Optimizations>
+    </CodeGeneration>
     <Linking>
+      <Debugging>
+        <GenerateDebugInfo Value="False"/>
+      </Debugging>
       <Options>
         <Win32>
           <GraphicApplication Value="True"/>

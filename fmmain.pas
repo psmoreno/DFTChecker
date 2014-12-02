@@ -5,11 +5,11 @@ unit fmmain;
 interface
 
 uses
-  Classes, SysUtils, db, FileUtil, LR_Desgn, LazHelpCHM, ZDataset,
-  ZConnection, Forms, Controls, Graphics, Dialogs, Menus, ComCtrls, StdCtrls,
-  DBGrids, Buttons, ExtCtrls, ActnList, LazHelpHTML, fmOF, fmModels, fmlinks,
-  fmoptions, fmKanbam, fmabout, fmclosebox, HelpIntfs, customconfig, fmIntro,
-  LResources, LR_Class;
+  Classes, SysUtils, db, FileUtil,LR_Desgn,LazHelpCHM, ZDataset, ZConnection,
+  Forms, Controls, Graphics, Dialogs, Menus,  ComCtrls, StdCtrls, DBGrids,
+  Buttons, ExtCtrls, ActnList, LazHelpHTML, fmOF, fmModels, fmlinks, fmoptions,
+  fmsearchdft, fmabout, fmclosebox, HelpIntfs, customconfig,
+  fmIntro, LResources, LR_Class;
 
 type
 
@@ -211,6 +211,25 @@ begin
      EditPCB.Enabled:=false;
      Run:=false;
   end;
+
+  if Run=true then
+  begin
+     ActionEditOF.Enabled:=false;
+     ActionEditModels.Enabled:=false;
+     ActionOFLink.Enabled:=false;
+     ActionConfig.Enabled:=false;
+     BitBtnRun.Color:=clGreen;
+  end
+  else
+  begin
+     ActionEditOF.Enabled:=true;
+     ActionEditModels.Enabled:=true;
+     ActionOFLink.Enabled:=true;
+     ActionConfig.Enabled:=true;
+     self.Caption:='Sistema de control de Magazzines DFT';
+     self.Color:=clDefault;
+     BitBtnRun.Color:=clDefault;
+  end;
 end;
 
 procedure TFormPrincipal.ActionOFLinkExecute(Sender: TObject);
@@ -235,8 +254,16 @@ begin
 end;
 
 procedure TFormPrincipal.ActionSearchDFTExecute(Sender: TObject);
+var
+  Result:integer;
 begin
-  FormKanbam.ShowModal;
+  FI.LoadConfig(CCF);
+  Result:=FI.ShowModal;
+  if Result=mrOK then
+  begin
+     FormSearchDFT.LoadConfig(CCF);
+     FormSearchDFT.ShowModal;
+  end;
 end;
 
 procedure TFormPrincipal.EditPCBKeyPress(Sender: TObject; var Key: char);
@@ -328,33 +355,53 @@ begin
 end;
 
 procedure TFormPrincipal.TimerMainTimer(Sender: TObject);
+const
+  WarningOnLostConnect:integer=0;
 begin
   if ((IsInExecution=true) and (OrderActive=true)) then
   begin
     if FileExistsUTF8(CCF.ConfigOptions.DFTResult1) then
     begin
+       WarningOnLostConnect:=0;
        RecordDFTResults(CCF.ConfigOptions.DFTResult1);
     end;
 
     if FileExistsUTF8(CCF.ConfigOptions.DFTResult2) then
     begin
+       WarningOnLostConnect:=0;
        RecordDFTResults(CCF.ConfigOptions.DFTResult2);
     end;
 
     if FileExistsUTF8(CCF.ConfigOptions.DFTResult3) then
     begin
+       WarningOnLostConnect:=0;
        RecordDFTResults(CCF.ConfigOptions.DFTResult3);
     end;
 
     if FileExistsUTF8(CCF.ConfigOptions.DFTResult4) then
     begin
+       WarningOnLostConnect:=0;
        RecordDFTResults(CCF.ConfigOptions.DFTResult4);
     end;
 
     if FileExistsUTF8(CCF.ConfigOptions.DFTResultRepair) then
     begin
+       WarningOnLostConnect:=0;
        RecordDFTResults(CCF.ConfigOptions.DFTResultRepair);
     end;
+
+    WarningOnLostConnect:=WarningOnLostConnect+1;
+    if WarningOnLostConnect>=5 then
+    begin
+       self.Caption:='Sistema de control de Magazzines DFT - ERROR DE CONEXION';
+       self.Color:=clYellow;
+    end
+    else
+    begin
+       self.Caption:='Sistema de control de Magazzines DFT';
+       self.Color:=clDefault;
+    end;
+
   end;
 end;
 
@@ -408,6 +455,7 @@ var
   ZQueryLoadPCBinPallet:TZQuery;
   ZConnectionLoadPCBinPallet:TZConnection;
   CurCnt:integer;
+  ModelName:string;
 begin
   self.IsInExecution:=false;
   ZConnectionLoadPCBinPallet:=TZConnection.Create(nil);
@@ -426,8 +474,11 @@ begin
   ZQueryLoadPCBinPallet.Open;
   if ZQueryLoadPCBinPallet.RecordCount>0 then
   begin
-     ZQueryLoadPCBinPallet.Last;
-     if ZQueryLoadPCBinPallet.FieldByName('Result').AsString='OK' then
+     ZQueryLoadPCBinPallet.Close;
+     ZQueryLoadPCBinPallet.SQL.Text:='SELECT * FROM tdftresults WHERE OfSerie LIKE '''+
+     EditPCB.Text +''' AND Result LIKE ''OK''';
+     ZQueryLoadPCBinPallet.Open;
+     if ZQueryLoadPCBinPallet.RecordCount > 0 then
      begin
        ZQueryPrincipal.Close;
        ZQueryPrincipal.SQL.Text:='SELECT * FROM tdms WHERE OfSerial LIKE '''+
@@ -455,6 +506,7 @@ begin
               ZQueryPrincipal.CommitUpdates;
               CurCnt:=ZQueryPrincipal.FieldByName('ActualCount').AsInteger;
 
+              ModelName:=ZQueryPrincipal.FieldByName('ModelName').AsString;
               ZQueryPrincipal.Close;
               ZQueryPrincipal.SQL.Text:='SELECT * FROM tdms WHERE OfSerial LIKE '''+ EditPCB.Text+'''';
               ZQueryPrincipal.Open;
@@ -462,7 +514,7 @@ begin
               ZQueryPrincipal.FieldByName('DMSdate').AsString:=DateToStr(date);
               ZQueryPrincipal.FieldByName('DMShour').AsString:=TimeToStr(now);
               ZQueryPrincipal.FieldByName('OfSerial').AsString:=EditPCB.Caption;
-              ZQueryPrincipal.FieldByName('ModelName').AsString:=LabelCountOpDMS.Caption;
+              ZQueryPrincipal.FieldByName('ModelName').AsString:=ModelName;
               ZQueryPrincipal.CommitUpdates;
 
               ZQueryPrincipal.Close;
@@ -489,7 +541,7 @@ begin
             end
             else
             begin
-              ShowMessage('No pertenece a ninguna orden de fabricacion activa');
+              MessageDlg('No pertenece a ninguna orden de fabricacion activa', mtinformation, [mbOK],0);
               ZQueryPrincipal.Close;
               ZQueryPrincipal.SQL.Text:='SELECT * FROM tlinkofmod WHERE Status > 0';
               ZQueryPrincipal.Open;
@@ -497,7 +549,7 @@ begin
        end
        else
        begin
-         ShowMessage('Esta placa ya sido ingresada');
+         MessageDlg('Esta placa ya ha sido ingresada', mtinformation, [mbOK],0);
          ImageResult.Picture.LoadFromLazarusResource('OK');
          ImageResult.Visible:=true;
          ZQueryPrincipal.Close;
@@ -589,37 +641,40 @@ begin
   ZConnectionLoadDFTRrecords.User:=CCF.ConfigSQl.User;
   ZConnectionLoadDFTRrecords.Password:=CCF.ConfigSQl.Pass;
   ZQueryLoadDFTRecords.Connection:=ZConnectionLoadDFTRrecords;
-  ZConnectionLoadDFTRrecords.Connect;
-  Cadenas.LoadFromFile(FilePath);
-  Componentes.Clear;
-  if debug=0 then
-     Componentes.SaveToFile(FilePath);
-  for i:=0 to (Cadenas.Count-1) do
-  begin
-     Componentes.DelimitedText:=Copy(Cadenas[i],Pos('values(%d',Cadenas[i])+10,Length(Cadenas[i]));
-     Componentes.Delimiter:=',';
-     for k:=0 to (Componentes.Count-1) do
+  try
+     ZConnectionLoadDFTRrecords.Connect;
+     Cadenas.LoadFromFile(FilePath);
+     Componentes.Clear;
+     if debug=0 then
      begin
-        Componentes[k]:=StringReplace(Componentes[k],')','',[rfReplaceAll,rfIgnoreCase]);
-        Componentes[k]:=StringReplace(Componentes[k],'(','',[rfReplaceAll,rfIgnoreCase]);
+        Componentes.SaveToFile(FilePath);
      end;
-     strSqlRecord:='INSERT INTO tdftresults(OfSerie,Result,TestDate,TestHour,NJig,Line_id,TestTime,Chassis) VALUES ('+
-     Componentes[0]+','+Componentes[1]+',"'+DateToStr(date)+'","'+TimeToStr(Now)+'",'+Componentes[2]+','+Componentes[3]+','+
-     Componentes[4]+','+Componentes[5]+');';
-     ZQueryLoadDFTRecords.SQL.Clear;
-     if debug=1 then
+     for i:=0 to (Cadenas.Count-1) do
      begin
-       ShowMessage(strSqlRecord);
+          Componentes.DelimitedText:=Copy(Cadenas[i],Pos('values(%d',Cadenas[i])+10,Length(Cadenas[i]));
+          Componentes.Delimiter:=',';
+          for k:=0 to (Componentes.Count-1) do
+          begin
+               Componentes[k]:=StringReplace(Componentes[k],')','',[rfReplaceAll,rfIgnoreCase]);
+               Componentes[k]:=StringReplace(Componentes[k],'(','',[rfReplaceAll,rfIgnoreCase]);
+          end;
+          strSqlRecord:='INSERT INTO tdftresults(OfSerie,Result,TestDate,TestHour,NJig,Line_id,TestTime,Chassis) VALUES ('+
+          Componentes[0]+','+Componentes[1]+',"'+FormatDateTime('dd-mm-yyyy',date)+'","'+TimeToStr(Now)+'",'+Componentes[2]+','+Componentes[3]+','+
+          Componentes[4]+','+Componentes[5]+');';
+          ZQueryLoadDFTRecords.SQL.Clear;
+          if debug=1 then
+          begin
+               ShowMessage(strSqlRecord);
+          end;
+          ZQueryLoadDFTRecords.SQL.Text:=strSqlRecord;
+          ZQueryLoadDFTRecords.ExecSQL;
      end;
-     ZQueryLoadDFTRecords.SQL.Text:=strSqlRecord;
-     ZQueryLoadDFTRecords.ExecSQL;
+     Cadenas.Clear;
+  finally
+    ZQueryLoadDFTRecords.Close;
+    ZConnectionLoadDFTRrecords.Disconnect;
+    self.IsInExecution:=true; // resume the timer
   end;
-  Cadenas.Clear;
-
-  ZQueryLoadDFTRecords.Close;
-  ZConnectionLoadDFTRrecords.Disconnect;
-
-  self.IsInExecution:=true; // resume the timer
 end;
 
 procedure TFormPrincipal.ExtractResources;

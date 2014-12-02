@@ -9,7 +9,7 @@ uses
   Interfaces, // this includes the LCL widgetset
   Forms, fortes324forlaz, fmmain, zcomponent, fmModels, fmof, fmlinks,
   fmoptions, fmabout, fmclosebox, fmaddinsert, fmintro, customconfig,
-  ucrypto, lhelpcontrolpkg, fmKanbam
+  ucrypto, lhelpcontrolpkg, fmsearchdft
   { you can add units after this };
 
 {$R *.res}
@@ -26,7 +26,7 @@ begin
   Application.CreateForm(TFormAbout, FormAbout);
   Application.CreateForm(TFormCloseOF, FormCloseOF);
   Application.CreateForm(TFormAddInsert, FormAddInsert);
-  Application.CreateForm(TFormKanbam, FormKanbam);
+  Application.CreateForm(TFormSearchDFT, FormSearchDFT);
   Application.Run;
 end.
 

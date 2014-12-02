@@ -101,7 +101,7 @@ begin
   CanClose:=BitBtnCancel.Enabled;
   if BitBtnCancel.Enabled = false then
   begin
-     ShowMessage('Es obligatorio cerrar la orden de fabricacion');
+     MessageDlg('Es obligatorio cerrar la orden de fabricación', mtinformation, [mbOK],0);
   end;
 end;
 

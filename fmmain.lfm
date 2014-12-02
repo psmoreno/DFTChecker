@@ -1,7 +1,7 @@
 object FormPrincipal: TFormPrincipal
-  Left = 481
+  Left = 476
   Height = 608
-  Top = 117
+  Top = 132
   Width = 885
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
@@ -204,6 +204,7 @@ object FormPrincipal: TFormPrincipal
     Caption = 'Confección de la cajas'
     ClientHeight = 246
     ClientWidth = 844
+    ParentColor = False
     TabOrder = 2
     object DBGridPrincipal: TDBGrid
       Left = 14
