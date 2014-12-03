@@ -7,9 +7,9 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, fortes324forlaz, fmmain, zcomponent, fmModels, fmof, fmlinks,
+  Forms, csvdocument_package, fmmain, zcomponent, fmModels, fmof, fmlinks,
   fmoptions, fmabout, fmclosebox, fmaddinsert, fmintro, customconfig,
-  ucrypto, lhelpcontrolpkg, fmsearchdft
+  ucrypto, lhelpcontrolpkg, fmsearchDMS, fmsearchdft
   { you can add units after this };
 
 {$R *.res}
@@ -27,6 +27,7 @@ begin
   Application.CreateForm(TFormCloseOF, FormCloseOF);
   Application.CreateForm(TFormAddInsert, FormAddInsert);
   Application.CreateForm(TFormSearchDFT, FormSearchDFT);
+  Application.CreateForm(TFormSearchDMS, FormSearchDMS);
   Application.Run;
 end.
 

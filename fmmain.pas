@@ -9,7 +9,7 @@ uses
   Forms, Controls, Graphics, Dialogs, Menus,  ComCtrls, StdCtrls, DBGrids,
   Buttons, ExtCtrls, ActnList, LazHelpHTML, fmOF, fmModels, fmlinks, fmoptions,
   fmsearchdft, fmabout, fmclosebox, HelpIntfs, customconfig,
-  fmIntro, LResources, LR_Class;
+  fmIntro, LResources, LR_Class,fmsearchDMS;
 
 type
 
@@ -96,6 +96,7 @@ type
     procedure ActionRunExecute(Sender: TObject);
     procedure ActionOFLinkExecute(Sender: TObject);
     procedure ActionSearchDFTExecute(Sender: TObject);
+    procedure ActionSearchDMSExecute(Sender: TObject);
     procedure EditPCBKeyPress(Sender: TObject; var Key: char);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -111,7 +112,7 @@ type
     CurrentCount:integer;
 
     procedure LoadFormOptions(MdResult:integer);
-    procedure RecordDFTResults(FilePath:string);
+    procedure RecordDFTResults(FilePath:string; NroJIG:integer);
     procedure ExtractResources;
     procedure RegisterWrongPCB;
     function CustomFormatNumbers(Value:integer;TotalLenghtofValue:integer):string;
@@ -266,6 +267,19 @@ begin
   end;
 end;
 
+procedure TFormPrincipal.ActionSearchDMSExecute(Sender: TObject);
+var
+  Result:integer;
+begin
+  FI.LoadConfig(CCF);
+  Result:=FI.ShowModal;
+  if Result=mrOK then
+  begin
+     FormSearchDMS.LoadConfig(CCF);
+     FormSearchDMS.ShowModal;
+  end;
+end;
+
 procedure TFormPrincipal.EditPCBKeyPress(Sender: TObject; var Key: char);
 begin
   if Integer(key)=13 then
@@ -363,31 +377,31 @@ begin
     if FileExistsUTF8(CCF.ConfigOptions.DFTResult1) then
     begin
        WarningOnLostConnect:=0;
-       RecordDFTResults(CCF.ConfigOptions.DFTResult1);
+       RecordDFTResults(CCF.ConfigOptions.DFTResult1,1);
     end;
 
     if FileExistsUTF8(CCF.ConfigOptions.DFTResult2) then
     begin
        WarningOnLostConnect:=0;
-       RecordDFTResults(CCF.ConfigOptions.DFTResult2);
+       RecordDFTResults(CCF.ConfigOptions.DFTResult2,2);
     end;
 
     if FileExistsUTF8(CCF.ConfigOptions.DFTResult3) then
     begin
        WarningOnLostConnect:=0;
-       RecordDFTResults(CCF.ConfigOptions.DFTResult3);
+       RecordDFTResults(CCF.ConfigOptions.DFTResult3,3);
     end;
 
     if FileExistsUTF8(CCF.ConfigOptions.DFTResult4) then
     begin
        WarningOnLostConnect:=0;
-       RecordDFTResults(CCF.ConfigOptions.DFTResult4);
+       RecordDFTResults(CCF.ConfigOptions.DFTResult4,4);
     end;
 
     if FileExistsUTF8(CCF.ConfigOptions.DFTResultRepair) then
     begin
        WarningOnLostConnect:=0;
-       RecordDFTResults(CCF.ConfigOptions.DFTResultRepair);
+       RecordDFTResults(CCF.ConfigOptions.DFTResultRepair,5);
     end;
 
     WarningOnLostConnect:=WarningOnLostConnect+1;
@@ -476,7 +490,7 @@ begin
   begin
      ZQueryLoadPCBinPallet.Close;
      ZQueryLoadPCBinPallet.SQL.Text:='SELECT * FROM tdftresults WHERE OfSerie LIKE '''+
-     EditPCB.Text +''' AND Result LIKE ''OK''';
+     EditPCB.Text +''' AND Tresult LIKE ''OK''';
      ZQueryLoadPCBinPallet.Open;
      if ZQueryLoadPCBinPallet.RecordCount > 0 then
      begin
@@ -502,11 +516,12 @@ begin
                then begin
                 ZQueryPrincipal.FieldByName('ActualMagazzine').AsInteger:=ZQueryPrincipal.FieldByName('ActualMagazzine').AsInteger+1;
                 MagazzineCount:=MagazzineCount+1;
+                LabelCountMag.Caption:=IntToStr(MagazzineCount);
               end;
               ZQueryPrincipal.CommitUpdates;
               CurCnt:=ZQueryPrincipal.FieldByName('ActualCount').AsInteger;
 
-              ModelName:=ZQueryPrincipal.FieldByName('ModelName').AsString;
+              ModelName:=ZQueryPrincipal.FieldByName('strModel').AsString;
               ZQueryPrincipal.Close;
               ZQueryPrincipal.SQL.Text:='SELECT * FROM tdms WHERE OfSerial LIKE '''+ EditPCB.Text+'''';
               ZQueryPrincipal.Open;
@@ -583,18 +598,15 @@ procedure TFormPrincipal.ActionCloseOFExecute(Sender: TObject);
 begin
   FormCloseOF.LoadConfig(CCF);
   FormCloseOF.strOf:='';
-  if FormCloseOF.ShowModal=mrOK then
+  IsInExecution:=false;
+  FormCloseOF.ShowModal;
+  if OrderActive=true then
+  begin
+     IsInExecution:=true;
+  end
+  else
   begin
      IsInExecution:=false;
-     OrderActive:=false;
-     ActionCloseOF.Enabled:=false;
-     ActionRun.Enabled:=true;
-     ActionChkPCB.Enabled:=false;
-     EditPCB.Enabled:=false;
-     ImageResult.Visible:=false;
-     LabelOFActives.Caption:='';
-     LabelCountOpDMS.Caption:='';
-     LabelCountMag.Caption:='';
   end;
 end;
 
@@ -616,7 +628,7 @@ begin
   end;
 end;
 
-procedure TFormPrincipal.RecordDFTResults(FilePath:string);
+procedure TFormPrincipal.RecordDFTResults(FilePath:string; NroJIG:integer);
 const
   debug=0;
 var
@@ -658,8 +670,8 @@ begin
                Componentes[k]:=StringReplace(Componentes[k],')','',[rfReplaceAll,rfIgnoreCase]);
                Componentes[k]:=StringReplace(Componentes[k],'(','',[rfReplaceAll,rfIgnoreCase]);
           end;
-          strSqlRecord:='INSERT INTO tdftresults(OfSerie,Result,TestDate,TestHour,NJig,Line_id,TestTime,Chassis) VALUES ('+
-          Componentes[0]+','+Componentes[1]+',"'+FormatDateTime('dd-mm-yyyy',date)+'","'+TimeToStr(Now)+'",'+Componentes[2]+','+Componentes[3]+','+
+          strSqlRecord:='INSERT INTO tdftresults(OfSerie,Tresult,TestDate,TestHour,NJig,Line_id,TestTime,Chassis) VALUES ('+
+          Componentes[0]+','+Componentes[1]+',"'+FormatDateTime('dd-mm-yyyy',date)+'","'+TimeToStr(Now)+'",'+IntToStr(NroJIG)+','+Componentes[3]+','+
           Componentes[4]+','+Componentes[5]+');';
           ZQueryLoadDFTRecords.SQL.Clear;
           if debug=1 then

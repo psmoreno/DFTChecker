@@ -27,6 +27,12 @@ type
     DFTResult4:string;
     DFTResultRepair:string;
 
+    DFTFail1:string;
+    DFTFail2:string;
+    DFTFail3:string;
+    DFTFail4:string;
+    DFTFailRepair:string;
+
     UpdateDelay:string;
     EnableRemoteControl:string;
   end;
@@ -75,11 +81,19 @@ begin
   if ((RPass='')or(RUser='')) then
      exit;
   ConfigOptions.UpdateDelay:=UnencryptOP(IniPropStorageConnection.ReadString('UpdateDelay','30000'));
+
   ConfigOptions.DFTResult1:=UnencryptOP(IniPropStorageConnection.ReadString('DFTResult1','MES_ResultData1.txt'));
   ConfigOptions.DFTResult2:=UnencryptOP(IniPropStorageConnection.ReadString('DFTResult2','MES_ResultData2.txt'));
   ConfigOptions.DFTResult3:=UnencryptOP(IniPropStorageConnection.ReadString('DFTResult3','MES_ResultData3.txt'));
   ConfigOptions.DFTResult4:=UnencryptOP(IniPropStorageConnection.ReadString('DFTResult4','MES_ResultData4.txt'));
   ConfigOptions.DFTResultRepair:=UnencryptOP(IniPropStorageConnection.ReadString('DFTResultRepair','MES_ResultData5.txt'));
+
+  ConfigOptions.DFTFail1:=UnencryptOP(IniPropStorageConnection.ReadString('DFTFail1','MES_StepData1.txt'));
+  ConfigOptions.DFTFail2:=UnencryptOP(IniPropStorageConnection.ReadString('DFTFail2','MES_StepData2.txt'));
+  ConfigOptions.DFTFail3:=UnencryptOP(IniPropStorageConnection.ReadString('DFTFail3','MES_StepData3.txt'));
+  ConfigOptions.DFTFail4:=UnencryptOP(IniPropStorageConnection.ReadString('DFTFail4','MES_StepData4.txt'));
+  ConfigOptions.DFTFailRepair:=UnencryptOP(IniPropStorageConnection.ReadString('DFTFailRepair','MES_StepData5.txt'));
+
   ConfigOptions.EnableRemoteControl:=UnencryptOP(IniPropStorageConnection.ReadString('EnableRControl','false'));
 
   IniPropStorageConnection.IniSection := 'SQLConfig';
@@ -105,11 +119,19 @@ begin
   IniPropStorageConnection.IniSection:='OptionsConfig';
   IniPropStorageConnection.WriteBoolean('Encripted',REncrypted);
   IniPropStorageConnection.WriteString('UpdateDelay',EncryptOp(ConfigOptions.UpdateDelay));
+
   IniPropStorageConnection.WriteString('DFTResult1',EncryptOp(ConfigOptions.DFTResult1));
   IniPropStorageConnection.WriteString('DFTResult2',EncryptOp(ConfigOptions.DFTResult2));
   IniPropStorageConnection.WriteString('DFTResult3',EncryptOp(ConfigOptions.DFTResult3));
   IniPropStorageConnection.WriteString('DFTResult4',EncryptOp(ConfigOptions.DFTResult4));
   IniPropStorageConnection.WriteString('DFTResultRepair',EncryptOp(ConfigOptions.DFTResultRepair));
+
+  IniPropStorageConnection.WriteString('DFTFail1',EncryptOp(ConfigOptions.DFTFail1));
+  IniPropStorageConnection.WriteString('DFTFail2',EncryptOp(ConfigOptions.DFTFail2));
+  IniPropStorageConnection.WriteString('DFTFail3',EncryptOp(ConfigOptions.DFTFail3));
+  IniPropStorageConnection.WriteString('DFTFail4',EncryptOp(ConfigOptions.DFTFail4));
+  IniPropStorageConnection.WriteString('DFTFailRepair',EncryptOp(ConfigOptions.DFTFailRepair));
+
   IniPropStorageConnection.WriteString('EnableRControl',EncryptOp(ConfigOptions.EnableRemoteControl));
   CreateCryptoKey;
   IniPropStorageConnection.WriteString('Cryptokey',RCryptokey);

@@ -1,7 +1,7 @@
 object FormOptions: TFormOptions
-  Left = 658
+  Left = 667
   Height = 607
-  Top = 170
+  Top = 127
   Width = 629
   BorderStyle = bsDialog
   Caption = 'Opciones de la aplicación'
@@ -27,21 +27,21 @@ object FormOptions: TFormOptions
       Left = 16
       Height = 24
       Top = 11
-      Width = 304
-      Caption = 'Archivo de resultados JIG Nro. 1'
+      Width = 207
+      Caption = 'Resultados JIG Nro. 1'
       ParentColor = False
     end
     object Edit1: TEdit
-      Left = 16
+      Left = 240
       Height = 32
-      Top = 48
-      Width = 528
+      Top = 7
+      Width = 304
       TabOrder = 0
     end
     object SpeedButton1: TSpeedButton
       Left = 547
       Height = 32
-      Top = 48
+      Top = 7
       Width = 40
       Caption = '...'
       OnClick = SpeedButton1Click
@@ -49,22 +49,22 @@ object FormOptions: TFormOptions
     object Label3: TLabel
       Left = 16
       Height = 24
-      Top = 160
-      Width = 304
-      Caption = 'Archivo de resultados JIG Nro. 3'
+      Top = 87
+      Width = 207
+      Caption = 'Resultados JIG Nro. 3'
       ParentColor = False
     end
     object Edit3: TEdit
-      Left = 16
+      Left = 240
       Height = 32
-      Top = 192
-      Width = 528
+      Top = 80
+      Width = 304
       TabOrder = 1
     end
     object SpeedButton3: TSpeedButton
       Left = 547
       Height = 32
-      Top = 192
+      Top = 80
       Width = 40
       Caption = '...'
       OnClick = SpeedButton3Click
@@ -72,22 +72,22 @@ object FormOptions: TFormOptions
     object Label4: TLabel
       Left = 16
       Height = 24
-      Top = 232
-      Width = 304
-      Caption = 'Archivo de resultados JIG Nro. 4'
+      Top = 124
+      Width = 207
+      Caption = 'Resultados JIG Nro. 4'
       ParentColor = False
     end
     object Edit4: TEdit
-      Left = 16
+      Left = 240
       Height = 32
-      Top = 264
-      Width = 528
+      Top = 116
+      Width = 304
       TabOrder = 2
     end
     object SpeedButton4: TSpeedButton
       Left = 547
       Height = 32
-      Top = 264
+      Top = 116
       Width = 40
       Caption = '...'
       OnClick = SpeedButton4Click
@@ -95,22 +95,22 @@ object FormOptions: TFormOptions
     object Label5: TLabel
       Left = 16
       Height = 24
-      Top = 88
-      Width = 304
-      Caption = 'Archivo de resultados JIG Nro. 2'
+      Top = 48
+      Width = 207
+      Caption = 'Resultados JIG Nro. 2'
       ParentColor = False
     end
     object Edit5: TEdit
-      Left = 16
+      Left = 240
       Height = 32
-      Top = 330
-      Width = 528
+      Top = 153
+      Width = 304
       TabOrder = 3
     end
     object SpeedButton5: TSpeedButton
       Left = 547
       Height = 32
-      Top = 330
+      Top = 153
       Width = 40
       Caption = '...'
       OnClick = SpeedButton5Click
@@ -118,25 +118,140 @@ object FormOptions: TFormOptions
     object Label2: TLabel
       Left = 16
       Height = 24
-      Top = 301
-      Width = 346
-      Caption = 'Archivo de resultados JIG Reparador'
+      Top = 158
+      Width = 212
+      Caption = 'Resultados JIG Repar.'
       ParentColor = False
     end
     object Edit2: TEdit
-      Left = 16
+      Left = 240
       Height = 32
-      Top = 116
-      Width = 528
+      Top = 43
+      Width = 304
       TabOrder = 4
     end
     object SpeedButton2: TSpeedButton
       Left = 547
       Height = 32
-      Top = 116
+      Top = 43
       Width = 40
       Caption = '...'
       OnClick = SpeedButton2Click
+    end
+    object Label16: TLabel
+      Left = 16
+      Height = 24
+      Top = 342
+      Width = 200
+      Caption = 'Fallas JIG Reparador'
+      ParentColor = False
+    end
+    object Label15: TLabel
+      Left = 16
+      Height = 24
+      Top = 306
+      Width = 158
+      Caption = 'Fallas JIG Nro. 4'
+      ParentColor = False
+    end
+    object Label14: TLabel
+      Left = 16
+      Height = 24
+      Top = 269
+      Width = 158
+      Caption = 'Fallas JIG Nro. 3'
+      ParentColor = False
+    end
+    object Label13: TLabel
+      Left = 16
+      Height = 24
+      Top = 234
+      Width = 158
+      Caption = 'Fallas JIG Nro. 2'
+      ParentColor = False
+    end
+    object Label12: TLabel
+      Left = 16
+      Height = 24
+      Top = 199
+      Width = 158
+      Caption = 'Fallas JIG Nro. 1'
+      ParentColor = False
+    end
+    object Edit12: TEdit
+      Left = 240
+      Height = 32
+      Top = 193
+      Width = 304
+      TabOrder = 5
+    end
+    object Edit13: TEdit
+      Left = 240
+      Height = 32
+      Top = 228
+      Width = 304
+      TabOrder = 6
+    end
+    object Edit14: TEdit
+      Left = 240
+      Height = 32
+      Top = 265
+      Width = 304
+      TabOrder = 7
+    end
+    object Edit15: TEdit
+      Left = 240
+      Height = 32
+      Top = 300
+      Width = 304
+      TabOrder = 8
+    end
+    object Edit16: TEdit
+      Left = 240
+      Height = 32
+      Top = 337
+      Width = 304
+      TabOrder = 9
+    end
+    object SpeedButton10: TSpeedButton
+      Left = 547
+      Height = 32
+      Top = 337
+      Width = 40
+      Caption = '...'
+      OnClick = SpeedButton10Click
+    end
+    object SpeedButton9: TSpeedButton
+      Left = 547
+      Height = 32
+      Top = 300
+      Width = 40
+      Caption = '...'
+      OnClick = SpeedButton9Click
+    end
+    object SpeedButton8: TSpeedButton
+      Left = 547
+      Height = 32
+      Top = 265
+      Width = 40
+      Caption = '...'
+      OnClick = SpeedButton8Click
+    end
+    object SpeedButton7: TSpeedButton
+      Left = 547
+      Height = 32
+      Top = 228
+      Width = 40
+      Caption = '...'
+      OnClick = SpeedButton7Click
+    end
+    object SpeedButton6: TSpeedButton
+      Left = 547
+      Height = 32
+      Top = 193
+      Width = 40
+      Caption = '...'
+      OnClick = SpeedButton6Click
     end
   end
   object GroupBoxMySQL: TGroupBox

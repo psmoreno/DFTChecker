@@ -28,30 +28,27 @@
         <FormatVersion Value="1"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="7">
+    <RequiredPackages Count="6">
       <Item1>
-        <PackageName Value="bgracontrols"/>
+        <PackageName Value="csvdocument_package"/>
       </Item1>
       <Item2>
-        <PackageName Value="fortes324forlaz"/>
+        <PackageName Value="lazreport"/>
       </Item2>
       <Item3>
-        <PackageName Value="lazreport"/>
+        <PackageName Value="lhelpcontrolpkg"/>
       </Item3>
       <Item4>
-        <PackageName Value="lhelpcontrolpkg"/>
+        <PackageName Value="zcomponent"/>
       </Item4>
       <Item5>
-        <PackageName Value="zcomponent"/>
+        <PackageName Value="FCL"/>
       </Item5>
       <Item6>
-        <PackageName Value="FCL"/>
-      </Item6>
-      <Item7>
         <PackageName Value="LCL"/>
-      </Item7>
+      </Item6>
     </RequiredPackages>
-    <Units Count="13">
+    <Units Count="14">
       <Unit0>
         <Filename Value="dftchecker.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -140,13 +137,21 @@
         <UnitName Value="ucrypto"/>
       </Unit11>
       <Unit12>
+        <Filename Value="fmsearchdms.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormSearchDMS"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="fmsearchDMS"/>
+      </Unit12>
+      <Unit13>
         <Filename Value="fmsearchdft.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FormSearchDFT"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="fmsearchdft"/>
-      </Unit12>
+      </Unit13>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

@@ -1,7 +1,7 @@
 object FormPrincipal: TFormPrincipal
-  Left = 476
+  Left = 536
   Height = 608
-  Top = 132
+  Top = 152
   Width = 885
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
@@ -51,35 +51,35 @@ object FormPrincipal: TFormPrincipal
       ShowHint = True
     end
     object ToolButton4: TToolButton
-      Left = 109
+      Left = 145
       Top = 2
       Width = 5
       Caption = 'ToolButton4'
       Style = tbsDivider
     end
     object ToolButton5: TToolButton
-      Left = 114
+      Left = 150
       Top = 2
       Action = ActionEditOF
       ParentShowHint = False
       ShowHint = True
     end
     object ToolButton6: TToolButton
-      Left = 150
+      Left = 186
       Top = 2
       Action = ActionEditModels
       ParentShowHint = False
       ShowHint = True
     end
     object ToolButton7: TToolButton
-      Left = 186
+      Left = 222
       Top = 2
       Action = ActionOFLink
       ParentShowHint = False
       ShowHint = True
     end
     object ToolButton8: TToolButton
-      Left = 222
+      Left = 109
       Top = 2
       Action = ActionSearchDMS
       ParentShowHint = False
@@ -3745,6 +3745,7 @@ object FormPrincipal: TFormPrincipal
       Caption = 'Buscar DMS'
       Hint = 'Permite buscar en los registros DMS'
       ImageIndex = 4
+      OnExecute = ActionSearchDMSExecute
     end
     object ActionConfig: TAction
       Caption = 'Configuraciones'
