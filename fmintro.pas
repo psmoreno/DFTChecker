@@ -29,12 +29,29 @@ type
   private
     { private declarations }
     TCC:TCustomConfig;
+    RUsers:TStringList;
+    RPass:TStringList;
+    RSections:TStringList;
+    RLevels:TStringList;
+
+    RCurSection:string;
+    RCurLevel:string;
+    RAllowNotRootUser:boolean;
+    RisRootUser:boolean;
 
     function CheckValues:boolean;
   public
     { public declarations }
     procedure ReturnConfig(out CCF:TCustomConfig);
     procedure LoadConfig(TCmCfg:TCustomConfig);
+    property Users:TStringList read RUsers write RUsers;
+    property Pass:TStringList read RPass write RPass;
+    property Sections:TStringList read RSections write RSections;
+    property Levels:TStringList read RLevels write RLevels;
+    property CurSection:string read RCurSection write RCurSection;
+    property CurLevel:string read RCurLevel write RCurLevel;
+    property AllowNotRootUser:boolean read RAllowNotRootUser write RAllowNotRootUser;
+    property isRootUser:boolean read RisRootUser;
   end;
 
 var
@@ -67,20 +84,46 @@ begin
 end;
 
 procedure TFormIntro.ButtonAceptClick(Sender: TObject);
+var
+  i:integer;
+  strRootUser:string;
+  strRootPass:string;
 begin
   if TCC.CryptoKey <>'' then
   begin
        if CheckValues then
        begin
+            strRootUser:=TCC.User;
+            strRootPass:=TCC.Pass;
+
             TCC.User:=EditUser.Text;
             TCC.Pass:=EditPass.Text;
             if TCC.CheckForUserAndPas then
             begin
                  Close();
+                 RisRootUser:=true;
                  ModalResult:=mrOK;
             end
             else
             begin
+                 //ahora usaremos los usuarios validos
+                 if RAllowNotRootUser then
+                 begin
+                    for i:=0 to RUsers.Count-1 do
+                    begin
+                      if ((RUsers[i]=EditUser.Text)and(RPass[i]=EditPass.Text)and(RSections[i]=RCurSection)
+                      and (RLevels[i]=RCurLevel))then
+                      begin
+                          Close;
+                          RisRootUser:=false;
+                          TCC.User:=strRootUser;
+                          TCC.Pass:=strRootPass;
+                          ModalResult:=mrOK;
+                          Exit;
+                      end;
+                    end;
+                 end;
+
                  EditUser.Clear;
                  EditPass.Clear;
                  EditUser.SetFocus;
@@ -125,6 +168,13 @@ end;
 procedure TFormIntro.FormCreate(Sender: TObject);
 begin
   TCC:=TCC.Create;
+  RUsers:=TStringList.Create;
+  RPass:=TStringList.Create;
+  RSections:=TStringList.Create;
+  RLevels:=TStringList.Create;
+  RCurSection:='';
+  RCurLevel:='';
+  RAllowNotRootUser:=false;
 end;
 
 procedure TFormIntro.FormShow(Sender: TObject);

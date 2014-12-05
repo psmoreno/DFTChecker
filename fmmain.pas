@@ -9,13 +9,14 @@ uses
   Forms, Controls, Graphics, Dialogs, Menus,  ComCtrls, StdCtrls, DBGrids,
   Buttons, ExtCtrls, ActnList, LazHelpHTML, fmOF, fmModels, fmlinks, fmoptions,
   fmsearchdft, fmabout, fmclosebox, HelpIntfs, customconfig,
-  fmIntro, LResources, LR_Class,fmsearchDMS;
+  fmIntro, LResources, LR_Class,fmsearchDMS,fmusers;
 
 type
 
   { TFormPrincipal }
 
   TFormPrincipal = class(TForm)
+    ActionChangeUsers: TAction;
     ActionSearchDMS: TAction;
     ActionAbout: TAction;
     ActionHelp: TAction;
@@ -60,6 +61,7 @@ type
     MenuItem13: TMenuItem;
     MenuItem14: TMenuItem;
     MenuItem15: TMenuItem;
+    MenuItem16: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
@@ -75,6 +77,7 @@ type
     ToolButton10: TToolButton;
     ToolButton11: TToolButton;
     ToolButton12: TToolButton;
+    ToolButton13: TToolButton;
     ToolButton2: TToolButton;
     ToolButton3: TToolButton;
     ToolButton4: TToolButton;
@@ -86,6 +89,7 @@ type
     ZConnectionPrincipal: TZConnection;
     ZQueryPrincipal: TZQuery;
     procedure ActionAboutExecute(Sender: TObject);
+    procedure ActionChangeUsersExecute(Sender: TObject);
     procedure ActionChkPCBExecute(Sender: TObject);
     procedure ActionCloseOFExecute(Sender: TObject);
     procedure ActionConfigExecute(Sender: TObject);
@@ -111,10 +115,20 @@ type
     MagazzineCount:integer;
     CurrentCount:integer;
 
+    Users:TStringList;
+    Pass:TStringList;
+    Sections:TStringList;
+    Levels:TStringList;
+
+    procedure LoadStringUserInIntro;
     procedure LoadFormOptions(MdResult:integer);
     procedure RecordDFTResults(FilePath:string; NroJIG:integer);
+    procedure RecordDFTSteps(FilePath:string; NroJIG:integer);
     procedure ExtractResources;
     procedure RegisterWrongPCB;
+    procedure InitialReadUsers;
+    function SepararCadena(Cadena: string; const Delim: Char): TStringList;
+    function ReorganizeStringList(Cadena:TStringList):TStringList;
     function CustomFormatNumbers(Value:integer;TotalLenghtofValue:integer):string;
   public
     { public declarations }
@@ -134,6 +148,9 @@ var
   Result:integer;
 begin
   FI.LoadConfig(CCF);
+  FI.AllowNotRootUser:=true;
+  FI.CurSection:='1';
+  FI.CurLevel:='2';
   Result:=FI.ShowModal;
   case Result of
        mrCancel:begin
@@ -238,6 +255,9 @@ var
   Result:integer;
 begin
   FI.LoadConfig(CCF);
+  FI.AllowNotRootUser:=true;
+  FI.CurSection:='2';
+  FI.CurLevel:='2';
   Result:=FI.ShowModal;
   case Result of
        mrCancel:begin
@@ -259,6 +279,9 @@ var
   Result:integer;
 begin
   FI.LoadConfig(CCF);
+  FI.AllowNotRootUser:=true;
+  FI.CurSection:='3';
+  FI.CurLevel:='2';
   Result:=FI.ShowModal;
   if Result=mrOK then
   begin
@@ -272,6 +295,9 @@ var
   Result:integer;
 begin
   FI.LoadConfig(CCF);
+  FI.AllowNotRootUser:=true;
+  FI.CurSection:='4';
+  FI.CurLevel:='2';
   Result:=FI.ShowModal;
   if Result=mrOK then
   begin
@@ -311,10 +337,16 @@ begin
    CCF:= TCustomConfig.Create;
    FI:=TFormIntro.Create(self);
 
+   Users:=TStringList.Create;
+   Pass:=TStringList.Create;
+   Sections:=TStringList.Create;
+   Levels:=TStringList.Create;
+
    CCF.ReadConfigIniFile;
    if CCF.Encrypted and((CCF.User='')or(CCF.Pass=''))then
    begin
       FI.LoadConfig(CCF);
+      FI.AllowNotRootUser:=false;
       Result:=FI.ShowModal;
       case Result of
            mrCancel:begin
@@ -346,6 +378,9 @@ begin
        Remote.OnShowRemoteOpEvent:=@ShowRemoteOp;
        Remote.Start;}
    end;
+
+   InitialReadUsers;
+   LoadStringUserInIntro;
 
    TimerMain.Interval:=StrToInt(CCF.ConfigOptions.UpdateDelay);
    TimerMain.Enabled:=true;
@@ -404,6 +439,36 @@ begin
        RecordDFTResults(CCF.ConfigOptions.DFTResultRepair,5);
     end;
 
+    if FileExistsUTF8(CCF.ConfigOptions.DFTFail1) then
+    begin
+       WarningOnLostConnect:=0;
+       RecordDFTSteps(CCF.ConfigOptions.DFTFail1,1);
+    end;
+
+    if FileExistsUTF8(CCF.ConfigOptions.DFTFail2) then
+    begin
+       WarningOnLostConnect:=0;
+       RecordDFTSteps(CCF.ConfigOptions.DFTFail2,2);
+    end;
+
+    if FileExistsUTF8(CCF.ConfigOptions.DFTFail3) then
+    begin
+       WarningOnLostConnect:=0;
+       RecordDFTSteps(CCF.ConfigOptions.DFTFail3,3);
+    end;
+
+    if FileExistsUTF8(CCF.ConfigOptions.DFTFail4) then
+    begin
+       WarningOnLostConnect:=0;
+       RecordDFTSteps(CCF.ConfigOptions.DFTFail4,4);
+    end;
+
+    if FileExistsUTF8(CCF.ConfigOptions.DFTFailRepair) then
+    begin
+       WarningOnLostConnect:=0;
+       RecordDFTSteps(CCF.ConfigOptions.DFTFailRepair,5);
+    end;
+
     WarningOnLostConnect:=WarningOnLostConnect+1;
     if WarningOnLostConnect>=5 then
     begin
@@ -424,6 +489,9 @@ var
   Result:integer;
 begin
   FI.LoadConfig(CCF);
+  FI.AllowNotRootUser:=true;
+  FI.CurSection:='1';
+  FI.CurLevel:='2';
   Result:=FI.ShowModal;
   case Result of
        mrCancel:begin
@@ -445,6 +513,9 @@ var
   Result:integer;
 begin
   FI.LoadConfig(CCF);
+  FI.AllowNotRootUser:=true;
+  FI.CurSection:='6';
+  FI.CurLevel:='2';
   Result:=FI.ShowModal;
   case Result of
        mrCancel:begin
@@ -461,7 +532,26 @@ end;
 
 procedure TFormPrincipal.ActionAboutExecute(Sender: TObject);
 begin
- FormAbout.ShowModal;
+   FormAbout.ShowModal;
+end;
+
+procedure TFormPrincipal.ActionChangeUsersExecute(Sender: TObject);
+var
+  Result:integer;
+begin
+  FI.LoadConfig(CCF);
+  FI.AllowNotRootUser:=false;
+  Result:=FI.ShowModal;
+  if Result=mrOK then
+  begin
+      FormUsers.LoadConfig(CCF);
+      FormUsers.ShowModal;
+      Self.Users:=FormUsers.Users;
+      Self.Pass:=FormUsers.Pass;
+      Self.Sections:=FormUsers.Sections;
+      Self.Levels:=FormUsers.Levels;
+      LoadStringUserInIntro;
+  end;
 end;
 
 procedure TFormPrincipal.ActionChkPCBExecute(Sender: TObject);
@@ -748,6 +838,152 @@ begin
   StrValue:=IntToStr(Value);
   StrResult:=Copy(StrResult,0,TotalLenghtofValue-Length(StrValue))+StrValue;
   CustomFormatNumbers:=StrResult;
+end;
+
+procedure TFormPrincipal.RecordDFTSteps(FilePath:string; NroJIG:integer);
+const
+  debug=0;
+var
+  Cadenas:TStringList;
+  Componentes:TStringList;
+  i,k:integer;
+  strSqlRecord:string;
+  ZQueryLoadDFTRecords:TZQuery;
+  ZConnectionLoadDFTRrecords:TZConnection;
+begin
+  self.IsInExecution:=false; //stop a while the timer
+
+  Cadenas:=TStringList.Create;
+  Componentes:=TStringList.Create;
+  ZConnectionLoadDFTRrecords:=TZConnection.Create(nil);
+  ZQueryLoadDFTRecords:=TZQuery.Create(nil);
+
+  ZConnectionLoadDFTRrecords.HostName:=CCF.ConfigSQl.HIP;
+  ZConnectionLoadDFTRrecords.Port:=StrToInt(CCF.ConfigSQl.PConecction);
+  ZConnectionLoadDFTRrecords.Protocol:=CCF.ConfigSQl.Databasetype;
+  ZConnectionLoadDFTRrecords.Database:=CCF.ConfigSQl.DBname;
+  ZConnectionLoadDFTRrecords.User:=CCF.ConfigSQl.User;
+  ZConnectionLoadDFTRrecords.Password:=CCF.ConfigSQl.Pass;
+  ZQueryLoadDFTRecords.Connection:=ZConnectionLoadDFTRrecords;
+  try
+     ZConnectionLoadDFTRrecords.Connect;
+     Cadenas.LoadFromFile(FilePath);
+     Componentes.Clear;
+     if debug=0 then
+     begin
+        Componentes.SaveToFile(FilePath);
+     end;
+     Cadenas:=ReorganizeStringList(Cadenas);
+     for i:=0 to (Cadenas.Count-1) do
+     begin
+          Componentes:=SepararCadena(Copy(Cadenas[i],Pos('values (%d',Cadenas[i])+11,Length(Cadenas[i])),',');
+          for k:=0 to (Componentes.Count-1) do
+          begin
+               Componentes[k]:=StringReplace(Componentes[k],')','',[rfReplaceAll,rfIgnoreCase]);
+               Componentes[k]:=StringReplace(Componentes[k],'(','',[rfReplaceAll,rfIgnoreCase]);
+               Componentes[k]:=StringReplace(Componentes[k],'''','',[rfReplaceAll,rfIgnoreCase]);
+               Componentes[k]:=StringReplace(Componentes[k],'.','',[rfReplaceAll,rfIgnoreCase]);
+          end;
+          if TryStrToInt(Componentes[4],k) = true then
+          begin
+            Componentes[4]:='NG';
+          end;
+          strSqlRecord:='INSERT INTO tstepfail(Fdate,Fhour,OfSerie,Step_no,Step_name,Tresult,NJig) VALUES ('+
+          '"'+FormatDateTime('dd-mm-yyyy',date)+'","'+TimeToStr(Now)+'","'+Componentes[0]+'",'+Componentes[2]+
+          ',"'+Componentes[3]+'","'+Componentes[4]+'",'+IntToStr(NroJIG)+');';
+          ZQueryLoadDFTRecords.SQL.Clear;
+          if debug=1 then
+          begin
+               ShowMessage(strSqlRecord);
+          end;
+          ZQueryLoadDFTRecords.SQL.Text:=strSqlRecord;
+          ZQueryLoadDFTRecords.ExecSQL;
+     end;
+     Cadenas.Clear;
+  finally
+    ZQueryLoadDFTRecords.Close;
+    ZConnectionLoadDFTRrecords.Disconnect;
+    self.IsInExecution:=true; // resume the timer
+  end;
+end;
+
+function TFormPrincipal.SepararCadena(Cadena: string; const Delim: Char): TStringList;
+var
+  p: Integer;
+begin
+  Result:= TStringList.Create;
+  Cadena:= Cadena + Delim;
+  while Length(Cadena) > 0 do
+  begin
+    Cadena:=Trim(Cadena);
+    p:= Pos(Delim, Cadena);
+    if p = Length(Cadena) then
+      SetLength(Cadena,Length(Cadena)-1);
+    Result.Add(Copy(Cadena, 1, p-1));
+    Delete(Cadena, 1, p);
+  end;
+end;
+
+function TFormPrincipal.ReorganizeStringList(Cadena:TStringList):TStringList;
+var
+  i:integer;
+  NPos:integer;
+begin
+  i:=0;
+  while  i<Cadena.Count do
+  begin
+    NPos:=Pos('?',Cadena[i]);
+    if NPos=0 then
+    begin
+      Cadena.Delete(i);
+      i:=i-1;
+    end;
+    i:=i+1;
+  end;
+  ReorganizeStringList:=Cadena;
+end;
+
+procedure TFormPrincipal.InitialReadUsers;
+var
+  i:integer;
+  ZQueryUsers:TZQuery;
+  ZConnectionUsers:TZConnection;
+begin
+   Users.Clear;
+   Pass.Clear;
+   Sections.Clear;
+   Levels.Clear;
+   ZConnectionUsers:=TZConnection.Create(nil);
+   ZQueryUsers:=TZQuery.Create(nil);
+   ZConnectionUsers.HostName:=CCF.ConfigSQl.HIP;
+   ZConnectionUsers.Port:=StrToInt(CCF.ConfigSQl.PConecction);
+   ZConnectionUsers.Protocol:=CCF.ConfigSQl.Databasetype;
+   ZConnectionUsers.Database:=CCF.ConfigSQl.DBname;
+   ZConnectionUsers.User:=CCF.ConfigSQl.User;
+   ZConnectionUsers.Password:=CCF.ConfigSQl.Pass;
+   ZQueryUsers.Connection:=ZConnectionUsers;
+
+   ZQueryUsers.SQL.Text:='SELECT * FROM tusers';
+   ZQueryUsers.Open;
+   ZQueryUsers.First;
+   for i:=0 to ZQueryUsers.RecordCount-1 do
+   begin
+        Users.Add(ZQueryUsers.FieldByName('UserName').AsString);
+        Pass.Add(ZQueryUsers.FieldByName('UserPass').AsString);
+        Sections.Add(ZQueryUsers.FieldByName('PSection').AsString);
+        Levels.Add(ZQueryUsers.FieldByName('TAutorization').AsString);
+        ZQueryUsers.Next;
+   end;
+   ZQueryUsers.Close;
+   ZConnectionUsers.Disconnect;
+end;
+
+procedure TFormPrincipal.LoadStringUserInIntro;
+begin
+  FI.Users:=Self.Users;
+  FI.Pass:=Self.Pass;
+  FI.Sections:=Self.Sections;
+  FI.Levels:=Self.Levels;
 end;
 
 initialization

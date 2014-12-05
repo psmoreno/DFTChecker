@@ -9,8 +9,7 @@ uses
   Interfaces, // this includes the LCL widgetset
   Forms, csvdocument_package, fmmain, zcomponent, fmModels, fmof, fmlinks,
   fmoptions, fmabout, fmclosebox, fmaddinsert, fmintro, customconfig,
-  ucrypto, lhelpcontrolpkg, fmsearchDMS, fmsearchdft
-  { you can add units after this };
+  ucrypto, lhelpcontrolpkg, fmsearchDMS, fmsearchdft, fmusers;
 
 {$R *.res}
 
@@ -28,6 +27,7 @@ begin
   Application.CreateForm(TFormAddInsert, FormAddInsert);
   Application.CreateForm(TFormSearchDFT, FormSearchDFT);
   Application.CreateForm(TFormSearchDMS, FormSearchDMS);
+  Application.CreateForm(TFormUsers, FormUsers);
   Application.Run;
 end.
 
