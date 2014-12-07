@@ -8,14 +8,16 @@ uses
   Classes, SysUtils, db, FileUtil,LR_Desgn,LazHelpCHM, ZDataset, ZConnection,
   Forms, Controls, Graphics, Dialogs, Menus,  ComCtrls, StdCtrls, DBGrids,
   Buttons, ExtCtrls, ActnList, LazHelpHTML, fmOF, fmModels, fmlinks, fmoptions,
-  fmsearchdft, fmabout, fmclosebox, HelpIntfs, customconfig,
-  fmIntro, LResources, LR_Class,fmsearchDMS,fmusers;
+  fmsearchdft, fmabout, fmclosebox, HelpIntfs, customconfig, fmIntro, LResources,
+  LR_Class,fmsearchDMS,fmusers,fmsearchFail,fmbkpdb;
 
 type
 
   { TFormPrincipal }
 
   TFormPrincipal = class(TForm)
+    ActionBkpDB: TAction;
+    ActionSearchFails: TAction;
     ActionChangeUsers: TAction;
     ActionSearchDMS: TAction;
     ActionAbout: TAction;
@@ -62,6 +64,8 @@ type
     MenuItem14: TMenuItem;
     MenuItem15: TMenuItem;
     MenuItem16: TMenuItem;
+    MenuItem17: TMenuItem;
+    MenuItem18: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
@@ -78,6 +82,9 @@ type
     ToolButton11: TToolButton;
     ToolButton12: TToolButton;
     ToolButton13: TToolButton;
+    ToolButton14: TToolButton;
+    ToolButton15: TToolButton;
+    ToolButton16: TToolButton;
     ToolButton2: TToolButton;
     ToolButton3: TToolButton;
     ToolButton4: TToolButton;
@@ -89,6 +96,7 @@ type
     ZConnectionPrincipal: TZConnection;
     ZQueryPrincipal: TZQuery;
     procedure ActionAboutExecute(Sender: TObject);
+    procedure ActionBkpDBExecute(Sender: TObject);
     procedure ActionChangeUsersExecute(Sender: TObject);
     procedure ActionChkPCBExecute(Sender: TObject);
     procedure ActionCloseOFExecute(Sender: TObject);
@@ -101,6 +109,7 @@ type
     procedure ActionOFLinkExecute(Sender: TObject);
     procedure ActionSearchDFTExecute(Sender: TObject);
     procedure ActionSearchDMSExecute(Sender: TObject);
+    procedure ActionSearchFailsExecute(Sender: TObject);
     procedure EditPCBKeyPress(Sender: TObject; var Key: char);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -127,6 +136,7 @@ type
     procedure ExtractResources;
     procedure RegisterWrongPCB;
     procedure InitialReadUsers;
+    procedure RegisterUser(UserName:string;iSector:integer;EqId:string);
     function SepararCadena(Cadena: string; const Delim: Char): TStringList;
     function ReorganizeStringList(Cadena:TStringList):TStringList;
     function CustomFormatNumbers(Value:integer;TotalLenghtofValue:integer):string;
@@ -157,10 +167,18 @@ begin
           exit;
        end;
        mrOK:begin
+          if FI.isRootUser=false then
+          begin
+               RegisterUser(FI.Users[FI.LocatedIndex],StrToInt(FI.CurSection),CCF.ConfigOptions.EqId);
+          end;
           FormOF.LoadConfig(CCF);
           FormOF.ShowModal;
        end;
        mrYes:begin
+          if FI.isRootUser=false then
+          begin
+               RegisterUser(FI.Users[FI.LocatedIndex],StrToInt(FI.CurSection),CCF.ConfigOptions.EqId);
+          end;
           FormOF.LoadConfig(CCF);
           FormOF.ShowModal;
        end;
@@ -264,10 +282,18 @@ begin
           exit;
        end;
        mrOK:begin
+          if FI.isRootUser=false then
+          begin
+               RegisterUser(FI.Users[FI.LocatedIndex],StrToInt(FI.CurSection),CCF.ConfigOptions.EqId);
+          end;
           FormLinks.LoadConfig(CCF);
           FormLinks.ShowModal;
        end;
        mrYes:begin
+          if FI.isRootUser=false then
+          begin
+               RegisterUser(FI.Users[FI.LocatedIndex],StrToInt(FI.CurSection),CCF.ConfigOptions.EqId);
+          end;
           FormLinks.LoadConfig(CCF);
           FormLinks.ShowModal;
        end;
@@ -285,6 +311,10 @@ begin
   Result:=FI.ShowModal;
   if Result=mrOK then
   begin
+     if FI.isRootUser=false then
+     begin
+          RegisterUser(FI.Users[FI.LocatedIndex],StrToInt(FI.CurSection),CCF.ConfigOptions.EqId);
+     end;
      FormSearchDFT.LoadConfig(CCF);
      FormSearchDFT.ShowModal;
   end;
@@ -301,8 +331,32 @@ begin
   Result:=FI.ShowModal;
   if Result=mrOK then
   begin
+     if FI.isRootUser=false then
+     begin
+          RegisterUser(FI.Users[FI.LocatedIndex],StrToInt(FI.CurSection),CCF.ConfigOptions.EqId);
+     end;
      FormSearchDMS.LoadConfig(CCF);
      FormSearchDMS.ShowModal;
+  end;
+end;
+
+procedure TFormPrincipal.ActionSearchFailsExecute(Sender: TObject);
+var
+  Result:integer;
+begin
+  FI.LoadConfig(CCF);
+  FI.AllowNotRootUser:=true;
+  FI.CurSection:='5';
+  FI.CurLevel:='2';
+  Result:=FI.ShowModal;
+  if Result=mrOK then
+  begin
+     if FI.isRootUser=false then
+     begin
+          RegisterUser(FI.Users[FI.LocatedIndex],StrToInt(FI.CurSection),CCF.ConfigOptions.EqId);
+     end;
+     FormSearchFail.LoadConfig(CCF);
+     FormSearchFail.ShowModal;
   end;
 end;
 
@@ -498,10 +552,18 @@ begin
           exit;
        end;
        mrOK:begin
+          if FI.isRootUser=false then
+          begin
+               RegisterUser(FI.Users[FI.LocatedIndex],StrToInt(FI.CurSection),CCF.ConfigOptions.EqId);
+          end;
           FormModels.LoadConfig(CCF);
           FormModels.ShowModal;
        end;
        mrYes:begin
+          if FI.isRootUser=false then
+          begin
+               RegisterUser(FI.Users[FI.LocatedIndex],StrToInt(FI.CurSection),CCF.ConfigOptions.EqId);
+          end;
           FormModels.LoadConfig(CCF);
           FormModels.ShowModal;
        end;
@@ -522,9 +584,17 @@ begin
           exit;
        end;
        mrOK:begin
+          if FI.isRootUser=false then
+          begin
+               RegisterUser(FI.Users[FI.LocatedIndex],StrToInt(FI.CurSection),CCF.ConfigOptions.EqId);
+          end;
           LoadFormOptions(mrOK);
        end;
        mrYes:begin
+          if FI.isRootUser=false then
+          begin
+               RegisterUser(FI.Users[FI.LocatedIndex],StrToInt(FI.CurSection),CCF.ConfigOptions.EqId);
+          end;
           LoadFormOptions(mrYes);
        end;
   end;
@@ -533,6 +603,26 @@ end;
 procedure TFormPrincipal.ActionAboutExecute(Sender: TObject);
 begin
    FormAbout.ShowModal;
+end;
+
+procedure TFormPrincipal.ActionBkpDBExecute(Sender: TObject);
+var
+  Result:integer;
+begin
+  FI.LoadConfig(CCF);
+  FI.AllowNotRootUser:=true;
+  FI.CurSection:='7';
+  FI.CurLevel:='2';
+  Result:=FI.ShowModal;
+  if Result=mrOK then
+  begin
+     if FI.isRootUser=false then
+     begin
+          RegisterUser(FI.Users[FI.LocatedIndex],StrToInt(FI.CurSection),CCF.ConfigOptions.EqId);
+     end;
+     FormBkpDB.LoadConfig(CCF);
+     FormBkpDB.ShowModal;
+  end;
 end;
 
 procedure TFormPrincipal.ActionChangeUsersExecute(Sender: TObject);
@@ -964,18 +1054,21 @@ begin
    ZQueryUsers.Connection:=ZConnectionUsers;
 
    ZQueryUsers.SQL.Text:='SELECT * FROM tusers';
-   ZQueryUsers.Open;
-   ZQueryUsers.First;
-   for i:=0 to ZQueryUsers.RecordCount-1 do
-   begin
+   try
+      ZQueryUsers.Open;
+      ZQueryUsers.First;
+      for i:=0 to ZQueryUsers.RecordCount-1 do
+      begin
         Users.Add(ZQueryUsers.FieldByName('UserName').AsString);
         Pass.Add(ZQueryUsers.FieldByName('UserPass').AsString);
         Sections.Add(ZQueryUsers.FieldByName('PSection').AsString);
         Levels.Add(ZQueryUsers.FieldByName('TAutorization').AsString);
         ZQueryUsers.Next;
-   end;
+      end;
    ZQueryUsers.Close;
    ZConnectionUsers.Disconnect;
+   finally
+   end;
 end;
 
 procedure TFormPrincipal.LoadStringUserInIntro;
@@ -984,6 +1077,36 @@ begin
   FI.Pass:=Self.Pass;
   FI.Sections:=Self.Sections;
   FI.Levels:=Self.Levels;
+end;
+
+procedure TFormPrincipal.RegisterUser(UserName:string;iSector:integer;EqId:string);
+var
+  ZQueryLogUsers:TZQuery;
+  ZConnectionLogUsers:TZConnection;
+begin
+  ZConnectionLogUsers:=TZConnection.Create(nil);
+  ZQueryLogUsers:=TZQuery.Create(nil);
+  ZConnectionLogUsers.HostName:=CCF.ConfigSQl.HIP;
+  ZConnectionLogUsers.Port:=StrToInt(CCF.ConfigSQl.PConecction);
+  ZConnectionLogUsers.Protocol:=CCF.ConfigSQl.Databasetype;
+  ZConnectionLogUsers.Database:=CCF.ConfigSQl.DBname;
+  ZConnectionLogUsers.User:=CCF.ConfigSQl.User;
+  ZConnectionLogUsers.Password:=CCF.ConfigSQl.Pass;
+  ZQueryLogUsers.Connection:=ZConnectionLogUsers;
+  ZQueryLogUsers.SQL.Text:='SELECT * FROM tuserlogs';
+  try
+     ZQueryLogUsers.Open;
+     ZQueryLogUsers.Append;
+     ZQueryLogUsers.FieldByName('uDate').AsString:=FormatDateTime('dd-mm-yyyy',date);
+     ZQueryLogUsers.FieldByName('uHour').AsString:=TimeToStr(Now);
+     ZQueryLogUsers.FieldByName('UserName').AsString:=UserName;
+     ZQueryLogUsers.FieldByName('iSector').AsInteger:=iSector;
+     ZQueryLogUsers.FieldByName('EqId').AsString:=EqId;
+     ZQueryLogUsers.CommitUpdates;
+     ZQueryLogUsers.Close;
+     ZConnectionLogUsers.Disconnect;
+  finally
+  end;
 end;
 
 initialization

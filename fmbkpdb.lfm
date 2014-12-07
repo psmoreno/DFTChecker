@@ -1,0 +1,10 @@
+object FormBkpDB: TFormBkpDB
+  Left = 644
+  Height = 413
+  Top = 196
+  Width = 652
+  BorderStyle = bsDialog
+  Caption = 'Configuración de copias de seguridad'
+  Position = poMainFormCenter
+  LCLVersion = '1.2.2.0'
+end

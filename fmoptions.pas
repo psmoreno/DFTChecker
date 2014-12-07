@@ -25,6 +25,7 @@ type
     Edit14: TEdit;
     Edit15: TEdit;
     Edit16: TEdit;
+    EditIdEquipment: TEdit;
     Edit2: TEdit;
     Edit3: TEdit;
     Edit4: TEdit;
@@ -43,6 +44,7 @@ type
     Label14: TLabel;
     Label15: TLabel;
     Label16: TLabel;
+    Label17: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
@@ -216,6 +218,8 @@ begin
     CheckBox1.Checked:=false;
   end;
 
+  EditIdEquipment.Text:=TCC.ConfigOptions.EqId;
+
   if (TCC.Encrypted)then
   begin
     CheckBox2.Checked:=true;
@@ -255,6 +259,8 @@ begin
    begin
       CCF.ConfigOptions.EnableRemoteControl:='false';
    end;
+
+   CCF.ConfigOptions.EqId:=EditIdEquipment.Text;
    CCF.Encrypted:=CheckBox2.Checked;
 end;
 

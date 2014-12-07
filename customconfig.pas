@@ -35,6 +35,7 @@ type
 
     UpdateDelay:string;
     EnableRemoteControl:string;
+    EqId:string;
   end;
 
   {CustomConfig}
@@ -95,6 +96,7 @@ begin
   ConfigOptions.DFTFailRepair:=UnencryptOP(IniPropStorageConnection.ReadString('DFTFailRepair','MES_StepData5.txt'));
 
   ConfigOptions.EnableRemoteControl:=UnencryptOP(IniPropStorageConnection.ReadString('EnableRControl','false'));
+  ConfigOptions.EqId:=UnencryptOP(IniPropStorageConnection.ReadString('EquipmentId','Unknown'));
 
   IniPropStorageConnection.IniSection := 'SQLConfig';
   ConfigSQl.Databasetype:=UnencryptOP(IniPropStorageConnection.ReadString('DatabaseType','mysql-5'));
@@ -133,6 +135,7 @@ begin
   IniPropStorageConnection.WriteString('DFTFailRepair',EncryptOp(ConfigOptions.DFTFailRepair));
 
   IniPropStorageConnection.WriteString('EnableRControl',EncryptOp(ConfigOptions.EnableRemoteControl));
+  IniPropStorageConnection.WriteString('EquipmentId',EncryptOp(ConfigOptions.EqId));
   CreateCryptoKey;
   IniPropStorageConnection.WriteString('Cryptokey',RCryptokey);
 end;

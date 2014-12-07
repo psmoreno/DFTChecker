@@ -1,12 +1,12 @@
-object FormSearchDMS: TFormSearchDMS
-  Left = 762
+object FormSearchFail: TFormSearchFail
+  Left = 594
   Height = 492
-  Top = 212
-  Width = 642
+  Top = 194
+  Width = 775
   BorderIcons = [biSystemMenu, biMaximize]
-  Caption = 'Busqueda de registros en DMS'
+  Caption = 'Busqueda de registros de fallas en los DFT'
   ClientHeight = 492
-  ClientWidth = 642
+  ClientWidth = 775
   Font.CharSet = ANSI_CHARSET
   Font.Height = -19
   Font.Name = 'Arial'
@@ -17,29 +17,29 @@ object FormSearchDMS: TFormSearchDMS
   LCLVersion = '1.2.2.0'
   object PanelRFilter: TPanel
     Left = 8
-    Height = 61
-    Top = 8
-    Width = 344
+    Height = 64
+    Top = 13
+    Width = 416
     BevelInner = bvRaised
     BevelOuter = bvLowered
-    ClientHeight = 61
-    ClientWidth = 344
+    ClientHeight = 64
+    ClientWidth = 416
     TabOrder = 0
     object Label1: TLabel
       Left = 8
       Height = 22
       Top = 20
-      Width = 177
-      Caption = 'Orden de fabricación'
+      Width = 146
+      Caption = 'Nombre del paso'
       ParentColor = False
     end
-    object EditSrchDMS: TEdit
+    object EditSrchFail: TEdit
       Left = 190
       Height = 30
       Top = 17
-      Width = 138
-      MaxLength = 11
-      OnKeyUp = EditSrchDMSKeyUp
+      Width = 210
+      MaxLength = 20
+      OnKeyUp = EditSrchFailKeyUp
       TabOrder = 0
     end
   end
@@ -478,11 +478,11 @@ object FormSearchDMS: TFormSearchDMS
       TabOrder = 2
     end
   end
-  object DBGridSrchDMS: TDBGrid
+  object DBGridSrchFail: TDBGrid
     Left = 8
     Height = 335
-    Top = 89
-    Width = 624
+    Top = 91
+    Width = 757
     Anchors = [akTop, akLeft, akRight, akBottom]
     Color = clWindow
     Columns = <    
@@ -493,8 +493,8 @@ object FormSearchDMS: TFormSearchDMS
         Title.Font.Name = 'Arial'
         Title.Font.Pitch = fpVariable
         Title.Font.Quality = fqDraft
-        Width = 80
-        FieldName = 'DMSdate'
+        Width = 110
+        FieldName = 'Fdate'
       end    
       item
         Title.Caption = 'Hora'
@@ -503,8 +503,8 @@ object FormSearchDMS: TFormSearchDMS
         Title.Font.Name = 'Arial'
         Title.Font.Pitch = fpVariable
         Title.Font.Quality = fqDraft
-        Width = 80
-        FieldName = 'DMShour'
+        Width = 90
+        FieldName = 'Fhour'
       end    
       item
         Title.Caption = 'Orden F. - Serial'
@@ -514,17 +514,32 @@ object FormSearchDMS: TFormSearchDMS
         Title.Font.Pitch = fpVariable
         Title.Font.Quality = fqDraft
         Width = 150
-        FieldName = 'OfSerial'
+        FieldName = 'OfSerie'
       end    
       item
-        Title.Caption = 'Modelo'
+        Title.Caption = 'N.Paso'
         Title.Font.CharSet = ANSI_CHARSET
         Title.Font.Height = -19
         Title.Font.Name = 'Arial'
         Title.Font.Pitch = fpVariable
         Title.Font.Quality = fqDraft
+        Width = 70
+        FieldName = 'Step_no'
+      end    
+      item
+        Title.Caption = 'Nombre Paso'
         Width = 150
-        FieldName = 'ModelName'
+        FieldName = 'Step_name'
+      end    
+      item
+        Title.Caption = 'Result.'
+        Width = 90
+        FieldName = 'Tresult'
+      end    
+      item
+        Title.Caption = 'N.JIG'
+        Width = 60
+        FieldName = 'NJig'
       end>
     TabOrder = 2
     TitleFont.CharSet = ANSI_CHARSET
@@ -534,9 +549,9 @@ object FormSearchDMS: TFormSearchDMS
     TitleFont.Quality = fqDraft
   end
   object RadioGroupRestrict: TRadioGroup
-    Left = 360
+    Left = 444
     Height = 86
-    Top = -4
+    Top = 1
     Width = 272
     AutoFill = True
     Caption = 'Restringir'
@@ -558,7 +573,7 @@ object FormSearchDMS: TFormSearchDMS
     OnSelectionChanged = RadioGroupRestrictSelectionChanged
     TabOrder = 3
   end
-  object ZConnectionSrchDMS: TZConnection
+  object ZConnectionSrchFail: TZConnection
     ControlsCodePage = cCP_UTF8
     AutoEncodeStrings = False
     Properties.Strings = (
@@ -569,17 +584,17 @@ object FormSearchDMS: TFormSearchDMS
     left = 56
     top = 152
   end
-  object ZQuerySrchDMS: TZQuery
+  object ZQuerySrchFail: TZQuery
     Params = <>
     left = 176
     top = 152
   end
-  object DataSourceSrchDMS: TDataSource
+  object DataSourceSrchFail: TDataSource
     left = 280
     top = 152
   end
-  object FrPrintGridSrchDMS: TFrPrintGrid
-    DBGrid = DBGridSrchDMS
+  object FrPrintGridSrchFail: TFrPrintGrid
+    DBGrid = DBGridSrchFail
     TitleFont.CharSet = ANSI_CHARSET
     TitleFont.Height = -21
     TitleFont.Name = 'Arial'
@@ -590,7 +605,7 @@ object FormSearchDMS: TFormSearchDMS
     left = 392
     top = 152
   end
-  object SaveDialogDMS: TSaveDialog
+  object SaveDialogFail: TSaveDialog
     Filter = 'Valores separados por comas (*.csv)|*.csv|Todos los archivos  (*.*)|*.*'
     left = 56
     top = 216

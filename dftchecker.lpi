@@ -48,7 +48,7 @@
         <PackageName Value="LCL"/>
       </Item6>
     </RequiredPackages>
-    <Units Count="15">
+    <Units Count="17">
       <Unit0>
         <Filename Value="dftchecker.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -160,6 +160,21 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="fmusers"/>
       </Unit14>
+      <Unit15>
+        <Filename Value="fmsearchFail.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormSearchFail"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="fmsearchFail"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="fmbkpdb.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormBkpDB"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="fmbkpdb"/>
+      </Unit16>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -172,7 +187,15 @@
       <IncludeFiles Value="$(ProjOutDir)"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
+    <CodeGeneration>
+      <Optimizations>
+        <OptimizationLevel Value="3"/>
+      </Optimizations>
+    </CodeGeneration>
     <Linking>
+      <Debugging>
+        <GenerateDebugInfo Value="False"/>
+      </Debugging>
       <Options>
         <Win32>
           <GraphicApplication Value="True"/>

@@ -38,6 +38,7 @@ type
     RCurLevel:string;
     RAllowNotRootUser:boolean;
     RisRootUser:boolean;
+    RLocatedIndex:integer;
 
     function CheckValues:boolean;
   public
@@ -52,6 +53,7 @@ type
     property CurLevel:string read RCurLevel write RCurLevel;
     property AllowNotRootUser:boolean read RAllowNotRootUser write RAllowNotRootUser;
     property isRootUser:boolean read RisRootUser;
+    property LocatedIndex:integer read RLocatedIndex;
   end;
 
 var
@@ -118,6 +120,7 @@ begin
                           RisRootUser:=false;
                           TCC.User:=strRootUser;
                           TCC.Pass:=strRootPass;
+                          RLocatedIndex:=i;
                           ModalResult:=mrOK;
                           Exit;
                       end;
@@ -181,6 +184,7 @@ procedure TFormIntro.FormShow(Sender: TObject);
 begin
   EditUser.Clear;
   EditPass.Clear;
+  RLocatedIndex:=0;
   EditUser.SetFocus;
 end;
 

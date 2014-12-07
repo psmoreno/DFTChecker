@@ -377,20 +377,20 @@ object FormOptions: TFormOptions
     end
   end
   object PanelButtons: TPanel
-    Left = 130
+    Left = 319
     Height = 58
     Top = 536
-    Width = 368
+    Width = 297
     BevelInner = bvRaised
     BevelOuter = bvLowered
     ClientHeight = 58
-    ClientWidth = 368
-    TabOrder = 2
+    ClientWidth = 297
+    TabOrder = 3
     object BitBtnOK: TBitBtn
-      Left = 18
+      Left = 12
       Height = 38
       Top = 8
-      Width = 153
+      Width = 134
       Caption = '&Aceptar'
       Glyph.Data = {
         36100000424D3610000000000000360000002800000020000000200000000100
@@ -528,10 +528,10 @@ object FormOptions: TFormOptions
       TabOrder = 0
     end
     object BitBtnExit: TBitBtn
-      Left = 200
+      Left = 152
       Height = 38
       Top = 8
-      Width = 153
+      Width = 134
       Caption = '&Cancelar'
       Glyph.Data = {
         36100000424D3610000000000000360000002800000020000000200000000100
@@ -669,10 +669,26 @@ object FormOptions: TFormOptions
       TabOrder = 1
     end
   end
+  object Label17: TLabel
+    Left = 8
+    Height = 24
+    Top = 552
+    Width = 87
+    Caption = 'Id Equipo'
+    ParentColor = False
+  end
+  object EditIdEquipment: TEdit
+    Left = 102
+    Height = 32
+    Top = 549
+    Width = 208
+    TabOrder = 2
+    Text = 'Control DMS'
+  end
   object OpenDialogPath: TOpenDialog
     DefaultExt = '.*.txt'
     Filter = 'Archivos de texto|*.txt|Todos los archivos|*.*'
-    left = 536
-    top = 544
+    left = 288
+    top = 456
   end
 end

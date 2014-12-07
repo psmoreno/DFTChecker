@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, db, FileUtil, LR_PGrid, ZConnection, ZDataset,
   Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, DBGrids, Buttons,
-  customconfig;
+  customconfig,dateutils;
 
 type
 
@@ -24,6 +24,7 @@ type
     Label1: TLabel;
     PanelRFilter: TPanel;
     PanelButtons: TPanel;
+    RadioGroupRestrict: TRadioGroup;
     SaveDialogDMS: TSaveDialog;
     ZConnectionSrchDMS: TZConnection;
     ZQuerySrchDMS: TZQuery;
@@ -33,10 +34,12 @@ type
     procedure EditSrchDMSKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure FormShow(Sender: TObject);
+    procedure RadioGroupRestrictSelectionChanged(Sender: TObject);
   private
     { private declarations }
       CCF:TCustomConfig;
       procedure FilterResults;
+      function GetAllDayOfWeek:TStringList;
   public
     { public declarations }
       procedure LoadConfig(TCmCfg:TCustomConfig);
@@ -93,6 +96,11 @@ begin
   EditSrchDMS.SetFocus;
 end;
 
+procedure TFormSearchDMS.RadioGroupRestrictSelectionChanged(Sender: TObject);
+begin
+  FilterResults;
+end;
+
 procedure TFormSearchDMS.LoadConfig(TCmCfg:TCustomConfig);
 begin
   CCF:=TCmCfg;
@@ -101,15 +109,65 @@ end;
 procedure TFormSearchDMS.FilterResults;
 var
   StrSQL:string;
+  ListOfDay:TStringList;
 begin
-  StrSQL:='SELECT * FROM tdms ORDER BY id DESC LIMIT 1000';
-  if EditSrchDMS.Text<>'' then
+  if EditSrchDMS.Text <>'' then
   begin
-     StrSQL:='SELECT * FROM tdms WHERE OfSerie LIKE ''%'+EditSrchDMS.Text+'%'' ORDER BY OfSerial ASC';
+      StrSQL:='SELECT * FROM tdms WHERE OfSerial LIKE ''%'+EditSrchDMS.Text+'%''';
+  end
+  else
+  begin
+      StrSQL:='SELECT * FROM tdms WHERE OfSerial LIKE ''%''';
+  end;
+
+  case RadioGroupRestrict.ItemIndex of
+       0:begin
+           StrSQL:=StrSQL+' ORDER BY OfSerial ASC LIMIT 10000';
+       end;
+       1:begin
+           StrSQL:=StrSQL+'AND DMSdate LIKE '''+FormatDateTime('dd-mm-yyyy',date)+'''';
+       end;
+       2:begin
+          ListOfDay:=GetAllDayOfWeek;
+          StrSQL:=StrSQL+'AND ( DMSdate LIKE '''+ListOfDay[1]+''' OR DMSdate LIKE '''+
+          ListOfDay[2]+''' OR DMSdate LIKE '''+ListOfDay[3]+''' OR DMSdate LIKE '''+
+          ListOfDay[4]+''' OR DMSdate LIKE '''+ListOfDay[5]+''' OR DMSdate LIKE '''+
+          ListOfDay[6]+''' OR DMSdate LIKE '''+ListOfDay[7]+''' )';
+       end;
   end;
   ZQuerySrchDMS.Active:=false;
   ZQuerySrchDMS.SQL.Text:=strSQL;
   ZQuerySrchDMS.Active:=true;
+end;
+
+function TFormSearchDMS.GetAllDayOfWeek:TStringList;
+var
+   Lista:TStringList;
+   i:integer;
+   k:integer;
+   CurDayPos:integer;
+begin
+   Lista:=TStringList.Create;
+   for i:=0 to 8 do
+   begin
+        Lista.Add('N');
+   end;
+
+   CurDayPos:=DayOfWeek(date);
+   k:=1;
+   for i:=(CurDayPos) to 8 do
+   begin
+      Lista[i]:=FormatDateTime('dd-mm-yyyy',IncDay(date,k));
+      k:=k+1;
+   end;
+   k:=0;
+   for i:=(CurDayPos-1) downto 1 do
+   begin
+      Lista[i]:=FormatDateTime('dd-mm-yyyy',IncDay(date,-k));
+      k:=k+1;
+   end;
+
+   GetAllDayOfWeek:=Lista;
 end;
 
 end.
