@@ -139,6 +139,7 @@ begin
        TCC.User:=EditUser.Text;
        TCC.Pass:=EditPass.Text;
        Close();
+       RisRootUser:=true;
        ModalResult:=mrYes;
   end;
 end;

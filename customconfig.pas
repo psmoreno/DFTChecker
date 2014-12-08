@@ -38,6 +38,16 @@ type
     EqId:string;
   end;
 
+  {ConfigBackupOptions}
+  TConfigBKPOptions = record
+    VDate:string;
+    VLastBkp:string;
+    VHour:string;
+    VRepeat:string;
+    VOlder:string;
+    EnableBKP:string;
+  end;
+
   {CustomConfig}
   TCustomConfig=class
     private
@@ -56,6 +66,7 @@ type
     public
       ConfigSQl:TConfigSQL;
       ConfigOptions:TConfigOptions;
+      ConfigBKPOptions:TConfigBKPOptions;
 
       procedure SaveConfigIniFile;
       procedure ReadConfigIniFile;
@@ -105,6 +116,14 @@ begin
   ConfigSQl.DBname:=UnencryptOP(IniPropStorageConnection.ReadString('DatabaseName', 'DFT'));
   ConfigSQl.User:=UnencryptOP(IniPropStorageConnection.ReadString('User', 'pabliten'));
   ConfigSQl.Pass:=UnencryptOP(IniPropStorageConnection.ReadString('Password', 'wizard'));
+
+  IniPropStorageConnection.IniSection:='BKPOptions';
+  ConfigBKPOptions.VDate:=UnencryptOP(IniPropStorageConnection.ReadString('InitialDate','07/12/2014'));
+  ConfigBKPOptions.VLastBkp:=UnencryptOP(IniPropStorageConnection.ReadString('LastBackup','07/12/2014'));
+  ConfigBKPOptions.VHour:=UnencryptOP(IniPropStorageConnection.ReadString('InitialHour','02:00'));
+  ConfigBKPOptions.Vrepeat:=UnencryptOP(IniPropStorageConnection.ReadString('Repeat','SEMANAL'));
+  ConfigBKPOptions.VOlder:=UnencryptOP(IniPropStorageConnection.ReadString('Antiguedad','SEMANAL'));
+  ConfigBKPOptions.EnableBKP:=UnencryptOP(IniPropStorageConnection.ReadString('EnableBKP','false'));
 end;
 
 procedure TCustomConfig.SaveConfigIniFile;
@@ -138,6 +157,14 @@ begin
   IniPropStorageConnection.WriteString('EquipmentId',EncryptOp(ConfigOptions.EqId));
   CreateCryptoKey;
   IniPropStorageConnection.WriteString('Cryptokey',RCryptokey);
+
+  IniPropStorageConnection.IniSection:='BKPOptions';
+  IniPropStorageConnection.WriteString('InitialDate',EncryptOp(ConfigBKPOptions.VDate));
+  IniPropStorageConnection.WriteString('LastBackup',EncryptOp(ConfigBKPOptions.VLastBkp));
+  IniPropStorageConnection.WriteString('InitialHour',EncryptOp(ConfigBKPOptions.VHour));
+  IniPropStorageConnection.WriteString('Repeat',EncryptOp(ConfigBKPOptions.VRepeat));
+  IniPropStorageConnection.WriteString('Antiguedad',EncryptOp(ConfigBKPOptions.VOlder));
+  IniPropStorageConnection.WriteString('EnableBKP',EncryptOp(ConfigBKPOptions.EnableBKP));
 end;
 
 Constructor TCustomConfig.Create();

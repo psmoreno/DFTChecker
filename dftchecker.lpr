@@ -9,7 +9,8 @@ uses
   Interfaces, // this includes the LCL widgetset
   Forms, csvdocument_package, fmmain, zcomponent, fmModels, fmof, fmlinks,
   fmoptions, fmabout, fmclosebox, fmaddinsert, fmintro, customconfig, ucrypto,
-  lhelpcontrolpkg, fmsearchDMS, fmsearchdft, fmusers, fmsearchFail, fmbkpdb;
+  lhelpcontrolpkg, fmsearchDMS, fmsearchdft, fmusers, fmsearchFail, fmbkpdb,
+  ubackups;
 
 {$R *.res}
 

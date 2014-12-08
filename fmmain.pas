@@ -9,7 +9,7 @@ uses
   Forms, Controls, Graphics, Dialogs, Menus,  ComCtrls, StdCtrls, DBGrids,
   Buttons, ExtCtrls, ActnList, LazHelpHTML, fmOF, fmModels, fmlinks, fmoptions,
   fmsearchdft, fmabout, fmclosebox, HelpIntfs, customconfig, fmIntro, LResources,
-  LR_Class,fmsearchDMS,fmusers,fmsearchFail,fmbkpdb;
+  LR_Class,fmsearchDMS,fmusers,fmsearchFail,fmbkpdb,ubackups,dateutils;
 
 type
 
@@ -123,6 +123,7 @@ type
     OrderActive:boolean;
     MagazzineCount:integer;
     CurrentCount:integer;
+    UBK:TBackups;
 
     Users:TStringList;
     Pass:TStringList;
@@ -140,6 +141,7 @@ type
     function SepararCadena(Cadena: string; const Delim: Char): TStringList;
     function ReorganizeStringList(Cadena:TStringList):TStringList;
     function CustomFormatNumbers(Value:integer;TotalLenghtofValue:integer):string;
+    procedure BackupAllRecords;
   public
     { public declarations }
   end;
@@ -390,6 +392,7 @@ var
 begin
    CCF:= TCustomConfig.Create;
    FI:=TFormIntro.Create(self);
+   UBK:=TBackups.Create(nil);
 
    Users:=TStringList.Create;
    Pass:=TStringList.Create;
@@ -534,7 +537,7 @@ begin
        self.Caption:='Sistema de control de Magazzines DFT';
        self.Color:=clDefault;
     end;
-
+    //BackupAllRecords;
   end;
 end;
 
@@ -620,8 +623,13 @@ begin
      begin
           RegisterUser(FI.Users[FI.LocatedIndex],StrToInt(FI.CurSection),CCF.ConfigOptions.EqId);
      end;
+     CCF.ReadConfigIniFile;
      FormBkpDB.LoadConfig(CCF);
-     FormBkpDB.ShowModal;
+     if FormBkpDB.ShowModal = mrOK then
+     begin
+       FormBkpDB.ReturnConfig(CCF);
+       CCF.SaveConfigIniFile;
+     end;
   end;
 end;
 
@@ -1107,6 +1115,45 @@ begin
      ZConnectionLogUsers.Disconnect;
   finally
   end;
+end;
+
+procedure TFormPrincipal.BackupAllRecords;
+var
+  NextBkpDate:TDateTime;
+  CurDate:TDateTime;
+  CurHour:TDateTime;
+  DayNextBkp:integer;
+begin
+  self.IsInExecution:=false; //stop a while the timer
+  CurDate:=Date;
+  CurHour:=Time;
+  case CCF.ConfigBKPOptions.VRepeat of
+       'DIARIA':begin
+           DayNextBkp:=1;
+       end;
+       'SEMANAL':begin
+           DayNextBkp:=7;
+       end;
+       'MENSUAL':begin
+           DayNextBkp:=30;
+       end;
+       'TRIMESTRAL':begin
+           DayNextBkp:=90;
+       end;
+       'SEMESTRAL':begin
+           DayNextBkp:=180;
+       end;
+  end;
+  NextBkpDate:=StrToDate(CCF.ConfigBKPOptions.VDate);
+  NextBkpDate:=IncDay(NextBkpDate,DayNextBkp);
+  if ((CurDate >= NextBkpDate)and(HourOf(CurHour)=StrToInt(CCF.ConfigBKPOptions.VHour))
+  and(StrToDate(CCF.ConfigBKPOptions.VLastBkp)<NextBkpDate))then
+  begin
+    UBk.LoadConfig(CCF);
+    UBK.MakeBackup(Date,CCF.ConfigBKPOptions.VOlder);
+    CCF.ConfigBKPOptions.VLastBkp:=DateToStr(Date);
+  end;
+  self.IsInExecution:=true; // resume the timer
 end;
 
 initialization
