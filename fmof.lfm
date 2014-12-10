@@ -666,7 +666,6 @@ object FormOF: TFormOF
     Properties.Strings = (
       'AutoEncodeStrings='
     )
-    TestMode = 0
     HostName = 'localhost'
     Port = 3306
     Database = 'dft'

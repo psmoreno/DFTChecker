@@ -10,7 +10,7 @@ uses
   Forms, csvdocument_package, fmmain, zcomponent, fmModels, fmof, fmlinks,
   fmoptions, fmabout, fmclosebox, fmaddinsert, fmintro, customconfig, ucrypto,
   lhelpcontrolpkg, fmsearchDMS, fmsearchdft, fmusers, fmsearchFail, fmbkpdb,
-  ubackups;
+  ubackups, fmOfSerieRepeat;
 
 {$R *.res}
 
@@ -30,6 +30,7 @@ begin
   Application.CreateForm(TFormUsers, FormUsers);
   Application.CreateForm(TFormSearchFail, FormSearchFail);
   Application.CreateForm(TFormBkpDB, FormBkpDB);
+  Application.CreateForm(TFormOFRepeated, FormOFRepeated);
   Application.Run;
 end.
 

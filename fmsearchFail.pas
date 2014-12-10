@@ -113,11 +113,11 @@ var
 begin
   if EditSrchFail.Text <>'' then
   begin
-      StrSQL:='SELECT * FROM tstepfail WHERE Step_name LIKE ''%'+EditSrchFail.Text+'%''';
+      StrSQL:='SELECT * FROM tstepfail WHERE OfSerie LIKE ''%'+EditSrchFail.Text+'%''';
   end
   else
   begin
-      StrSQL:='SELECT * FROM tstepfail WHERE Step_name LIKE ''%''';
+      StrSQL:='SELECT * FROM tstepfail WHERE OfSerie LIKE ''%''';
   end;
 
   case RadioGroupRestrict.ItemIndex of

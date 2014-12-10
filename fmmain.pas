@@ -9,7 +9,7 @@ uses
   Forms, Controls, Graphics, Dialogs, Menus,  ComCtrls, StdCtrls, DBGrids,
   Buttons, ExtCtrls, ActnList, LazHelpHTML, fmOF, fmModels, fmlinks, fmoptions,
   fmsearchdft, fmabout, fmclosebox, HelpIntfs, customconfig, fmIntro, LResources,
-  LR_Class,fmsearchDMS,fmusers,fmsearchFail,fmbkpdb,ubackups,dateutils;
+  LR_Class,fmsearchDMS,fmusers,fmsearchFail,fmbkpdb,ubackups,dateutils,fmOfSerieRepeat;
 
 type
 
@@ -464,6 +464,7 @@ procedure TFormPrincipal.TimerMainTimer(Sender: TObject);
 const
   WarningOnLostConnect:integer=0;
 begin
+  BackupAllRecords;
   if ((IsInExecution=true) and (OrderActive=true)) then
   begin
     if FileExistsUTF8(CCF.ConfigOptions.DFTResult1) then
@@ -537,7 +538,6 @@ begin
        self.Caption:='Sistema de control de Magazzines DFT';
        self.Color:=clDefault;
     end;
-    //BackupAllRecords;
   end;
 end;
 
@@ -628,6 +628,7 @@ begin
      if FormBkpDB.ShowModal = mrOK then
      begin
        FormBkpDB.ReturnConfig(CCF);
+       CCF.ChangeBkpDate:=FormBkpDB.ChangeBkpDate;
        CCF.SaveConfigIniFile;
      end;
   end;
@@ -752,7 +753,8 @@ begin
        end
        else
        begin
-         MessageDlg('Esta placa ya ha sido ingresada', mtinformation, [mbOK],0);
+         FormOFRepeated.ShowModal;
+         //MessageDlg('Esta placa ya ha sido ingresada', mtinformation, [mbOK],0);
          ImageResult.Picture.LoadFromLazarusResource('OK');
          ImageResult.Visible:=true;
          ZQueryPrincipal.Close;
@@ -1127,6 +1129,12 @@ begin
   self.IsInExecution:=false; //stop a while the timer
   CurDate:=Date;
   CurHour:=Time;
+
+
+  if CurDate < StrToDate(CCF.ConfigBKPOptions.VDate) then
+  begin
+       exit;
+  end;
   case CCF.ConfigBKPOptions.VRepeat of
        'DIARIA':begin
            DayNextBkp:=1;
@@ -1144,10 +1152,10 @@ begin
            DayNextBkp:=180;
        end;
   end;
-  NextBkpDate:=StrToDate(CCF.ConfigBKPOptions.VDate);
+  NextBkpDate:=StrToDate(CCF.ConfigBKPOptions.VLastBkp);
   NextBkpDate:=IncDay(NextBkpDate,DayNextBkp);
-  if ((CurDate >= NextBkpDate)and(HourOf(CurHour)=StrToInt(CCF.ConfigBKPOptions.VHour))
-  and(StrToDate(CCF.ConfigBKPOptions.VLastBkp)<NextBkpDate))then
+
+  if ((CurDate >= NextBkpDate)and(HourOf(CurHour)=StrToInt(Copy(CCF.ConfigBKPOptions.VHour,0,2))))then
   begin
     UBk.LoadConfig(CCF);
     UBK.MakeBackup(Date,CCF.ConfigBKPOptions.VOlder);

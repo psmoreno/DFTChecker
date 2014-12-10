@@ -57,6 +57,7 @@ type
       RPass:string;
       PCr:Pcrypto;
       RCryptoKey:string;
+      RChangeBkpDate:boolean;
 
       function EncryptOp(UnencryptedStr:string):string;
       function UnencryptOP(EncryptedStr:string):string;
@@ -77,6 +78,7 @@ type
       property User:string read RUser write RUser;
       property Pass:string read RPass write RPass;
       property CryptoKey:string read RCryptoKey;
+      property ChangeBkpDate:boolean read RChangeBkpDate write RChangeBkpDate;
 
       Constructor Create();
       destructor Free;
@@ -160,7 +162,10 @@ begin
 
   IniPropStorageConnection.IniSection:='BKPOptions';
   IniPropStorageConnection.WriteString('InitialDate',EncryptOp(ConfigBKPOptions.VDate));
-  IniPropStorageConnection.WriteString('LastBackup',EncryptOp(ConfigBKPOptions.VLastBkp));
+  if RChangeBkpDate then
+  begin
+       IniPropStorageConnection.WriteString('LastBackup',EncryptOp(ConfigBKPOptions.VLastBkp));
+  end;
   IniPropStorageConnection.WriteString('InitialHour',EncryptOp(ConfigBKPOptions.VHour));
   IniPropStorageConnection.WriteString('Repeat',EncryptOp(ConfigBKPOptions.VRepeat));
   IniPropStorageConnection.WriteString('Antiguedad',EncryptOp(ConfigBKPOptions.VOlder));

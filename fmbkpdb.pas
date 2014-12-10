@@ -26,6 +26,7 @@ type
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
+    PanelLastBkp: TPanel;
     PanelButtons: TPanel;
     procedure BitBtnBkpNowClick(Sender: TObject);
     procedure BitBtnCloseClick(Sender: TObject);
@@ -37,10 +38,12 @@ type
     TCC:TCustomConfig;
     UBkp:TBackups;
     LastBackup:string;
+    RChangeBkpDate:boolean;
   public
     { public declarations }
     procedure LoadConfig(TCmCfg:TCustomConfig);
     procedure ReturnConfig(out CCF:TCustomConfig);
+    property ChangeBkpDate:boolean read RChangeBkpDate;
   end;
 
 var
@@ -60,7 +63,9 @@ procedure TFormBkpDB.BitBtnBkpNowClick(Sender: TObject);
 begin
   UBkp.LoadConfig(TCC);
   UBkp.MakeBackup(date,'SEMANAL');
+  RChangeBkpDate:=true;
   LastBackup:=DateToStr(Date);
+  PanelLastBkp.Caption:='Backup: '+LastBackup;
   MessageDlg('Aviso de finalización de backup','A finalizado correctamente la copia de seguridad de la database',
   mtInformation,[mbOK],0);
 end;
@@ -78,7 +83,8 @@ end;
 
 procedure TFormBkpDB.FormShow(Sender: TObject);
 begin
-  DateEditBkpDB.Date:=StrToDate(TCC.ConfigBKPOptions.VDate);
+  //DateEditBkpDB.Date:=StrToDate(TCC.ConfigBKPOptions.VDate);
+  DateEditBkpDB.Text:=TCC.ConfigBKPOptions.VDate;
   ComboBoxHourBkpDB.ItemIndex:=ComboBoxHourBkpDB.Items.IndexOf(TCC.ConfigBKPOptions.VHour);
   ComboBoxRepeatBkpDB.ItemIndex:=ComboBoxRepeatBkpDB.Items.IndexOf(TCC.ConfigBKPOptions.VRepeat);
   ComboBoxSelectOldRecords.ItemIndex:=ComboBoxSelectOldRecords.Items.IndexOf(TCC.ConfigBKPOptions.VOlder);
@@ -90,6 +96,7 @@ begin
   begin
     CheckBoxActiveBKP.Checked:=false;
   end;
+  RChangeBkpDate:=false;
 end;
 
 procedure TFormBkpDB.LoadConfig(TCmCfg:TCustomConfig);

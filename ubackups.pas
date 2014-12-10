@@ -74,7 +74,7 @@ begin
     ZQueryReadRecords.Open;
     ZQueryReadRecords.First;
     i:=0;
-    while i<(ZQueryReadRecords.RecordCount-1)do
+    while i<(ZQueryReadRecords.RecordCount)do
     begin
        CurDate:=StrToDate(StringReplace(ZQueryReadRecords.FieldByName('TestDate').AsString,'-','/',[rfReplaceAll]));
        if CurDate <= DateLimit then
@@ -90,6 +90,71 @@ begin
           ZQueryBkp.FieldByName('Line_id').AsInteger:=ZQueryReadRecords.FieldByName('Line_id').AsInteger;
           ZQueryBkp.FieldByName('TestTime').AsFloat:=ZQueryReadRecords.FieldByName('TestTime').AsFloat;
           ZQueryBkp.FieldByName('Chassis').AsString:=ZQueryReadRecords.FieldByName('Chassis').AsString;
+
+          ZQueryBkp.CommitUpdates;
+          ZQueryBkp.Close;
+          ZQueryReadRecords.Delete;
+          i:=i-1;
+       end
+       else
+       begin
+          ZQueryReadRecords.Next;
+       end;
+       i:=i+1;
+    end;
+    ZQueryReadRecords.Close;
+
+    ZQueryReadRecords.SQL.Text:='SELECT * FROM tstepfail';
+    ZQueryBkp.SQL.Text:='SELECT * FROM bkpstepfail';
+    ZQueryReadRecords.Open;
+    ZQueryReadRecords.First;
+    i:=0;
+    while i<(ZQueryReadRecords.RecordCount)do
+    begin
+       CurDate:=StrToDate(StringReplace(ZQueryReadRecords.FieldByName('Fdate').AsString,'-','/',[rfReplaceAll]));
+       if CurDate <= DateLimit then
+       begin
+          ZQueryBkp.Open;
+          ZQueryBkp.Append;
+
+          ZQueryBkp.FieldByName('Fdate').AsDateTime:=CurDate;
+          ZQueryBkp.FieldByName('Fhour').AsString:=ZQueryReadRecords.FieldByName('Fhour').AsString;
+          ZQueryBkp.FieldByName('OfSerie').AsString:=ZQueryReadRecords.FieldByName('OfSerie').AsString;
+          ZQueryBkp.FieldByName('Step_no').AsInteger:=ZQueryReadRecords.FieldByName('Step_no').AsInteger;
+          ZQueryBkp.FieldByName('Step_name').AsString:=ZQueryReadRecords.FieldByName('Step_name').AsString;
+          ZQueryBkp.FieldByName('Tresult').AsString:=ZQueryReadRecords.FieldByName('Tresult').AsString;
+          ZQueryBkp.FieldByName('NJig').AsInteger:=ZQueryReadRecords.FieldByName('NJig').AsInteger;
+
+          ZQueryBkp.CommitUpdates;
+          ZQueryBkp.Close;
+          ZQueryReadRecords.Delete;
+          i:=i-1;
+       end
+       else
+       begin
+          ZQueryReadRecords.Next;
+       end;
+       i:=i+1;
+    end;
+    ZQueryReadRecords.Close;
+
+    ZQueryReadRecords.SQL.Text:='SELECT * FROM tdms';
+    ZQueryBkp.SQL.Text:='SELECT * FROM bkpdms';
+    ZQueryReadRecords.Open;
+    ZQueryReadRecords.First;
+    i:=0;
+    while i<(ZQueryReadRecords.RecordCount)do
+    begin
+       CurDate:=StrToDate(StringReplace(ZQueryReadRecords.FieldByName('DMSdate').AsString,'-','/',[rfReplaceAll]));
+       if CurDate <= DateLimit then
+       begin
+          ZQueryBkp.Open;
+          ZQueryBkp.Append;
+
+          ZQueryBkp.FieldByName('DMSdate').AsDateTime:=CurDate;
+          ZQueryBkp.FieldByName('DMShour').AsString:=ZQueryReadRecords.FieldByName('DMShour').AsString;
+          ZQueryBkp.FieldByName('OfSerial').AsString:=ZQueryReadRecords.FieldByName('OfSerial').AsString;
+          ZQueryBkp.FieldByName('ModelName').AsString:=ZQueryReadRecords.FieldByName('ModelName').AsString;
 
           ZQueryBkp.CommitUpdates;
           ZQueryBkp.Close;

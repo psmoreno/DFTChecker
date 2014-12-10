@@ -631,7 +631,6 @@ object FormSearchDFT: TFormSearchDFT
     Properties.Strings = (
       'AutoEncodeStrings='
     )
-    TestMode = 0
     Port = 0
     left = 56
     top = 152

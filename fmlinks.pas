@@ -81,9 +81,10 @@ begin
        begin
             // Creo el registro vinculo
             ZQueryLinkOFModels.Append;
-            ZQueryLinkOFModels.FieldByName('NBox').AsInteger:=tmpQty;
             ZQueryLinkOFModels.FieldByName('strOF').AsString:=ZQueryLinksOF.FieldByName('OrdenF').AsString;
             ZQueryLinkOFModels.FieldByName('strModel').AsString:=ZQueryLinksModels.FieldByName('ModelName').AsString;
+            ZQueryLinkOFModels.FieldByName('Qty').AsInteger:=ZQueryLinksOF.FieldByName('Qty').AsInteger;
+            ZQueryLinkOFModels.FieldByName('NBox').AsInteger:=tmpQty;
             ZQueryLinkOFModels.FieldByName('Status').AsInteger:=1;
             ZQueryLinkOFModels.CommitUpdates;
 

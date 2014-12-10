@@ -1,11 +1,11 @@
 object FormBkpDB: TFormBkpDB
   Left = 680
-  Height = 185
+  Height = 234
   Top = 360
   Width = 577
   BorderStyle = bsDialog
   Caption = 'Configuración de copias de seguridad'
-  ClientHeight = 185
+  ClientHeight = 234
   ClientWidth = 577
   Font.CharSet = ANSI_CHARSET
   Font.Height = -21
@@ -143,16 +143,16 @@ object FormBkpDB: TFormBkpDB
     end
   end
   object PanelButtons: TPanel
-    Left = 144
+    Left = 8
     Height = 58
-    Top = 120
-    Width = 424
+    Top = 168
+    Width = 560
     BevelInner = bvLowered
     ClientHeight = 58
-    ClientWidth = 424
+    ClientWidth = 560
     TabOrder = 1
     object BitBtnBkpNow: TBitBtn
-      Left = 8
+      Left = 55
       Height = 40
       Top = 10
       Width = 128
@@ -293,7 +293,7 @@ object FormBkpDB: TFormBkpDB
       TabOrder = 0
     end
     object BitBtnClose: TBitBtn
-      Left = 282
+      Left = 371
       Height = 40
       Top = 10
       Width = 128
@@ -434,7 +434,7 @@ object FormBkpDB: TFormBkpDB
       TabOrder = 1
     end
     object BitBtnSaveOpt: TBitBtn
-      Left = 144
+      Left = 214
       Height = 40
       Top = 10
       Width = 128
@@ -578,9 +578,20 @@ object FormBkpDB: TFormBkpDB
   object CheckBoxActiveBKP: TCheckBox
     Left = 8
     Height = 28
-    Top = 136
-    Width = 133
-    Caption = 'Activar BKP'
+    Top = 126
+    Width = 247
+    Caption = 'Activar sistema backups'
     TabOrder = 2
+  end
+  object PanelLastBkp: TPanel
+    Left = 280
+    Height = 41
+    Top = 120
+    Width = 288
+    BevelInner = bvLowered
+    Caption = 'Backup:   /   /'
+    Color = clLime
+    ParentColor = False
+    TabOrder = 3
   end
 end

@@ -251,14 +251,24 @@ object FormPrincipal: TFormPrincipal
           FieldName = 'strModel'
         end      
         item
-          Title.Caption = 'Mag. Actual'
+          Title.Caption = 'Cantidad'
           Width = 120
-          FieldName = 'ActualMagazzine'
+          FieldName = 'Qty'
+        end      
+        item
+          Title.Caption = 'Cnt. Mag.'
+          Width = 120
+          FieldName = 'Nbox'
         end      
         item
           Title.Caption = 'Cnt. Actual'
           Width = 120
           FieldName = 'ActualCount'
+        end      
+        item
+          Title.Caption = 'Mag. Actual'
+          Width = 120
+          FieldName = 'ActualMagazzine'
         end>
       DataSource = DataSourcePrincipal
       DefaultRowHeight = 25
