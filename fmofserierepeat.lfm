@@ -14,10 +14,11 @@ object FormOFRepeated: TFormOFRepeated
   Font.Pitch = fpVariable
   Font.Quality = fqDraft
   OnClose = FormClose
+  OnCreate = FormCreate
   OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '1.2.2.0'
-  object Label1: TLabel
+  object LabelWarning: TLabel
     Left = 16
     Height = 24
     Top = 10

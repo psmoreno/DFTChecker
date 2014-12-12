@@ -256,6 +256,9 @@ begin
      ActionEditModels.Enabled:=false;
      ActionOFLink.Enabled:=false;
      ActionConfig.Enabled:=false;
+     ActionBkpDB.Enabled:=false;
+     ActionChangeUsers.Enabled:=false;
+     ActionExit.Enabled:=false;
      BitBtnRun.Color:=clGreen;
   end
   else
@@ -264,6 +267,9 @@ begin
      ActionEditModels.Enabled:=true;
      ActionOFLink.Enabled:=true;
      ActionConfig.Enabled:=true;
+     ActionBkpDB.Enabled:=true;
+     ActionChangeUsers.Enabled:=true;
+     ActionExit.Enabled:=true;
      self.Caption:='Sistema de control de Magazzines DFT';
      self.Color:=clDefault;
      BitBtnRun.Color:=clDefault;
@@ -753,8 +759,8 @@ begin
        end
        else
        begin
+         FormOFRepeated.TimerEnabled:=true;
          FormOFRepeated.ShowModal;
-         //MessageDlg('Esta placa ya ha sido ingresada', mtinformation, [mbOK],0);
          ImageResult.Picture.LoadFromLazarusResource('OK');
          ImageResult.Visible:=true;
          ZQueryPrincipal.Close;
@@ -1133,6 +1139,7 @@ begin
 
   if CurDate < StrToDate(CCF.ConfigBKPOptions.VDate) then
   begin
+       self.IsInExecution:=true;
        exit;
   end;
   case CCF.ConfigBKPOptions.VRepeat of
@@ -1157,9 +1164,18 @@ begin
 
   if ((CurDate >= NextBkpDate)and(HourOf(CurHour)=StrToInt(Copy(CCF.ConfigBKPOptions.VHour,0,2))))then
   begin
+    FormOFRepeated.TimerEnabled:=false;
+    FormOFRepeated.Show;
+    EditPCB.Enabled:=false;
+    ActionChkPCB.Enabled:=false;
     UBk.LoadConfig(CCF);
     UBK.MakeBackup(Date,CCF.ConfigBKPOptions.VOlder);
     CCF.ConfigBKPOptions.VLastBkp:=DateToStr(Date);
+    FormOFRepeated.TimerEnabled:=true;
+    EditPCB.Enabled:=true;
+    ActionChkPCB.Enabled:=true;
+    EditPCB.SelectAll;
+    EditPCB.SetFocus;
   end;
   self.IsInExecution:=true; // resume the timer
 end;

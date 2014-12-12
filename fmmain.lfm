@@ -98,14 +98,14 @@ object FormPrincipal: TFormPrincipal
       Style = tbsDivider
     end
     object ToolButton11: TToolButton
-      Left = 412
+      Left = 448
       Top = 2
       Action = ActionHelp
       ParentShowHint = False
       ShowHint = True
     end
     object ToolButton12: TToolButton
-      Left = 448
+      Left = 412
       Top = 2
       Action = ActionExit
       ParentShowHint = False

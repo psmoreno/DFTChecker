@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, EditBtn, Buttons, ubackups, customconfig;
+  ExtCtrls, EditBtn, Buttons, ubackups, customconfig,fmOfSerieRepeat;
 
 type
 
@@ -57,17 +57,22 @@ procedure TFormBkpDB.BitBtnCloseClick(Sender: TObject);
 begin
   Close;
   ModalResult:=mrCancel;
+  if RChangeBkpDate then
+  begin
+     ModalResult:=mrOK;
+  end;
 end;
 
 procedure TFormBkpDB.BitBtnBkpNowClick(Sender: TObject);
 begin
+  FormOFRepeated.TimerEnabled:=false;
+  FormOFRepeated.Show;
   UBkp.LoadConfig(TCC);
   UBkp.MakeBackup(date,'SEMANAL');
   RChangeBkpDate:=true;
   LastBackup:=DateToStr(Date);
   PanelLastBkp.Caption:='Backup: '+LastBackup;
-  MessageDlg('Aviso de finalización de backup','A finalizado correctamente la copia de seguridad de la database',
-  mtInformation,[mbOK],0);
+  FormOFRepeated.TimerEnabled:=true;
 end;
 
 procedure TFormBkpDB.BitBtnSaveOptClick(Sender: TObject);
@@ -97,6 +102,7 @@ begin
     CheckBoxActiveBKP.Checked:=false;
   end;
   RChangeBkpDate:=false;
+  PanelLastBkp.Caption:=TCC.ConfigBKPOptions.VLastBkp;
 end;
 
 procedure TFormBkpDB.LoadConfig(TCmCfg:TCustomConfig);
