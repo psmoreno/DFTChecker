@@ -5,11 +5,12 @@ unit fmmain;
 interface
 
 uses
-  Classes, SysUtils, db, FileUtil,LR_Desgn,LazHelpCHM, ZDataset, ZConnection,
-  Forms, Controls, Graphics, Dialogs, Menus,  ComCtrls, StdCtrls, DBGrids,
+  Classes, SysUtils, db, FileUtil, LR_Desgn, LazHelpCHM, ZDataset, ZConnection,
+  Forms, Controls, Graphics, Dialogs, Menus, ComCtrls, StdCtrls, DBGrids,
   Buttons, ExtCtrls, ActnList, LazHelpHTML, fmOF, fmModels, fmlinks, fmoptions,
-  fmsearchdft, fmabout, fmclosebox, HelpIntfs, customconfig, fmIntro, LResources,
-  LR_Class,fmsearchDMS,fmusers,fmsearchFail,fmbkpdb,ubackups,dateutils,fmOfSerieRepeat;
+  fmsearchdft, fmabout, fmclosebox, HelpIntfs, customconfig, fmIntro,
+  LResources, IniPropStorage, LR_Class, fmsearchDMS, fmusers, fmsearchFail,
+  fmbkpdb, ubackups, dateutils, fmOfSerieRepeat;
 
 type
 
@@ -36,10 +37,10 @@ type
     BitBtnCloseOF: TBitBtn;
     BitBtnSearchDFT: TBitBtn;
     BitBtnSearchDNS: TBitBtn;
+    BitBtnSearchDNS1: TBitBtn;
     DataSourcePrincipal: TDataSource;
     DBGridPrincipal: TDBGrid;
     EditPCB: TEdit;
-    frReportMain: TfrReport;
     GroupBoxQuery: TGroupBox;
     GroupBoxDB: TGroupBox;
     GroupBoxPrincipal: TGroupBox;
@@ -48,6 +49,7 @@ type
     ImageListPrincipal16: TImageList;
     ImageListPrincipal32: TImageList;
     ImageResult: TImage;
+    IniPropStorageCount: TIniPropStorage;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
@@ -137,6 +139,10 @@ type
     procedure ExtractResources;
     procedure RegisterWrongPCB;
     procedure InitialReadUsers;
+
+    procedure RegisterCurStatus;
+    procedure LoadCurStatus;
+
     procedure RegisterUser(UserName:string;iSector:integer;EqId:string);
     function SepararCadena(Cadena: string; const Delim: Char): TStringList;
     function ReorganizeStringList(Cadena:TStringList):TStringList;
@@ -200,7 +206,8 @@ end;
 procedure TFormPrincipal.ActionRunExecute(Sender: TObject);
 const
   Run:boolean=false;
-
+var
+  MsgResult:integer;
 begin
   if Run=false then
   begin
@@ -208,8 +215,20 @@ begin
         ZConnectionPrincipal.Connect;
         ZQueryPrincipal.Active:=true;
         LabelOFActives.Caption:=CustomFormatNumbers(ZQueryPrincipal.RecordCount,4);
-        LabelCountOpDMS.Caption:=CustomFormatNumbers(0,4);
-        LabelCountMag.Caption:=CustomFormatNumbers(0,4);
+
+        LoadCurStatus;
+        if ((CurrentCount<>0) or (MagazzineCount<>0)) then
+        begin
+           MsgResult:=MessageDlg('Confirmar Reinicio','Desea Reiniciar los contadores, o proseguir con la cuenta anterior?',
+           mtWarning,mbYesNo,0);
+           if MsgResult = mrYes then
+           begin
+              self.CurrentCount:=0;
+              self.MagazzineCount:=0;
+           end;
+        end;
+        LabelCountOpDMS.Caption:=CustomFormatNumbers(self.CurrentCount,4);
+        LabelCountMag.Caption:=CustomFormatNumbers(self.MagazzineCount,4);
 
         ZQueryPrincipal.Close;
         ZQueryPrincipal.SQL.Text:='SELECT * FROM tlinkofmod WHERE Status > 0';
@@ -231,6 +250,7 @@ begin
         MagazzineCount:=0;
         CurrentCount:=0;
         ActionRun.Caption:='Detener';
+        ImageResult.Visible:=false;
         Run:=true;
      except
            MessageDlg('Advertencia','No se encontró una conexion SQL disponible, funcionalidad limitada!',
@@ -259,7 +279,6 @@ begin
      ActionBkpDB.Enabled:=false;
      ActionChangeUsers.Enabled:=false;
      ActionExit.Enabled:=false;
-     BitBtnRun.Color:=clGreen;
   end
   else
   begin
@@ -272,7 +291,8 @@ begin
      ActionExit.Enabled:=true;
      self.Caption:='Sistema de control de Magazzines DFT';
      self.Color:=clDefault;
-     BitBtnRun.Color:=clDefault;
+     self.GroupBoxDB.Color:=clDefault;
+     self.ToolBarPrincipal.Color:=clDefault;
   end;
 end;
 
@@ -537,12 +557,19 @@ begin
     if WarningOnLostConnect>=5 then
     begin
        self.Caption:='Sistema de control de Magazzines DFT - ERROR DE CONEXION';
+       ImageResult.Picture.LoadFromLazarusResource('NetFail');
+       ImageResult.Visible:=true;
        self.Color:=clYellow;
+       self.GroupBoxDB.Color:=clYellow;
+       self.ToolBarPrincipal.Color:=clYellow;
     end
     else
     begin
        self.Caption:='Sistema de control de Magazzines DFT';
+       ImageResult.Visible:=false;
        self.Color:=clDefault;
+       self.GroupBoxDB.Color:=clDefault;
+       self.ToolBarPrincipal.Color:=clDefault;
     end;
   end;
 end;
@@ -703,16 +730,17 @@ begin
             begin
                CurrentCount:=CurrentCount+1;
                LabelCountOpDMS.Caption:=CustomFormatNumbers(CurrentCount,4);
-               LabelCountOpDMS.Caption:=CustomFormatNumbers(CurrentCount,4);
-
                ZQueryPrincipal.Edit;
                ZQueryPrincipal.FieldByName('ActualCount').AsInteger:=ZQueryPrincipal.FieldByName('ActualCount').AsInteger+1;
                if ((ZQueryPrincipal.FieldByName('ActualCount').AsInteger mod ZQueryPrincipal.FieldByName('Nbox').AsInteger)=0)
                then begin
-                ZQueryPrincipal.FieldByName('ActualMagazzine').AsInteger:=ZQueryPrincipal.FieldByName('ActualMagazzine').AsInteger+1;
-                MagazzineCount:=MagazzineCount+1;
-                LabelCountMag.Caption:=IntToStr(MagazzineCount);
-              end;
+                    ZQueryPrincipal.FieldByName('ActualMagazzine').AsInteger:=ZQueryPrincipal.FieldByName('ActualMagazzine').AsInteger+1;
+                    MagazzineCount:=MagazzineCount+1;
+                    LabelCountMag.Caption:=IntToStr(MagazzineCount);
+
+               end;
+
+              RegisterCurStatus;
               ZQueryPrincipal.CommitUpdates;
               CurCnt:=ZQueryPrincipal.FieldByName('ActualCount').AsInteger;
 
@@ -791,19 +819,17 @@ begin
 end;
 
 procedure TFormPrincipal.ActionCloseOFExecute(Sender: TObject);
+var
+  Status:boolean;
 begin
   FormCloseOF.LoadConfig(CCF);
   FormCloseOF.strOf:='';
+  Status:=IsInExecution;
   IsInExecution:=false;
   FormCloseOF.ShowModal;
-  if OrderActive=true then
-  begin
-     IsInExecution:=true;
-  end
-  else
-  begin
-     IsInExecution:=false;
-  end;
+  ZQueryPrincipal.Close;
+  ZQueryPrincipal.Open;
+  IsInExecution:=Status;
 end;
 
 procedure TFormPrincipal.LoadFormOptions(MdResult:integer);
@@ -867,13 +893,12 @@ begin
                Componentes[k]:=StringReplace(Componentes[k],'(','',[rfReplaceAll,rfIgnoreCase]);
           end;
           strSqlRecord:='INSERT INTO tdftresults(OfSerie,Tresult,TestDate,TestHour,NJig,Line_id,TestTime,Chassis) VALUES ('+
-          Componentes[0]+','+Componentes[1]+',"'+FormatDateTime('dd-mm-yyyy',date)+'","'+TimeToStr(Now)+'",'+IntToStr(NroJIG)+','+Componentes[3]+','+
+          Componentes[0]+','+Componentes[1]+',"'+FormatDateTime('dd/mm/yyyy',date)+'","'+TimeToStr(Now)+'",'+IntToStr(NroJIG)+','+Componentes[3]+','+
           Componentes[4]+','+Componentes[5]+');';
           ZQueryLoadDFTRecords.SQL.Clear;
-          if debug=1 then
-          begin
+          {$IFDEF DEBUG}
                ShowMessage(strSqlRecord);
-          end;
+          {$ENDIF}
           ZQueryLoadDFTRecords.SQL.Text:=strSqlRecord;
           ZQueryLoadDFTRecords.ExecSQL;
      end;
@@ -923,7 +948,7 @@ begin
   ZQueryLoadWrongPCB.FieldByName('WRdate').AsString:=DateToStr(Date);
   ZQueryLoadWrongPCB.FieldByName('WRhour').AsString:=TimeToStr(Now);
   ZQueryLoadWrongPCB.FieldByName('OfSerial').AsString:=EditPCB.Text;
-  ZQueryLoadWrongPCB.FieldByName('ModelName').AsString:=LabelCountOpDMS.Caption;
+  ZQueryLoadWrongPCB.FieldByName('ModelName').AsString:=ZQueryPrincipal.FieldByName('strModel').AsString;
 
   ZQueryLoadWrongPCB.CommitUpdates;
   ZQueryLoadWrongPCB.Close;
@@ -947,8 +972,7 @@ begin
 end;
 
 procedure TFormPrincipal.RecordDFTSteps(FilePath:string; NroJIG:integer);
-const
-  debug=0;
+{$DEFINE DEBUG}
 var
   Cadenas:TStringList;
   Componentes:TStringList;
@@ -975,10 +999,9 @@ begin
      ZConnectionLoadDFTRrecords.Connect;
      Cadenas.LoadFromFile(FilePath);
      Componentes.Clear;
-     if debug=0 then
-     begin
+     {$IFDEF DEBUG}
         Componentes.SaveToFile(FilePath);
-     end;
+     {$ENDIF}
      Cadenas:=ReorganizeStringList(Cadenas);
      for i:=0 to (Cadenas.Count-1) do
      begin
@@ -995,13 +1018,12 @@ begin
             Componentes[4]:='NG';
           end;
           strSqlRecord:='INSERT INTO tstepfail(Fdate,Fhour,OfSerie,Step_no,Step_name,Tresult,NJig) VALUES ('+
-          '"'+FormatDateTime('dd-mm-yyyy',date)+'","'+TimeToStr(Now)+'","'+Componentes[0]+'",'+Componentes[2]+
+          '"'+FormatDateTime('dd/mm/yyyy',date)+'","'+TimeToStr(Now)+'","'+Componentes[0]+'",'+Componentes[2]+
           ',"'+Componentes[3]+'","'+Componentes[4]+'",'+IntToStr(NroJIG)+');';
           ZQueryLoadDFTRecords.SQL.Clear;
-          if debug=1 then
-          begin
+          {$IFDEF DEBUG}
                ShowMessage(strSqlRecord);
-          end;
+          {$ENDIF}
           ZQueryLoadDFTRecords.SQL.Text:=strSqlRecord;
           ZQueryLoadDFTRecords.ExecSQL;
      end;
@@ -1081,10 +1103,12 @@ begin
         Levels.Add(ZQueryUsers.FieldByName('TAutorization').AsString);
         ZQueryUsers.Next;
       end;
+   except
+        MessageDlg('Advertencia','No se encontró una conexion SQL disponible, funcionalidad limitada!',
+        mtWarning,[mbOK],0);
+   end;
    ZQueryUsers.Close;
    ZConnectionUsers.Disconnect;
-   finally
-   end;
 end;
 
 procedure TFormPrincipal.LoadStringUserInIntro;
@@ -1113,7 +1137,7 @@ begin
   try
      ZQueryLogUsers.Open;
      ZQueryLogUsers.Append;
-     ZQueryLogUsers.FieldByName('uDate').AsString:=FormatDateTime('dd-mm-yyyy',date);
+     ZQueryLogUsers.FieldByName('uDate').AsString:=FormatDateTime('dd/mm/yyyy',date);
      ZQueryLogUsers.FieldByName('uHour').AsString:=TimeToStr(Now);
      ZQueryLogUsers.FieldByName('UserName').AsString:=UserName;
      ZQueryLogUsers.FieldByName('iSector').AsInteger:=iSector;
@@ -1178,6 +1202,22 @@ begin
     EditPCB.SetFocus;
   end;
   self.IsInExecution:=true; // resume the timer
+end;
+
+procedure TFormPrincipal.RegisterCurStatus;
+begin
+  IniPropStorageCount.IniFileName:='CurStatus.ini';
+  IniPropStorageCount.IniSection:='CurCount';
+  IniPropStorageCount.WriteInteger('CurPCBCount',self.CurrentCount);
+  IniPropStorageCount.WriteInteger('CurMagazineCount',self.MagazzineCount);
+end;
+
+procedure TFormPrincipal.LoadCurStatus;
+begin
+  IniPropStorageCount.IniFileName:='CurStatus.ini';
+  IniPropStorageCount.IniSection:='CurCount';
+  self.CurrentCount:=IniPropStorageCount.ReadInteger('CurPCBCount',0);
+  self.MagazzineCount:=IniPropStorageCount.ReadInteger('CurMagazineCount',0);
 end;
 
 initialization

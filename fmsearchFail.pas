@@ -125,7 +125,7 @@ begin
            StrSQL:=StrSQL+' ORDER BY OfSerie ASC LIMIT 10000';
        end;
        1:begin
-           StrSQL:=StrSQL+'AND Fdate LIKE '''+FormatDateTime('dd-mm-yyyy',date)+'''';
+           StrSQL:=StrSQL+'AND Fdate LIKE '''+FormatDateTime('dd/mm/yyyy',date)+'''';
        end;
        2:begin
           ListOfDay:=GetAllDayOfWeek;
@@ -157,13 +157,13 @@ begin
    k:=1;
    for i:=(CurDayPos) to 8 do
    begin
-      Lista[i]:=FormatDateTime('dd-mm-yyyy',IncDay(date,k));
+      Lista[i]:=FormatDateTime('dd/mm/yyyy',IncDay(date,k));
       k:=k+1;
    end;
    k:=0;
    for i:=(CurDayPos-1) downto 1 do
    begin
-      Lista[i]:=FormatDateTime('dd-mm-yyyy',IncDay(date,-k));
+      Lista[i]:=FormatDateTime('dd/mm/yyyy',IncDay(date,-k));
       k:=k+1;
    end;
 
