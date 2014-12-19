@@ -7,40 +7,94 @@ interface
 uses
   Classes, SysUtils, ZConnection, ZDataset,dateutils,customconfig;
 type
+
+  TCustomSamplerErrors =(ERROR_SUCCESS,DFTRESULT_SUCCESS,DFTFAIL_SUCCESS,DMS_SUCCESS);
+  TShowSamplerStatusEvent = procedure(StSamplerStatus:String;Status:TCustomSamplerErrors) of Object;
+
   {TBackups}
-   TBackups=class
+   TBackups=class(TThread)
      private
        { private declarations }
        TCC:TCustomConfig;
+       RDateFrom:TDateTime;
+       RIsOlder:string;
+       RStatus:TCustomSamplerErrors;
+       RStatusText:string;
+       FOnShowStatus: TShowSamplerStatusEvent;
+
+       ZConnectionBkp:TZConnection;
+       ZQueryReadRecords:TZQuery;
+       ZQueryBkp:TZQuery;
+       i:integer;
+       CurDate:TDateTime;
+       DateLimit:TDateTime;
+       DayConversion:integer;
+
+       procedure MakeDFTResultsBackups;
+       procedure MakeDFTFailBackups;
+       procedure MakeDMSBakups;
+       procedure ShowStatus;
+     protected
+       { protected declarations }
+      procedure Execute; override;
      public
        { public declarations }
        procedure LoadConfig(TCmCfg:TCustomConfig);
-       procedure MakeBackup(DateFrom:TDateTime;IsOlder:string);
-       constructor Create(Parent:TObject);
+       procedure LoadSettings(DateFrom:TDateTime;IsOlder:string);
+
+       property OnShowStatus: TShowSamplerStatusEvent read FOnShowStatus write FOnShowStatus;
+       property Status:TCustomSamplerErrors read RStatus write RStatus;
+
+       Constructor Create(CreateSuspended : boolean);
+       destructor Free;
    end;
 
 implementation
 
-constructor TBackups.Create(Parent:TObject);
+Constructor TBackups.Create(CreateSuspended : boolean);
 begin
   TCC:=TCustomConfig.Create;
-end;
-
-procedure TBackups.MakeBackup(DateFrom:TDateTime;IsOlder:string);
-var
-  ZConnectionBkp:TZConnection;
-  ZQueryReadRecords:TZQuery;
-  ZQueryBkp:TZQuery;
-  i:integer;
-  CurDate:TDateTime;
-  DateLimit:TDateTime;
-  DayConversion:integer;
-begin
   ZConnectionBkp:=TZConnection.Create(nil);
   ZQueryReadRecords:=TZQuery.Create(nil);
   ZQueryBkp:=TZQuery.Create(nil);
+  FreeOnTerminate:=true;
+  inherited Create(CreateSuspended);
+end;
 
-  case IsOlder of
+destructor TBackups.Free;
+begin
+  ZQueryReadRecords.Close;
+  ZQueryBkp.Close;
+  ZConnectionBkp.Disconnect;
+  inherited;
+end;
+
+procedure TBackups.LoadConfig(TCmCfg:TCustomConfig);
+begin
+  TCC:=TCmCfg;
+end;
+
+procedure TBackups.LoadSettings(DateFrom:TDateTime;IsOlder:string);
+begin
+  RDateFrom:=DateFrom;
+  RIsOlder:=IsOlder;
+end;
+
+procedure TBackups.ShowStatus;
+begin
+   if Assigned(FOnShowStatus) then
+    begin
+      FOnShowStatus(RStatusText,RStatus);
+    end
+end;
+
+procedure TBackups.Execute;
+begin
+  RStatusText:='Comenzando con los backups';
+  RStatus:=ERROR_SUCCESS;
+  Synchronize(@ShowStatus);
+
+  case RIsOlder of
        'DIARIA':begin
            DayConversion:=1;
        end;
@@ -58,7 +112,7 @@ begin
        end;
   end;
 
-  DateLimit:=IncDay(DateFrom,-DayConversion);
+  DateLimit:=IncDay(RDateFrom,-DayConversion);
 
   ZConnectionBkp.HostName:=TCC.ConfigSQl.HIP;
   ZConnectionBkp.Port:=StrToInt(TCC.ConfigSQl.PConecction);
@@ -68,9 +122,30 @@ begin
   ZConnectionBkp.Password:=TCC.ConfigSQl.Pass;
   ZQueryReadRecords.Connection:=ZConnectionBkp;
   ZQueryBkp.Connection:=ZConnectionBkp;
-  try
+
+  RStatusText:='Realizando backup resultados DFT';
+  RStatus:=DFTRESULT_SUCCESS;
+  Synchronize(@ShowStatus);
+  MakeDFTResultsBackups;
+
+  RStatusText:='Realizando backup fallas DFT';
+  RStatus:=DFTFAIL_SUCCESS;
+  Synchronize(@ShowStatus);
+  MakeDFTFailBackups;
+
+  RStatusText:='Realizando backup operaciones DMS';
+  RStatus:=DMS_SUCCESS;
+  Synchronize(@ShowStatus);
+  MakeDMSBakups;
+
+end;
+
+procedure TBackups.MakeDFTResultsBackups;
+begin
+   try
     ZQueryReadRecords.SQL.Text:='SELECT * FROM tdftresults';
     ZQueryBkp.SQL.Text:='SELECT * FROM bkpdftresults';
+    ZConnectionBkp.Connect;
     ZQueryReadRecords.Open;
     ZQueryReadRecords.First;
     i:=0;
@@ -102,10 +177,19 @@ begin
        end;
        i:=i+1;
     end;
-    ZQueryReadRecords.Close;
+   finally
+     ZQueryReadRecords.Close;
+     ZQueryBkp.Close;
+     ZConnectionBkp.Disconnect;
+   end;
+end;
 
+procedure TBackups.MakeDFTFailBackups;
+begin
+  try
     ZQueryReadRecords.SQL.Text:='SELECT * FROM tstepfail';
     ZQueryBkp.SQL.Text:='SELECT * FROM bkpstepfail';
+    ZConnectionBkp.Connect;
     ZQueryReadRecords.Open;
     ZQueryReadRecords.First;
     i:=0;
@@ -136,8 +220,16 @@ begin
        end;
        i:=i+1;
     end;
+  finally
     ZQueryReadRecords.Close;
+    ZQueryBkp.Close;
+    ZConnectionBkp.Disconnect;
+  end;
+end;
 
+procedure TBackups.MakeDMSBakups;
+begin
+  try
     ZQueryReadRecords.SQL.Text:='SELECT * FROM tdms';
     ZQueryBkp.SQL.Text:='SELECT * FROM bkpdms';
     ZQueryReadRecords.Open;
@@ -167,18 +259,11 @@ begin
        end;
        i:=i+1;
     end;
-    ZQueryReadRecords.Close;
-
   finally
     ZQueryReadRecords.Close;
     ZQueryBkp.Close;
     ZConnectionBkp.Disconnect;
   end;
-end;
-
-procedure TBackups.LoadConfig(TCmCfg:TCustomConfig);
-begin
-  TCC:=TCmCfg;
 end;
 
 end.

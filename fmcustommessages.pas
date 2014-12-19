@@ -1,4 +1,4 @@
-unit fmOfSerieRepeat;
+unit fmcustommessages;
 
 {$mode objfpc}{$H+}
 
@@ -10,9 +10,9 @@ uses
 
 type
 
-  { TFormOFRepeated }
+  { TFormCustomMessages }
 
-  TFormOFRepeated = class(TForm)
+  TFormCustomMessages = class(TForm)
     LabelWarning: TLabel;
     TimerWarning: TTimer;
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -29,15 +29,15 @@ type
   end;
 
 var
-  FormOFRepeated: TFormOFRepeated;
+  FormCustomMessages: TFormCustomMessages;
 
 implementation
 
 {$R *.lfm}
 
-{ TFormOFRepeated }
+{ TFormCustomMessages }
 
-procedure TFormOFRepeated.FormClose(Sender: TObject;
+procedure TFormCustomMessages.FormClose(Sender: TObject;
   var CloseAction: TCloseAction);
 begin
   RTimerEnabled:=false;
@@ -45,25 +45,27 @@ begin
   CountClose:=0;
 end;
 
-procedure TFormOFRepeated.FormCreate(Sender: TObject);
+procedure TFormCustomMessages.FormCreate(Sender: TObject);
 begin
   RTimerEnabled:=false;
 end;
 
-procedure TFormOFRepeated.FormShow(Sender: TObject);
+procedure TFormCustomMessages.FormShow(Sender: TObject);
 begin
   TimerWarning.Enabled:=true;
   if RTimerEnabled then
   begin
+     Self.Caption:='AVISO: Serial de TV ya utilizado';
      LabelWarning.Caption:='Esta placa ya ha sido ingresada a la OF.';
   end
   else
   begin
+     Self.Caption:='Realizando backups';
      LabelWarning.Caption:='Realizando backup, espere un momento...';
   end;
 end;
 
-procedure TFormOFRepeated.TimerWarningTimer(Sender: TObject);
+procedure TFormCustomMessages.TimerWarningTimer(Sender: TObject);
 begin
    if RTimerEnabled then
    begin

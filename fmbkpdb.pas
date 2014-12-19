@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  ExtCtrls, EditBtn, Buttons, ubackups, customconfig,fmOfSerieRepeat;
+  ExtCtrls, EditBtn, Buttons, ubackups, customconfig,fmcustommessages;
 
 type
 
@@ -31,7 +31,6 @@ type
     procedure BitBtnBkpNowClick(Sender: TObject);
     procedure BitBtnCloseClick(Sender: TObject);
     procedure BitBtnSaveOptClick(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
     { private declarations }
@@ -65,25 +64,22 @@ end;
 
 procedure TFormBkpDB.BitBtnBkpNowClick(Sender: TObject);
 begin
-  FormOFRepeated.TimerEnabled:=false;
-  FormOFRepeated.Show;
+  FormCustomMessages.TimerEnabled:=false;
+  FormCustomMessages.Show;
+  UBkp:=TBackups.Create(true);
   UBkp.LoadConfig(TCC);
-  UBkp.MakeBackup(date,'SEMANAL');
+  UBkp.LoadSettings(date,'SEMANAL');//Esto esta fijo
+  UBkp.Start;
   RChangeBkpDate:=true;
   LastBackup:=DateToStr(Date);
   PanelLastBkp.Caption:='Backup: '+LastBackup;
-  FormOFRepeated.TimerEnabled:=true;
+  FormCustomMessages.TimerEnabled:=true;
 end;
 
 procedure TFormBkpDB.BitBtnSaveOptClick(Sender: TObject);
 begin
   self.close;
   self.ModalResult:=mrOK;
-end;
-
-procedure TFormBkpDB.FormCreate(Sender: TObject);
-begin
-  UBkp:=TBackups.Create(nil);
 end;
 
 procedure TFormBkpDB.FormShow(Sender: TObject);

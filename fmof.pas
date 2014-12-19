@@ -63,7 +63,7 @@ begin
   ZQueryOF.SQL.Text:='SELECT * FROM tordenf';
   ZQueryOF.Open;
   ZQueryOF.RecNo:=Pos;
-  FormAddInsert.InputType:=0;
+  FormAddInsert.InputType:=1;
   FormAddInsert.StrValue:=ZQueryOF.FieldByName('OrdenF').AsString;
   if FormAddInsert.ShowModal=mrOK then
   begin
@@ -71,7 +71,7 @@ begin
      ZQueryOF.FieldByName('OrdenF').AsString:=FormAddInsert.StrValue;
      ZQueryOF.CommitUpdates;
   end;
-  FormAddInsert.InputType:=2;
+  FormAddInsert.InputType:=3;
   FormAddInsert.StrValue:=ZQueryOF.FieldByName('Qty').AsString;
   if FormAddInsert.ShowModal=mrOK then
   begin
@@ -88,7 +88,7 @@ var
   CanContinue:boolean;
 begin
   EditSearchOF.Text:='';
-  FormAddInsert.InputType:=0;
+  FormAddInsert.InputType:=1;
   FormAddInsert.StrValue:='';
   if FormAddInsert.ShowModal=mrOK then
   begin
@@ -112,7 +112,7 @@ begin
   if (CanContinue=false) then
      exit;
 
-  FormAddInsert.InputType:=2;
+  FormAddInsert.InputType:=3;
   FormAddInsert.StrValue:='';
   if FormAddInsert.ShowModal=mrOK then
   begin

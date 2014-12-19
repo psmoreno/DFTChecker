@@ -12,7 +12,6 @@ object FormBkpDB: TFormBkpDB
   Font.Name = 'Arial'
   Font.Pitch = fpVariable
   Font.Quality = fqDraft
-  OnCreate = FormCreate
   OnShow = FormShow
   Position = poMainFormCenter
   LCLVersion = '1.2.2.0'

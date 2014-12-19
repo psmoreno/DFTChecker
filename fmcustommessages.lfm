@@ -1,4 +1,4 @@
-object FormOFRepeated: TFormOFRepeated
+object FormCustomMessages: TFormCustomMessages
   Left = 687
   Height = 49
   Top = 367

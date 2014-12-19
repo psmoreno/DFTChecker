@@ -17,6 +17,7 @@ type
     PanelAddInsert: TPanel;
     SpeedButtonOK: TSpeedButton;
     SpeedButtonCancel: TSpeedButton;
+    procedure EditAddInsertKeyPress(Sender: TObject; var Key: char);
     procedure FormShow(Sender: TObject);
     procedure SpeedButtonCancelClick(Sender: TObject);
     procedure SpeedButtonOKClick(Sender: TObject);
@@ -28,6 +29,8 @@ type
     function CheckOF:boolean;
     function CheckTVModel:boolean;
     function CheckQty:boolean;
+    function InputProcess:integer;
+    function CheckValidOfSerial:boolean;
   public
     { public declarations }
     property StrValue:string read RStrValue write RStrValue;
@@ -53,18 +56,49 @@ procedure TFormAddInsert.FormShow(Sender: TObject);
 begin
   EditAddInsert.Text:=RStrValue;
   case RInputType of
-       0:begin    // Es una orden de fabricacion
+       1:begin    // Es una orden de fabricacion
           EditAddInsert.MaxLength:=6;
           Self.Caption:='Ingrese orden de fabricación';
        end;
-       1:begin   // Modelo de TV
+       2:begin   // Modelo de TV
           EditAddInsert.MaxLength:=0;
           self.Caption:='Ingrese el modelo de TV';
        end;
-       2:begin   // Cantidad de placas a producir
+       3:begin   // Cantidad de placas a producir
          EditAddInsert.MaxLength:=4;
          Self.Caption:='Ingrese la cantidad de placas a producir';
        end;
+       4:begin   // Es un serial valido de una placa
+         EditAddInsert.MaxLength:=11;
+         Self.Caption:='Ingrese el serial de la PCB';
+       end;
+  end;
+end;
+
+procedure TFormAddInsert.EditAddInsertKeyPress(Sender: TObject; var Key: char);
+var
+  CHKresult:boolean;
+begin
+  if integer(Key)=13 then
+  begin
+      case InputProcess of
+       1:begin
+          Close;
+          ModalResult:=mrOK;
+       end;
+       2:begin
+          Close;
+          ModalResult:=mrOK;
+       end;
+       3:begin
+          Close;
+          ModalResult:=mrOK;
+       end;
+       4:begin
+          Close;
+          ModalResult:=mrOK;
+       end;
+     end;
   end;
 end;
 
@@ -72,22 +106,23 @@ procedure TFormAddInsert.SpeedButtonOKClick(Sender: TObject);
 var
   CHKresult:boolean;
 begin
-  case RInputType of
-       0:begin    // Es una orden de fabricacion
-          CHKresult:=CheckOF;
+  case InputProcess of
+       1:begin
+          Close;
+          ModalResult:=mrOK;
        end;
-       1:begin   // Modelo de TV
-          CHKresult:=CheckTVModel;
+       2:begin
+          Close;
+          ModalResult:=mrOK;
        end;
-       2:begin   // Cantidad de placas a producir
-         CHKresult:=CheckQty;
+       3:begin
+          Close;
+          ModalResult:=mrOK;
        end;
-  end;
-
-  if CHKresult=true then
-  begin
-       self.Close;
-       ModalResult:=mrOK;
+       4:begin
+          Close;
+          ModalResult:=mrOK;
+       end;
   end;
 end;
 
@@ -140,6 +175,49 @@ begin
        EditAddInsert.SelectAll;
        EditAddInsert.SetFocus;
        CheckQty:=false;
+  end;
+end;
+
+function TFormAddInsert.InputProcess:integer;
+var
+  CHKresult:integer;
+begin
+  CHKresult:=0;
+  case RInputType of
+       1:begin    // Es una orden de fabricacion
+          if CheckOF then
+             CHKresult:=1;
+       end;
+       2:begin   // Modelo de TV
+          if CheckTVModel then
+             CHKresult:=2;
+       end;
+       3:begin   // Cantidad de placas a producir
+         if CheckQty then
+             CHKresult:=3;
+       end;
+       4:begin
+         if CheckValidOfSerial then
+            CHKresult:=4;
+       end;
+  end;
+  InputProcess:=CHKresult;
+end;
+
+function TFormAddInsert.CheckValidOfSerial:boolean;
+var
+  tmp:Int64;
+begin
+  if ((Length(EditAddInsert.Text)=11)and(TryStrToInt64(EditAddInsert.Text,tmp))) then
+  begin
+       CheckValidOfSerial:=true;
+  end
+  else
+  begin
+        MessageDlg('Error','Debe ingresar una orden de fabricación válida!',mtError,[mbOK],0);
+        EditAddInsert.SelectAll;
+        EditAddInsert.SetFocus;
+       CheckValidOfSerial:=false;
   end;
 end;
 

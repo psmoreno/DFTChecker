@@ -102,6 +102,7 @@ object FormUsers: TFormUsers
         '5 - Buscar Valores Fallas.'
         '6 - Cambiar Opciones'
         '7 - Cambiar Backups'
+        '8 - Ver registros reparador'
       )
       Style = csDropDownList
       TabOrder = 2

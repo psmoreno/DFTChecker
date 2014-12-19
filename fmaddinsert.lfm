@@ -1,7 +1,7 @@
 object FormAddInsert: TFormAddInsert
-  Left = 637
+  Left = 753
   Height = 63
-  Top = 356
+  Top = 374
   Width = 529
   BorderStyle = bsDialog
   Caption = 'Agregar o insertar registro'
@@ -30,6 +30,7 @@ object FormAddInsert: TFormAddInsert
       Top = 8
       Width = 408
       CharCase = ecUppercase
+      OnKeyPress = EditAddInsertKeyPress
       TabOrder = 0
     end
     object SpeedButtonOK: TSpeedButton

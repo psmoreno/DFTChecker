@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, db, FileUtil, LR_PGrid, ZConnection, ZDataset,
   Forms, Controls, Graphics, Dialogs, ExtCtrls, StdCtrls, DBGrids, Buttons,
-  customconfig,dateutils;
+  customconfig,dateutils,CsvDocument;
 
 type
 
@@ -40,6 +40,7 @@ type
       CCF:TCustomConfig;
       procedure FilterResults;
       function GetAllDayOfWeek:TStringList;
+      procedure SaveLogData(AFileName:string);
   public
     { public declarations }
       procedure LoadConfig(TCmCfg:TCustomConfig);
@@ -65,7 +66,7 @@ procedure TFormSearchDMS.BitBtnExportClick(Sender: TObject);
 begin
   if SaveDialogDMS.Execute then
   begin
-
+     SaveLogData(SaveDialogDMS.FileName);
   end;
 end;
 
@@ -168,6 +169,32 @@ begin
    end;
 
    GetAllDayOfWeek:=Lista;
+end;
+
+procedure TFormSearchDMS.SaveLogData(AFileName:string);
+var
+  i:integer;
+  Parser:TCSVDocument;
+begin
+  Parser:=TCSVDocument.Create;
+  Parser.Clear;
+
+  Parser.Delimiter:=';';
+  Parser.IgnoreOuterWhitespace:=true;
+  Parser.QuoteOuterWhitespace:=false;
+  ZQuerySrchDMS.First;
+  for i:=0 to (ZQuerySrchDMS.RecordCount-1)do
+  begin
+     Parser.Cells[0,i]:=ZQuerySrchDMS.FieldByName('Id').AsString;
+     Parser.Cells[1,i]:=ZQuerySrchDMS.FieldByName('DMSdate').AsString;
+     Parser.Cells[2,i]:=ZQuerySrchDMS.FieldByName('DMShour').AsString;
+     Parser.Cells[3,i]:=ZQuerySrchDMS.FieldByName('OfSerial').AsString;
+     Parser.Cells[4,i]:=ZQuerySrchDMS.FieldByName('ModelName').AsString;
+     ZQuerySrchDMS.Next;
+  end;
+  Parser.SaveToFile(AFilename);
+  Parser.Free;
+  ShowMessage('Finalizo el guardado de datos');
 end;
 
 end.

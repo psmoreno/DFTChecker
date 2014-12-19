@@ -48,7 +48,7 @@
         <PackageName Value="LCL"/>
       </Item6>
     </RequiredPackages>
-    <Units Count="19">
+    <Units Count="20">
       <Unit0>
         <Filename Value="dftchecker.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -182,13 +182,21 @@
         <UnitName Value="ubackups"/>
       </Unit17>
       <Unit18>
-        <Filename Value="fmofserierepeat.pas"/>
+        <Filename Value="fmcustommessages.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="FormOFRepeated"/>
+        <ComponentName Value="FormCustomMessages"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="fmOfSerieRepeat"/>
+        <UnitName Value="fmcustommessages"/>
       </Unit18>
+      <Unit19>
+        <Filename Value="fmsearchrepair.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormSearchRepair"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="fmsearchrepair"/>
+      </Unit19>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

@@ -1,7 +1,7 @@
 object FormSearchFail: TFormSearchFail
-  Left = 594
+  Left = 628
   Height = 492
-  Top = 194
+  Top = 211
   Width = 775
   BorderIcons = [biSystemMenu, biMaximize]
   Caption = 'Busqueda de registros de fallas en los DFT'
@@ -541,6 +541,7 @@ object FormSearchFail: TFormSearchFail
         Width = 60
         FieldName = 'NJig'
       end>
+    ReadOnly = True
     TabOrder = 2
     TitleFont.CharSet = ANSI_CHARSET
     TitleFont.Height = -21
@@ -579,6 +580,7 @@ object FormSearchFail: TFormSearchFail
     Properties.Strings = (
       'AutoEncodeStrings='
     )
+    TestMode = 0
     Port = 0
     left = 56
     top = 152

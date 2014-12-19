@@ -566,6 +566,7 @@ object FormSearchDFT: TFormSearchDFT
         Width = 80
         FieldName = 'Chassis'
       end>
+    ReadOnly = True
     TabOrder = 2
     TitleFont.CharSet = ANSI_CHARSET
     TitleFont.Height = -21

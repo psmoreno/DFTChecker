@@ -10,13 +10,14 @@ uses
   Buttons, ExtCtrls, ActnList, LazHelpHTML, fmOF, fmModels, fmlinks, fmoptions,
   fmsearchdft, fmabout, fmclosebox, HelpIntfs, customconfig, fmIntro,
   LResources, IniPropStorage, LR_Class, fmsearchDMS, fmusers, fmsearchFail,
-  fmbkpdb, ubackups, dateutils, fmOfSerieRepeat;
+  fmbkpdb, ubackups, dateutils, fmcustommessages,fmsearchrepair;
 
 type
 
   { TFormPrincipal }
 
   TFormPrincipal = class(TForm)
+    ActionSearchRepair: TAction;
     ActionBkpDB: TAction;
     ActionSearchFails: TAction;
     ActionChangeUsers: TAction;
@@ -68,6 +69,7 @@ type
     MenuItem16: TMenuItem;
     MenuItem17: TMenuItem;
     MenuItem18: TMenuItem;
+    MenuItem19: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
@@ -87,6 +89,7 @@ type
     ToolButton14: TToolButton;
     ToolButton15: TToolButton;
     ToolButton16: TToolButton;
+    ToolButton17: TToolButton;
     ToolButton2: TToolButton;
     ToolButton3: TToolButton;
     ToolButton4: TToolButton;
@@ -112,6 +115,7 @@ type
     procedure ActionSearchDFTExecute(Sender: TObject);
     procedure ActionSearchDMSExecute(Sender: TObject);
     procedure ActionSearchFailsExecute(Sender: TObject);
+    procedure ActionSearchRepairExecute(Sender: TObject);
     procedure EditPCBKeyPress(Sender: TObject; var Key: char);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -148,6 +152,7 @@ type
     function ReorganizeStringList(Cadena:TStringList):TStringList;
     function CustomFormatNumbers(Value:integer;TotalLenghtofValue:integer):string;
     procedure BackupAllRecords;
+    procedure ReturnFail(OfSerial:string;out JIG:integer;out strFail:string);
   public
     { public declarations }
   end;
@@ -388,6 +393,26 @@ begin
   end;
 end;
 
+procedure TFormPrincipal.ActionSearchRepairExecute(Sender: TObject);
+var
+  Result:integer;
+begin
+  FI.LoadConfig(CCF);
+  FI.AllowNotRootUser:=true;
+  FI.CurSection:='8';
+  FI.CurLevel:='2';
+  Result:=FI.ShowModal;
+  if Result=mrOK then
+  begin
+     if FI.isRootUser=false then
+     begin
+          RegisterUser(FI.Users[FI.LocatedIndex],StrToInt(FI.CurSection),CCF.ConfigOptions.EqId);
+     end;
+     FormSearchRepair.LoadConfig(CCF);
+     FormSearchRepair.ShowModal;
+  end;
+end;
+
 procedure TFormPrincipal.EditPCBKeyPress(Sender: TObject; var Key: char);
 begin
   if Integer(key)=13 then
@@ -418,7 +443,6 @@ var
 begin
    CCF:= TCustomConfig.Create;
    FI:=TFormIntro.Create(self);
-   UBK:=TBackups.Create(nil);
 
    Users:=TStringList.Create;
    Pass:=TStringList.Create;
@@ -787,8 +811,8 @@ begin
        end
        else
        begin
-         FormOFRepeated.TimerEnabled:=true;
-         FormOFRepeated.ShowModal;
+         FormCustomMessages.TimerEnabled:=true;
+         FormCustomMessages.ShowModal;
          ImageResult.Picture.LoadFromLazarusResource('OK');
          ImageResult.Visible:=true;
          ZQueryPrincipal.Close;
@@ -928,6 +952,8 @@ procedure TFormPrincipal.RegisterWrongPCB;
 var
   ZQueryLoadWrongPCB:TZQuery;
   ZConnectionLoadWrongPCB:TZConnection;
+  JIG:integer;
+  strFail:string;
 
 begin
   ZConnectionLoadWrongPCB:=TZConnection.Create(nil);
@@ -949,6 +975,11 @@ begin
   ZQueryLoadWrongPCB.FieldByName('WRhour').AsString:=TimeToStr(Now);
   ZQueryLoadWrongPCB.FieldByName('OfSerial').AsString:=EditPCB.Text;
   ZQueryLoadWrongPCB.FieldByName('ModelName').AsString:=ZQueryPrincipal.FieldByName('strModel').AsString;
+
+  ReturnFail(ZQueryLoadWrongPCB.FieldByName('OfSerial').AsString,JIG,strFail);
+  ZQueryLoadWrongPCB.FieldByName('JIG').AsInteger:=JIG;
+  ZQueryLoadWrongPCB.FieldByName('strFail').AsString:=strFail;
+  ZQueryLoadWrongPCB.FieldByName('Status').AsInteger:=1;//es el estado de la placa
 
   ZQueryLoadWrongPCB.CommitUpdates;
   ZQueryLoadWrongPCB.Close;
@@ -1188,14 +1219,16 @@ begin
 
   if ((CurDate >= NextBkpDate)and(HourOf(CurHour)=StrToInt(Copy(CCF.ConfigBKPOptions.VHour,0,2))))then
   begin
-    FormOFRepeated.TimerEnabled:=false;
-    FormOFRepeated.Show;
+    FormCustomMessages.TimerEnabled:=false;
+    FormCustomMessages.Show;
     EditPCB.Enabled:=false;
     ActionChkPCB.Enabled:=false;
+    UBK:=TBackups.Create(true);
     UBk.LoadConfig(CCF);
-    UBK.MakeBackup(Date,CCF.ConfigBKPOptions.VOlder);
+    UBK.LoadSettings(Date,CCF.ConfigBKPOptions.VOlder);
+    UBK.Start;
     CCF.ConfigBKPOptions.VLastBkp:=DateToStr(Date);
-    FormOFRepeated.TimerEnabled:=true;
+    FormCustomMessages.TimerEnabled:=true;
     EditPCB.Enabled:=true;
     ActionChkPCB.Enabled:=true;
     EditPCB.SelectAll;
@@ -1218,6 +1251,37 @@ begin
   IniPropStorageCount.IniSection:='CurCount';
   self.CurrentCount:=IniPropStorageCount.ReadInteger('CurPCBCount',0);
   self.MagazzineCount:=IniPropStorageCount.ReadInteger('CurMagazineCount',0);
+end;
+
+procedure TFormPrincipal.ReturnFail(OfSerial:string;out JIG:integer;out strFail:string);
+var
+  ZConnectionSrchFail:TZConnection;
+  ZQuerySrchFail:TZQuery;
+begin
+  ZConnectionSrchFail:=TZConnection.Create(nil);
+  ZQuerySrchFail:=TZQuery.Create(nil);
+
+  ZConnectionSrchFail.HostName:=CCF.ConfigSQl.HIP;
+  ZConnectionSrchFail.Port:=StrToInt(CCF.ConfigSQl.PConecction);
+  ZConnectionSrchFail.Protocol:=CCF.ConfigSQl.Databasetype;
+  ZConnectionSrchFail.Database:=CCF.ConfigSQl.DBname;
+  ZConnectionSrchFail.User:=CCF.ConfigSQl.User;
+  ZConnectionSrchFail.Password:=CCF.ConfigSQl.Pass;
+  ZQuerySrchFail.Connection:=ZConnectionSrchFail;
+  ZQuerySrchFail.SQL.Text:='SELECT * FROM tstepfail WHERE OfSerie LIKE ''%'+OfSerial+'%''';
+  try
+     ZConnectionSrchFail.Connect;
+     ZQuerySrchFail.Open;
+     if ZQuerySrchFail.RecordCount > 0 then
+     begin
+       ZQuerySrchFail.Last;
+       JIG:=ZQuerySrchFail.FieldByName('NJig').AsInteger;
+       strFail:=ZQuerySrchFail.FieldByName('Step_name').AsString;
+     end;
+  finally
+    ZQuerySrchFail.Close;
+    ZConnectionSrchFail.Disconnect;
+  end;
 end;
 
 initialization

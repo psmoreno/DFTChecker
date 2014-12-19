@@ -1,7 +1,7 @@
 object FormSearchDMS: TFormSearchDMS
-  Left = 406
+  Left = 625
   Height = 492
-  Top = 114
+  Top = 174
   Width = 642
   BorderIcons = [biSystemMenu, biMaximize]
   Caption = 'Busqueda de registros en DMS'
@@ -526,6 +526,7 @@ object FormSearchDMS: TFormSearchDMS
         Width = 150
         FieldName = 'ModelName'
       end>
+    ReadOnly = True
     TabOrder = 2
     TitleFont.CharSet = ANSI_CHARSET
     TitleFont.Height = -21
