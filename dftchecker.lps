@@ -21,7 +21,6 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="fmmain"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="0"/>
         <WindowIndex Value="0"/>
         <TopLine Value="1204"/>
@@ -208,10 +207,13 @@
         <Filename Value="ubackups.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="ubackups"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
         <WindowIndex Value="0"/>
-        <TopLine Value="45"/>
+        <TopLine Value="219"/>
         <CursorPos X="1" Y="269"/>
         <UsageCount Value="67"/>
+        <Loaded Value="True"/>
       </Unit17>
       <Unit18>
         <Filename Value="fmcustommessages.pas"/>
@@ -527,15 +529,11 @@
     <General>
       <ActiveWindowIndexAtStart Value="0"/>
     </General>
-    <JumpHistory Count="2" HistoryIndex="1">
+    <JumpHistory Count="1" HistoryIndex="0">
       <Position1>
         <Filename Value="fmmain.pas"/>
-        <Caret Line="721" Column="3" TopLine="974"/>
-      </Position1>
-      <Position2>
-        <Filename Value="fmmain.pas"/>
         <Caret Line="447" Column="4" TopLine="432"/>
-      </Position2>
+      </Position1>
     </JumpHistory>
   </ProjectSession>
   <Debugging>
